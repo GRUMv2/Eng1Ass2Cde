@@ -1,9 +1,10 @@
-package github.game;
-
-import java.util.ArrayList;
+package io.github.GRUMv2.EngSim;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.Renderer.*;
+
+import java.util.ArrayList;
 
 public class GameMap extends Entity {
   private static final int CELLS_PER_ROW = 30;
@@ -15,7 +16,7 @@ public class GameMap extends Entity {
     this.placedBuildings = new ArrayList<Building>();
     this.obstacles = new Obstacle[] {
       new Obstacle(
-        new Vector2(5, 5), 
+        new Vector2(5, 5),
         new Vector2[] {
           new Vector2(1, 0),
           new Vector2(2, 0),
@@ -35,7 +36,7 @@ public class GameMap extends Entity {
         , Color.BLUE
       ),
       new Obstacle(
-        new Vector2(20, 25), 
+        new Vector2(20, 25),
         new Vector2[] {
           new Vector2(0, 0),
           new Vector2(1, 0),
@@ -61,7 +62,7 @@ public class GameMap extends Entity {
       for (int j = 0; j < CELLS_PER_ROW; j++) {
         Vector2 cellPos = new Vector2(i, j);
         cells[i * CELLS_PER_ROW + j] = new Cell(
-          cellPos, 
+          cellPos,
           () -> game.handleCellClick(cellPos)
         );
       }

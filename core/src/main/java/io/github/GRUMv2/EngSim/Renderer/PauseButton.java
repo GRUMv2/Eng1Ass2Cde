@@ -1,7 +1,8 @@
-package github.game;
+package io.github.GRUMv2.EngSim.Renderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.InputHandler;
 
 public class PauseButton extends Entity {
   private Runnable togglePause;

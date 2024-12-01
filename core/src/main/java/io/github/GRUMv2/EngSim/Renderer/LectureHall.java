@@ -1,13 +1,14 @@
-package github.game;
+package io.github.GRUMv2.EngSim.Renderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.InputHandler;
 
 public class LectureHall extends Building {
 
   public LectureHall(Vector2 mapPos) {
     super(
-      mapPos, 
+      mapPos,
        new Vector2[] {
         new Vector2(-2, 0),
         new Vector2(-1, 0),
@@ -36,11 +37,11 @@ public class LectureHall extends Building {
       Vector2 cellPos = new Vector2(pos.x + (offset.x * CELL_WIDTH), pos.y + (offset.y * CELL_WIDTH));
       renderer.drawRect(cellPos, new Vector2(CELL_WIDTH, CELL_WIDTH), Color.BLUE);
     }
-    
+
     renderer.drawText(
-      "Lecture Hall", 
-      new Vector2(pos.x, pos.y + CELL_WIDTH), 
-      Color.WHITE, 
+      "Lecture Hall",
+      new Vector2(pos.x, pos.y + CELL_WIDTH),
+      Color.WHITE,
       1.25f
     );
   }

@@ -1,13 +1,14 @@
-package github.game;
+package io.github.GRUMv2.EngSim.Renderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.InputHandler;
 
 public class Restaurant extends Building {
 
   public Restaurant(Vector2 mapPos) {
     super(
-      mapPos, 
+      mapPos,
        new Vector2[] {
         new Vector2(0, 0),
         new Vector2(1, 0),
@@ -26,11 +27,11 @@ public class Restaurant extends Building {
     renderer.drawRect(pos,size,Color.RED);
     renderer.drawRect(new Vector2(pos.x, pos.y+CELL_WIDTH), new Vector2(CELL_WIDTH, CELL_WIDTH), Color.RED);
     renderer.drawRect(new Vector2(pos.x+(3*CELL_WIDTH), pos.y+CELL_WIDTH), new Vector2(CELL_WIDTH, CELL_WIDTH), Color.RED);
-    
+
     renderer.drawText(
-      "Restaurant", 
+      "Restaurant",
       new Vector2(pos.x + 3, pos.y + size.y - 3),
-      Color.WHITE, 
+      Color.WHITE,
       1.25f
     );
   }

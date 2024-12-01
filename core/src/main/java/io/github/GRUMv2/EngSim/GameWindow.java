@@ -1,4 +1,4 @@
-package github.game;
+package io.github.GRUMv2.EngSim;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.GRUMv2.EngSim.Renderer.Renderer;
 
 public class GameWindow extends ApplicationAdapter {
 

@@ -1,7 +1,9 @@
-package github.game;
+package io.github.GRUMv2.EngSim.Renderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.Game;
+import io.github.GRUMv2.EngSim.InputHandler;
 
 public class UI extends Entity {
   private Game game;
@@ -13,32 +15,32 @@ public class UI extends Entity {
     pauseButton = new PauseButton(game::togglePause);
     buildingPlaceButtons = new BuildingPlaceButton[] {
       new BuildingPlaceButton(
-        "Pub", 
-        "A place to drink.", 
-        0, 
+        "Pub",
+        "A place to drink.",
+        0,
         () -> game.setBuildingToPlace(Pub.class)
       ),
       new BuildingPlaceButton(
-        "Halls Accommodation", 
-        "A place to sleep.", 
+        "Halls Accommodation",
+        "A place to sleep.",
         1,
         () -> game.setBuildingToPlace(HallsAccommadation.class)
       ),
       new BuildingPlaceButton(
-        "Restaurant", 
-        "A place to eat.", 
+        "Restaurant",
+        "A place to eat.",
         2,
         () -> game.setBuildingToPlace(Restaurant.class)
       ),
       new BuildingPlaceButton(
-        "Lecture Hall", 
-        "A place to learn.", 
+        "Lecture Hall",
+        "A place to learn.",
         3,
         () -> game.setBuildingToPlace(LectureHall.class)
       ),
       new BuildingPlaceButton(
-        "Gym", 
-        "A place to get bolo.", 
+        "Gym",
+        "A place to get bolo.",
         3,
         () -> game.setBuildingToPlace(Gym.class)
       )
@@ -62,7 +64,7 @@ public class UI extends Entity {
 
     // draw the building count
     renderer.drawText(
-      game.getBuildingCount() + " Buildings Placed", 
+      game.getBuildingCount() + " Buildings Placed",
       new Vector2(20, 600),
       Color.BLACK,
       1.5f
@@ -70,9 +72,9 @@ public class UI extends Entity {
 
     // draw the selected building
     renderer.drawText(
-      "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace().getSimpleName()), 
-      new Vector2(250, 600), 
-      Color.BLACK, 
+      "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace().getSimpleName()),
+      new Vector2(250, 600),
+      Color.BLACK,
       1.5f
     );
 

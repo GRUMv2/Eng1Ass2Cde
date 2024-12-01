@@ -1,7 +1,8 @@
-package github.game;
+package io.github.GRUMv2.EngSim;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.Renderer.*;
 
 public class Game {
     private static final float REALTIME_LENGTH = 300f;

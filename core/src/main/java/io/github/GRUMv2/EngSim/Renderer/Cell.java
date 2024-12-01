@@ -1,7 +1,8 @@
-package github.game;
+package io.github.GRUMv2.EngSim.Renderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.InputHandler;
 
 public class Cell extends Entity {
   private static final int BORDER_WIDTH = 1;

@@ -14,7 +14,7 @@
  */
 //Note, the above license and copyright applies to this file only.
 
-package github.game.lwjgl3;
+package io.github.GRUMv2.EngSim.lwjgl3;
 
 import org.lwjgl.system.macosx.LibC;
 
