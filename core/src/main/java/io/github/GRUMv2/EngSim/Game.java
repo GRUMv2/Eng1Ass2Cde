@@ -2,7 +2,11 @@ package io.github.GRUMv2.EngSim;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+
+// Should really refactor out the .* if possible
 import io.github.GRUMv2.EngSim.Renderer.*;
+
+import io.github.GRUMv2.EngSim.Server.Server;
 
 public class Game {
     private static final float REALTIME_LENGTH = 300f;
@@ -12,12 +16,16 @@ public class Game {
     private float timeElapsed = 0f;
     private boolean paused = false;
     private Class<? extends Building> buildingToPlace = null;
-    private GameMap map;
-    private UI ui;
+    private final GameMap map;
+    private final UI ui;
+    private final Server server;
 
     public Game() {
         map = new GameMap(this);
         ui = new UI(this);
+
+        server = new Server(120);
+        server.start();
     }
 
     public void update(float delta, Renderer renderer, InputHandler inputHandler) {
@@ -93,5 +101,9 @@ public class Game {
     private void renderGameOverScreen(Renderer renderer) {
         Vector2 pos = new Vector2(500, 700);
         renderer.drawText("Game Over!",pos, Color.RED, 4f);
+    }
+
+    public void dispose() {
+        server.Stop();
     }
 }
