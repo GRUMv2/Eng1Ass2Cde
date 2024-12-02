@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim;
+package io.github.GRUMv2.EngSim.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -6,17 +6,25 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.github.GRUMv2.EngSim.Renderer.Renderer;
 
-public class GameWindow extends ApplicationAdapter {
+public class Client extends ApplicationAdapter {
 
-    public final static int WIDTH = 1280;
-    public final static int HEIGHT = 720;
+    private int WIDTH;
+    private int HEIGHT;
 
     private OrthographicCamera camera;
     private Renderer renderer;
     private InputHandler inputHandler;
     private Game game;
+
+    public Client(int width, int height) {
+        // NOTE: At this stage of execution libGDX is not initialised
+        // and will not be until it calls Main.create()
+        // Anything within the constructor of Client cannot attempt
+        // to interact with libGDX objects until its create() function
+        this.WIDTH = width;
+        this.HEIGHT = height;
+    }
 
     @Override
     public void create() {

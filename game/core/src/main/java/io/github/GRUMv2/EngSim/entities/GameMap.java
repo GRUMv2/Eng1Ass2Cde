@@ -1,8 +1,11 @@
-package io.github.GRUMv2.EngSim;
+package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import io.github.GRUMv2.EngSim.Renderer.*;
+
+import io.github.GRUMv2.EngSim.client.Game;
+import io.github.GRUMv2.EngSim.client.Renderer;
+import io.github.GRUMv2.EngSim.client.InputHandler;
 
 import java.util.ArrayList;
 
