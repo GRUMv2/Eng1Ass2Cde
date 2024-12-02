@@ -103,6 +103,7 @@ public class Game {
         renderer.drawText("Game Over!",pos, Color.RED, 4f);
     }
 
+    // TODO: tell my whyyyyyyyyyyy
     public void dispose() {
         server.Stop();
     }
