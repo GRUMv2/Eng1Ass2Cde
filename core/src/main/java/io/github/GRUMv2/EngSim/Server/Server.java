@@ -1,21 +1,31 @@
 package io.github.GRUMv2.EngSim.Server;
 
 
+import io.github.GRUMv2.EngSim.Server.Simultion.Simulation;
+
+
 public class Server extends Thread {
     private boolean isRunning = true;
     private boolean isPaused = false;
     private final int targetTPS;
 
+    private final Simulation simulation;
+
     public Server(int targetTPS) {
         super("Server");
         this.targetTPS = targetTPS;
+        this.simulation = new Simulation();
+
         System.out.println("[ SVR ] Server created");
+
     }
 
+    // Pause's the server, events, and simulation
     public void Pause() {
         isPaused = true;
     }
 
+    // Unpauses the above
     public void Resume() {
         isPaused = false;
     }
@@ -24,9 +34,68 @@ public class Server extends Thread {
         return isPaused;
     }
 
+    // Entirely stops and disposes the server, this call cannot be undone
     public void Stop() {
         isRunning = false;
     }
+
+    // Driven by:
+    // - Location of buildings
+    // - Staff Student Ratio
+    // - Student building ratio
+    // Can also be affected by events
+    public float getStudentSatisfaction() {
+        return simulation.getStudentSatisfaction();
+    }
+
+    // most of the time is the maximum possible given the number of halls,
+    // unless the student satisfaction is too low then will drop as people
+    // drop out.
+    // Can also be affected by events
+    //
+    // Average students per building: 300
+    public int getStudentNumbers() {
+        return simulation.getStudentNumbers();
+    }
+
+    // Driven by:
+    // - Location to car parks
+    // - Staff student satisfaction
+    // - Student turnout (to lectures)
+    //   - Driven by distance to halls
+    // Can also be affected by events
+    public float getStaffSatisfaction() {
+        return simulation.getStaffSatisfaction();
+    }
+
+    // Again mostly driven by the number of offices (that is itself driven by
+    // number of placed buildings) unless staff satisfaction is too low.
+    // Can also be affected by events
+    public int getStaffNumbers() {
+        return simulation.getStaffNumbers();
+    }
+
+    // Driven by
+    // - Income
+    // - User building buildings
+    // - Events can directly add/remove
+    //
+    // Average cost of halls building 20_000_000
+    public int getMoney() {
+        return simulation.getMoney();
+    }
+
+    // Driven by
+    // - Number students
+    // - International student ratio
+    // - Staff numbers
+    // - Staff satisfaction
+    //   - Low staff satisfaction numbers will increase their
+    //     wage to prevent them from being fired
+    public int getIncome() {
+        return simulation.getIncome();
+    }
+
 
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
@@ -56,6 +125,6 @@ public class Server extends Thread {
     }
 
     private void tick(double delta) {
-
+        simulation.tick(delta);
     }
 }
