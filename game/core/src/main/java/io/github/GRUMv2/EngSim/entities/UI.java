@@ -1,5 +1,7 @@
 package io.github.GRUMv2.EngSim.entities;
 
+// TODO: UI overhaul
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.Game;
@@ -14,6 +16,7 @@ public class UI extends Entity {
     public UI(Game game) {
         this.game = game;
         pauseButton = new PauseButton(game::togglePause);
+        // TODO: burn with fire
         buildingPlaceButtons = new BuildingPlaceButton[] {
             new BuildingPlaceButton(
                 "Pub",

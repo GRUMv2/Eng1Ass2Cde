@@ -8,6 +8,7 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class Restaurant extends Building {
 
     public Restaurant(Vector2 mapPos) {
+        // TODO: Map data
         super(
             mapPos,
             new Vector2[] {
@@ -21,6 +22,7 @@ public class Restaurant extends Building {
         );
     }
 
+    // TODO: UI overhaul -> abstract
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         Vector2 pos = new Vector2((1280 - 720) + (this.mapPos.x * CELL_WIDTH), this.mapPos.y * CELL_WIDTH);

@@ -8,6 +8,7 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class Gym extends Building {
 
     public Gym(Vector2 mapPos) {
+        // TODO: Map data
         super(
             mapPos,
             new Vector2[] {
@@ -26,6 +27,7 @@ public class Gym extends Building {
         );
     }
 
+    // TODO: UI overhaul -> abstract
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         Vector2 pos = new Vector2((1280 - 720) + (this.mapPos.x * CELL_WIDTH), this.mapPos.y * CELL_WIDTH);

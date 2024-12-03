@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
+// TODO: UI overhaul -> Buttons
+
 public class PauseButton extends Entity {
     private Runnable togglePause;
 

@@ -5,8 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.Viewport; // TODO: bit pointless
 
+// TODO: No longer extends ApplicationAdapter
 public class Client extends ApplicationAdapter {
 
     private int WIDTH;
@@ -16,6 +17,10 @@ public class Client extends ApplicationAdapter {
     private Renderer renderer;
     private InputHandler inputHandler;
     private Game game;
+    // TODO: private GameScreen screen;
+    // +getter
+    // +setter
+    // +switchbox
 
     public Client(int width, int height) {
         // NOTE: At this stage of execution libGDX is not initialised
@@ -26,7 +31,7 @@ public class Client extends ApplicationAdapter {
         this.HEIGHT = height;
     }
 
-    @Override
+    @Override // TODO: No longer extends ApplicationAdapter
     public void create() {
         camera = createCamera();
         renderer = new Renderer(camera);
@@ -34,14 +39,16 @@ public class Client extends ApplicationAdapter {
         game = new Game();
     }
 
-    @Override
+    @Override // TODO: No longer extends ApplicationAdapter
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
         renderer.update();
+        //
         game.update(delta, renderer, inputHandler);
     }
 
-    @Override
+    // This must only be called on sysexit otherwise everything is kil
+    @Override // TODO: No longer extends ApplicationAdapter
     public void dispose() {
         renderer.dispose();
     }
@@ -49,7 +56,7 @@ public class Client extends ApplicationAdapter {
     private OrthographicCamera createCamera() {
         Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         OrthographicCamera newCamera = new OrthographicCamera();
-        Viewport viewport = new FitViewport(WIDTH, HEIGHT, newCamera);
+        Viewport viewport = new FitViewport(WIDTH, HEIGHT, newCamera); // TODO: bit pointless
         viewport.apply();
         viewport.update((int) screenSize.x, (int) screenSize.y, true);
         newCamera.position.set((int) newCamera.viewportWidth / 2, (int) newCamera.viewportHeight / 2, 0);

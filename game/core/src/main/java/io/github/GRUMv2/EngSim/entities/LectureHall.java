@@ -8,6 +8,7 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class LectureHall extends Building {
 
     public LectureHall(Vector2 mapPos) {
+        // TODO: Map data
         super(
             mapPos,
             new Vector2[] {

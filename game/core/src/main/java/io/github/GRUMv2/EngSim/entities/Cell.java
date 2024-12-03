@@ -7,20 +7,28 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class Cell extends Entity {
     private static final int BORDER_WIDTH = 1;
+    // TODO: -> Settings
     private static final float CELL_WIDTH = 720 / 30;
 
     private Vector2 pos;
     private Vector2 size = new Vector2(CELL_WIDTH, CELL_WIDTH);
-    private Runnable handleClick;
+    private Runnable handleClick; // TODO: UI overhaul -> abstract (see note in update())
 
     public Cell(Vector2 mapPos, Runnable handleClick) {
+        // TODO: UI overhaul -> abstract (see note in update())
         this.handleClick = handleClick;
+        // TODO: unhardcode
         pos = new Vector2((1280 - 720) + (mapPos.x * CELL_WIDTH), mapPos.y * CELL_WIDTH);
         size = new Vector2(CELL_WIDTH, CELL_WIDTH);
     }
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
+        // TODO: style
+        // Just for UI style I think there'll be a need to replace this border trick
+        // with something more formal
+        // Or at very least abstract the trick to Renderer so it can be used in
+        // arbitrary classes
         // draw black border
         Color borderColor = inputHandler.getMouseInBounds(pos, size) ? Color.WHITE : Color.BLACK;
         renderer.drawRect(pos, size, borderColor);
@@ -32,6 +40,9 @@ public class Cell extends Entity {
             Color.GREEN
         );
 
+        // TODO: UI overhaul -> abstract
+        // Might need to be abstracted up to Entity to handle other actions
+        // like building movement/destroy
         if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(pos, size)) {
             handleClick.run();
         }

@@ -10,13 +10,21 @@ import io.github.GRUMv2.EngSim.client.InputHandler;
 import java.util.ArrayList;
 
 public class GameMap extends Entity {
+    // TODO -> Settings
     private static final int CELLS_PER_ROW = 30;
     private Cell[] cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
+    // TODO: Map data
+    // Similarly to attributes of Game, these might be better suited to a
+    // dedicated class that keeps track of game state
+    // This both prevents server having to reach all the way across into client
+    // and means that the GameMap Entity class is more concise in purpose
     private ArrayList<Building> placedBuildings;
     private Obstacle[] obstacles;
 
     public GameMap(Game game) {
+        // TODO: Map data
         this.placedBuildings = new ArrayList<Building>();
+        // TODO: something about this
         this.obstacles = new Obstacle[] {
             new Obstacle(
                 new Vector2(5, 5),
@@ -66,6 +74,7 @@ public class GameMap extends Entity {
                 Vector2 cellPos = new Vector2(i, j);
                 cells[i * CELLS_PER_ROW + j] = new Cell(
                     cellPos,
+                // TODO: see note in Game()
                 () -> game.handleCellClick(cellPos)
                 );
             }
@@ -85,6 +94,13 @@ public class GameMap extends Entity {
             cell.update(renderer, inputHandler);
         }
 
+        // TODO: Foregroundismness
+        // Apart from being of separate classes, there isn't much reason
+        // for Buildings and Obstacles to be tracked differently here, and
+        // coord-wise it would be neater if a single object tracked them both
+        // as it would simplify preventing buildings to be placed on objects
+        // This will be increasingly relevant when Roads become a thing
+
         for (Building building : placedBuildings) {
             building.update(renderer, inputHandler);
         }
@@ -98,6 +114,8 @@ public class GameMap extends Entity {
         placedBuildings.add(building);
     }
 
+
+    // TODO: Foregroundismness - See note in update()
     public boolean getCanPlace(Building building) {
         Vector2 mapPos = building.getMapPos();
         Vector2[] relCellsUsed = building.getRelCellsUsed();
@@ -116,6 +134,7 @@ public class GameMap extends Entity {
         return true;
     }
 
+    // TODO: Foregroundismness - See note in update()
     public boolean getCellIsFree(Vector2 cellPos) {
         for (Building building : placedBuildings) {
             Vector2[] relCellsUsed = building.getRelCellsUsed();
@@ -146,6 +165,7 @@ public class GameMap extends Entity {
         return true;
     }
 
+    // TODO: -> Server
     public int getBuildingCount() {
         return placedBuildings.size();
     }
