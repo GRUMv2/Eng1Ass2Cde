@@ -4,3 +4,8 @@
 - Refactored project to io.github.grumv2.engsim
 	- Introduced -.renderer hoping to condense rendering code into that when refactoring
 - fixed minor git issues, updated tracking and gitignore
+- reorganise:
+    - relocated all game source files to the /game subdirectory
+    - introduced new entrypoint -> Main() which calls previous GameWindow entrypoint
+    - renamed GameWindow to Client
+    - refactored inherited code into proper packages and fixed imports
