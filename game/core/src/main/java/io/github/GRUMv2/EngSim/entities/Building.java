@@ -9,15 +9,15 @@ public abstract class Building extends Entity {
     protected Vector2 mapPos;
 
     public Building(Vector2 mapPos, Vector2[] relCellsUsed) {
-      this.mapPos = mapPos;
-      this.relCellsUsed = relCellsUsed;
+        this.mapPos = mapPos;
+        this.relCellsUsed = relCellsUsed;
     }
 
     public Vector2 getMapPos() {
-      return mapPos;
+        return mapPos;
     }
 
     public Vector2[] getRelCellsUsed() {
-      return relCellsUsed;
+        return relCellsUsed;
     }
 }
