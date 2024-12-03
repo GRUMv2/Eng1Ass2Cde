@@ -1,9 +1,10 @@
-package io.github.GRUMv2.EngSim.Renderer;
+package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import io.github.GRUMv2.EngSim.Game;
-import io.github.GRUMv2.EngSim.InputHandler;
+import io.github.GRUMv2.EngSim.client.Game;
+import io.github.GRUMv2.EngSim.client.InputHandler;
+import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class UI extends Entity {
   private Game game;

@@ -1,8 +1,18 @@
-package io.github.GRUMv2.EngSim;
+package io.github.GRUMv2.EngSim.client;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import io.github.GRUMv2.EngSim.Renderer.*;
+
+import io.github.GRUMv2.EngSim.entities.Building;
+import io.github.GRUMv2.EngSim.entities.GameMap;
+import io.github.GRUMv2.EngSim.entities.Gym;
+
+// To remove:
+import io.github.GRUMv2.EngSim.entities.HallsAccommadation;
+import io.github.GRUMv2.EngSim.entities.LectureHall;
+import io.github.GRUMv2.EngSim.entities.Pub;
+import io.github.GRUMv2.EngSim.entities.Restaurant;
+import io.github.GRUMv2.EngSim.entities.UI;
 
 public class Game {
     private static final float REALTIME_LENGTH = 300f;
@@ -58,6 +68,7 @@ public class Game {
         return buildingToPlace;
     }
 
+    // To remove:
     public void handleCellClick(Vector2 cellPos) {
         Building building;
         if (buildingToPlace == Pub.class) {

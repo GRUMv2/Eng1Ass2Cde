@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Renderer;
+package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.math.Vector2;
 
