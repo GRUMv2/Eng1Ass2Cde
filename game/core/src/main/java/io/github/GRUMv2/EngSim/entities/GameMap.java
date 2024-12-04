@@ -26,7 +26,7 @@ public class GameMap extends Entity {
         this.placedBuildings = new ArrayList<Building>();
         // TODO: something about this
         this.obstacles = new Obstacle[] {
-            new Obstacle(
+            new Water(
                 new Vector2(5, 5),
                 new Vector2[] {
                     new Vector2(1, 0),
@@ -44,9 +44,8 @@ public class GameMap extends Entity {
                     new Vector2(4, 2),
                     new Vector2(5, 2)
                 }
-                , Color.BLUE
             ),
-            new Obstacle(
+            new Water(
                 new Vector2(20, 25),
                 new Vector2[] {
                     new Vector2(0, 0),
@@ -65,7 +64,6 @@ public class GameMap extends Entity {
                     new Vector2(3, -6),
                     new Vector2(3, -7),
                 }
-                , Color.BLUE
             )
         };
 
