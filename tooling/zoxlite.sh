@@ -57,7 +57,21 @@ vwip() {
     unset _zl_WIP _zl_UNTRACKED
 }
 
+rungam() {
+    case "$XDG_SESSION_TYPE" in
+        x11|wayland) ;;
+        *)
+            # (X11 Forwarding)
+            # shellcheck disable=SC2317 # ./script.sh -> exit; source ./script.sh -> return
+            [ -z "$DISPLAY" ] && { echo "No display output available"; return 1 2>/dev/null; exit 1; }
+            ;;
+    esac
+    ( command cd "${_zl_BASE}${_zl_GAM_PREFIX}" || false && ./gradlew run )
+}
+
+
 alias fgrum=fgrym
 alias fgrumd=fgrymd
-
-unset _zl_GAM_PREFIX _zl_pkgpath
+alias rungame=rungam
+alias gradlerun=rungam
+alias gradlewrun=rungam
