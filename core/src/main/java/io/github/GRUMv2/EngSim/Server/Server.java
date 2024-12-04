@@ -96,6 +96,10 @@ public class Server extends Thread {
         return simulation.getIncome();
     }
 
+    public String getGameTime() {
+        return "Dec 2024";
+    }
+
 
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
