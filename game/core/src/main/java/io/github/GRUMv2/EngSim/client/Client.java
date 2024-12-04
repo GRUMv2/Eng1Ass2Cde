@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport; // TODO: bit pointless
 
 // TODO: No longer extends ApplicationAdapter
 public class Client extends ApplicationAdapter {
@@ -53,10 +52,13 @@ public class Client extends ApplicationAdapter {
         renderer.dispose();
     }
 
+    // Not sure why it's necessary to create a custom camera here rather than
+    // creating a viewport and using that for everything.
+    // Runs once and isn't in the way of anything so leave for now.
     private OrthographicCamera createCamera() {
         Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         OrthographicCamera newCamera = new OrthographicCamera();
-        Viewport viewport = new FitViewport(WIDTH, HEIGHT, newCamera); // TODO: bit pointless
+        FitViewport viewport = new FitViewport(WIDTH, HEIGHT, newCamera);
         viewport.apply();
         viewport.update((int) screenSize.x, (int) screenSize.y, true);
         newCamera.position.set((int) newCamera.viewportWidth / 2, (int) newCamera.viewportHeight / 2, 0);
