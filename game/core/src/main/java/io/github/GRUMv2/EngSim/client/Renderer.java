@@ -1,23 +1,24 @@
 package io.github.GRUMv2.EngSim.client;
 
-import com.badlogic.gdx.Gdx;
+//import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
+//import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Renderer {
 
-    final private OrthographicCamera camera;
+    //final private OrthographicCamera camera;
     final private ShapeRenderer shapeRenderer;
     final private BitmapFont font;
     final private SpriteBatch spriteBatch;
 
     public Renderer(OrthographicCamera camera) {
-        this.camera = camera;
+        //this.camera = camera;
         shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
         spriteBatch = new SpriteBatch();
@@ -53,13 +54,16 @@ public class Renderer {
     }
 
     private void drawScreen() {
-        // TODO: figure out why any other line beyond the below is necessary
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(1, 1, 1, 1);
+        // TODO_: figure out why any line below is necessary
+        // Current verdict: No idea
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.rect(0, 0, camera.viewportWidth, camera.viewportHeight);
-        shapeRenderer.end();
+        //Gdx.gl.glClearColor(0, 0, 0, 1);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //
+        //shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        //shapeRenderer.setColor(1, 1, 1, 1);
+        //shapeRenderer.rect(0, 0, camera.viewportWidth, camera.viewportHeight);
+        //shapeRenderer.end();
     }
 }
