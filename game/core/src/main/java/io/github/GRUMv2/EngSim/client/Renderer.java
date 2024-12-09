@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Renderer;
+package io.github.GRUMv2.EngSim.client;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

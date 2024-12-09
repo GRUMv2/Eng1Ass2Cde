@@ -1,0 +1,54 @@
+@startuml
+
+title Game Render Steps in a Frame (Inherited Architecture)\n
+
+start
+:GameWindow.update() (=> Client.update());
+:Game.update();
+split
+    :Map.update();
+    split
+        repeat
+            :Cell.update();
+        repeat while (cells) is (for loop)
+        -> end;
+        detach
+    split again
+        repeat
+            :Building.update();
+            split
+                :Gym.update();
+            split again
+                :HallsAccommadation(sic).update();
+            split again
+                :LectureHall.update();
+            split again
+                :Pub.update();
+            split again
+                :Restaurant.update();
+            end split
+            repeat while (placedBuildings) is (for loop)
+        -> end;
+        detach
+    split again
+        repeat
+            :Obstacle.update();
+        repeat while (obstacles) is (for loop)
+        -> end;
+        detach
+    end split
+split again
+    :UI.update();
+    split
+        :PauseButton.update();
+        detach
+    split again
+        repeat
+            :BuildingPlaceButton.update();
+            repeat while (buildingPlaceButtons) is (for loop)
+        -> end;
+        detach
+    end split
+end split
+
+@enduml
