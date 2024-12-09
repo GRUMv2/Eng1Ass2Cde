@@ -2,6 +2,7 @@ package io.github.GRUMv2.EngSim.Server;
 
 
 import io.github.GRUMv2.EngSim.Server.Simultion.Simulation;
+import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 
 
 public class Server extends Thread {
@@ -9,12 +10,12 @@ public class Server extends Thread {
     private boolean isPaused = false;
     private final int targetTPS;
 
-    private final Simulation simulation;
+    private final Simulation simulation = new Simulation();
+    private final EventHandler eventHandler = new EventHandler();
 
     public Server(int targetTPS) {
         super("Server");
         this.targetTPS = targetTPS;
-        this.simulation = new Simulation();
 
         System.out.println("[ SVR ] Server created");
 
@@ -128,7 +129,12 @@ public class Server extends Thread {
         }
     }
 
+    private void updateInternalGridCache() {}
+
     private void tick(double delta) {
+        updateInternalGridCache();
+
         simulation.tick(delta);
+        eventHandler.tick(delta);
     }
 }
