@@ -1,7 +1,5 @@
 package io.github.GRUMv2.EngSim.entities;
 
-import java.util.Vector;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
