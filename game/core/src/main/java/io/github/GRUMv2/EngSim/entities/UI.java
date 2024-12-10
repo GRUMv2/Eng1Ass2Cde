@@ -45,7 +45,7 @@ public class UI extends Entity {
             new BuildingPlaceButton(
                 "Gym",
                 "A place to get bolo.",
-                3,
+                4,
             () -> game.setBuildingToPlace(Gym.class)
             )
         };

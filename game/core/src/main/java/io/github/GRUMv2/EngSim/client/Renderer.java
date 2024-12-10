@@ -1,5 +1,7 @@
 package io.github.GRUMv2.EngSim.client;
 
+import javax.swing.GroupLayout.Alignment;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 public class Renderer {
 
@@ -43,13 +46,22 @@ public class Renderer {
         shapeRenderer.end();
     }
 
-    public void drawText(String text, Vector2 position, Color color, float fontSize) {
+    public void drawText(String text, Vector2 position, Color color, float fontSize, int alignment) {
         spriteBatch.begin();
         font.getData().setScale(fontSize);
         font.setColor(color);
-        font.draw(spriteBatch, text, position.x, position.y);
+        font.draw(spriteBatch, text,
+            position.x, position.y,
+            3.0f,               // targetWidth; ignored if no wrapping/truncation, I think
+            alignment,          // Alignment in respect to pos XY
+            false               // Text wrap
+        );
         spriteBatch.end();
         font.getData().setScale(1.0f);
+    }
+
+    public void drawText(String text, Vector2 position, Color color, float fontSize) {
+        this.drawText(text, position, color, fontSize, Align.left);
     }
 
     private void drawScreen() {
