@@ -5,15 +5,14 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
-// TODO: UI overhaul -> Buttons
 
-public class PauseButton extends Entity {
-    private Runnable togglePause;
+public class PauseButton extends Button {
 
-    public PauseButton(Runnable togglePause) {
-        this.togglePause = togglePause;
+    public PauseButton(Runnable handleClick) {
+        super(handleClick);
     }
 
+    // TODO: Button rendering abstraction
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         Vector2 pos = new Vector2(180, 625);
@@ -31,7 +30,7 @@ public class PauseButton extends Entity {
         );
 
         if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(pos, size)) {
-            togglePause.run();
+            this.click();
         }
     }
 }

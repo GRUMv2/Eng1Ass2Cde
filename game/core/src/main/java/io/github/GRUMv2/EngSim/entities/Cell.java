@@ -12,16 +12,16 @@ public class Cell extends Entity {
 
     private Vector2 pos;
     private Vector2 size = new Vector2(CELL_WIDTH, CELL_WIDTH);
-    private Runnable handleClick; // TODO: UI overhaul -> abstract (see note in update())
 
     public Cell(Vector2 mapPos, Runnable handleClick) {
         // TODO: UI overhaul -> abstract (see note in update())
-        this.handleClick = handleClick;
+        this.setHandleClick(handleClick);
         // TODO: unhardcode
         pos = new Vector2((1280 - 720) + (mapPos.x * CELL_WIDTH), mapPos.y * CELL_WIDTH);
         size = new Vector2(CELL_WIDTH, CELL_WIDTH);
     }
 
+    // TODO: Button rendering abstraction (?)
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         // TODO: style
@@ -40,11 +40,8 @@ public class Cell extends Entity {
             Color.GREEN
         );
 
-        // TODO: UI overhaul -> abstract
-        // Might need to be abstracted up to Entity to handle other actions
-        // like building movement/destroy
         if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(pos, size)) {
-            handleClick.run();
+            this.click();
         }
     }
 }
