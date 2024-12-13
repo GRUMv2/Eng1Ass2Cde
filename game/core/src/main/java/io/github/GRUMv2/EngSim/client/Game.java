@@ -1,5 +1,6 @@
 package io.github.GRUMv2.EngSim.client;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,7 +15,7 @@ import io.github.GRUMv2.EngSim.entities.Pub;
 import io.github.GRUMv2.EngSim.entities.Restaurant;
 import io.github.GRUMv2.EngSim.entities.UI;
 
-public class Game {
+public class Game extends AbstractGameScreen {
     // TODO: -> Settings
     private static final float REALTIME_LENGTH = 300f;
     private static final float GAMETIME_LENGTH = 10f;
@@ -26,15 +27,16 @@ public class Game {
     private GameMap map;
     private UI ui;
 
-    public Game() {
+    public Game(Renderer renderer, InputHandler inputHandler) {
+        super(renderer, inputHandler);
         map = new GameMap(this);
         ui = new UI(this);
     }
 
-    public void update(float delta, Renderer renderer, InputHandler inputHandler) {
+    public void update(Renderer renderer, InputHandler inputHandler) {
         // TODO: PauseScreen
         if (!paused) {
-            timeElapsed += delta;
+            timeElapsed += Gdx.graphics.getDeltaTime();
         }
 
         // TODO: Time is a server job. Replace this with calls to server

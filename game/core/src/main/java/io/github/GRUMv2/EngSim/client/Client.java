@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 // TODO: No longer extends ApplicationAdapter
-public class Client extends ApplicationAdapter {
+public class Client {
 
     private int WIDTH;
     private int HEIGHT;
@@ -15,39 +15,40 @@ public class Client extends ApplicationAdapter {
     private OrthographicCamera camera;
     private Renderer renderer;
     private InputHandler inputHandler;
-    private Game game;
+    private AbstractGameScreen gameScreen;
+    private Runnable setScreen;
     // TODO: private GameScreen screen;
     // +getter
     // +setter
     // +switchbox
 
-    public Client(int width, int height) {
+    public Client(int width, int height, Runnable setScreen) {
         // NOTE: At this stage of execution libGDX is not initialised
         // and will not be until it calls Main.create()
         // Anything within the constructor of Client cannot attempt
         // to interact with libGDX objects until its create() function
         this.WIDTH = width;
         this.HEIGHT = height;
+        this.setScreen = setScreen;
     }
 
-    @Override // TODO: No longer extends ApplicationAdapter
+    public AbstractGameScreen getGameScreen() {
+        return gameScreen;
+    }
+
+    private void setGameScreen(AbstractGameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+        this.setScreen.run();
+    }
+
     public void create() {
-        camera = createCamera();
-        renderer = new Renderer(camera);
-        inputHandler = new InputHandler(camera);
-        game = new Game();
-    }
-
-    @Override // TODO: No longer extends ApplicationAdapter
-    public void render() {
-        float delta = Gdx.graphics.getDeltaTime();
-        renderer.update();
-        //
-        game.update(delta, renderer, inputHandler);
+        this.camera = createCamera();
+        this.renderer = new Renderer(this.camera);
+        this.inputHandler = new InputHandler(this.camera);
+        this.setGameScreen(new Game(this.renderer, this.inputHandler));
     }
 
     // This must only be called on sysexit otherwise everything is kil
-    @Override // TODO: No longer extends ApplicationAdapter
     public void dispose() {
         renderer.dispose();
     }

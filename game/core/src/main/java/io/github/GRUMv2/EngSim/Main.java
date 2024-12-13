@@ -20,7 +20,7 @@ public class Main extends Game {
         // and will not be until it calls Main.create()
         // Anything within the constructor of Client cannot attempt
         // to interact with libGDX objects until its create() function
-        client = new Client(WIDTH, HEIGHT);
+        client = new Client(WIDTH, HEIGHT, () -> setScreen());
         //server = new Server(120);
         //server.start();
     }
@@ -32,8 +32,10 @@ public class Main extends Game {
     @Override
     public void render() {
         super.render();
-        // TODO: Become screen
-        client.render();
+    }
+
+    private void setScreen() {
+        super.setScreen(client.getGameScreen());
     }
 
     @Override
