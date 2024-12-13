@@ -18,14 +18,14 @@ public class GameMap extends Entity {
     // dedicated class that keeps track of game state
     // This both prevents server having to reach all the way across into client
     // and means that the GameMap Entity class is more concise in purpose
-    private ArrayList<Building> placedBuildings;
-    private Obstacle[] obstacles;
+    private ArrayList<ForegroundEntity> gameEntities;
+    private int placedBuildings;
 
     public GameMap(Game game) {
         // TODO: Map data
-        this.placedBuildings = new ArrayList<Building>();
+        this.gameEntities = new ArrayList<ForegroundEntity>();
         // TODO: something about this
-        this.obstacles = new Obstacle[] {
+        this.gameEntities.add(
             new Water(
                 new Vector2(5, 5),
                 new Vector2[] {
@@ -44,7 +44,9 @@ public class GameMap extends Entity {
                     new Vector2(4, 2),
                     new Vector2(5, 2)
                 }
-            ),
+            )
+        );
+        this.gameEntities.add(
             new Water(
                 new Vector2(20, 25),
                 new Vector2[] {
@@ -65,7 +67,7 @@ public class GameMap extends Entity {
                     new Vector2(3, -7),
                 }
             )
-        };
+        );
 
         for (int i = 0; i < CELLS_PER_ROW; i++) {
             for (int j = 0; j < CELLS_PER_ROW; j++) {
@@ -92,28 +94,17 @@ public class GameMap extends Entity {
             cell.update(renderer, inputHandler);
         }
 
-        // TODO: Foregroundismness
-        // Apart from being of separate classes, there isn't much reason
-        // for Buildings and Obstacles to be tracked differently here, and
-        // coord-wise it would be neater if a single object tracked them both
-        // as it would simplify preventing buildings to be placed on objects
-        // This will be increasingly relevant when Roads become a thing
-
-        for (Building building : placedBuildings) {
-            building.update(renderer, inputHandler);
-        }
-
-        for (Obstacle obstacle : obstacles) {
-            obstacle.update(renderer, inputHandler);
+        for (ForegroundEntity entity : gameEntities) {
+            entity.update(renderer, inputHandler);
         }
     }
 
     public void placeBuilding(Building building) {
-        placedBuildings.add(building);
+        this.placedBuildings++;
+        gameEntities.add(building);
     }
 
 
-    // TODO: Foregroundismness - See note in update()
     public boolean getCanPlace(Building building) {
         Vector2 mapPos = building.getMapPos();
         Vector2[] relCellsUsed = building.getRelCellsUsed();
@@ -132,24 +123,10 @@ public class GameMap extends Entity {
         return true;
     }
 
-    // TODO: Foregroundismness - See note in update()
     public boolean getCellIsFree(Vector2 cellPos) {
-        for (Building building : placedBuildings) {
-            Vector2[] relCellsUsed = building.getRelCellsUsed();
-            Vector2 mapPos = building.getMapPos();
-
-            for (Vector2 relCell : relCellsUsed) {
-                Vector2 usedCellPos = new Vector2(mapPos.x + relCell.x, mapPos.y + relCell.y);
-
-                if (usedCellPos.equals(cellPos)) {
-                    return false;
-                }
-            }
-        }
-
-        for (Obstacle obstacle : obstacles) {
-            Vector2[] relCellsUsed = obstacle.getRelCellsUsed();
-            Vector2 mapPos = obstacle.getMapPos();
+        for (ForegroundEntity entity : gameEntities) {
+            Vector2[] relCellsUsed = entity.getRelCellsUsed();
+            Vector2 mapPos = entity.getMapPos();
 
             for (Vector2 relCell : relCellsUsed) {
                 Vector2 usedCellPos = new Vector2(mapPos.x + relCell.x, mapPos.y + relCell.y);
@@ -165,6 +142,6 @@ public class GameMap extends Entity {
 
     // TODO: -> Server
     public int getBuildingCount() {
-        return placedBuildings.size();
+        return this.placedBuildings;
     }
 }
