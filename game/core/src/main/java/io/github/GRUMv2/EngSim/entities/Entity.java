@@ -6,7 +6,7 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 
 
-// TODO: UI overhaul
+// TODO: Button rendering abstraction
 
 public abstract class Entity {
 

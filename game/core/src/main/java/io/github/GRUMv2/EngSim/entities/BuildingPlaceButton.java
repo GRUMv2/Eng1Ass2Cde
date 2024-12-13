@@ -1,7 +1,5 @@
 package io.github.GRUMv2.EngSim.entities;
 
-// TODO: UI overhaul -> Buttons
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;

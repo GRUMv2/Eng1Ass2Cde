@@ -1,6 +1,6 @@
 package io.github.GRUMv2.EngSim.entities;
 
-// TODO: UI overhaul
+// TODO, low priority: proper UI toolkit and rewrite
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;

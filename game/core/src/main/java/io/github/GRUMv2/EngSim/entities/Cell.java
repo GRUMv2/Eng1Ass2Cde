@@ -14,7 +14,7 @@ public class Cell extends Entity {
     private Vector2 size = new Vector2(CELL_WIDTH, CELL_WIDTH);
 
     public Cell(Vector2 mapPos, Runnable handleClick) {
-        // TODO: UI overhaul -> abstract (see note in update())
+        // TODO: Button rendering abstraction
         this.setHandleClick(handleClick);
         // TODO: unhardcode
         pos = new Vector2((1280 - 720) + (mapPos.x * CELL_WIDTH), mapPos.y * CELL_WIDTH);
