@@ -42,4 +42,15 @@ public class InputHandler {
             && mousePos.y < pos.y + size.y
         );
     }
+
+    public boolean getMouseInBounds(Vector2[][] shape) {
+        // Where shape is a 2D list of [pos, size] arrays that can be passed
+        // to getMouseInBounds(pos, size)
+        for (Vector2[] box : shape) {
+            if (getMouseInBounds(box[0], box[1])) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

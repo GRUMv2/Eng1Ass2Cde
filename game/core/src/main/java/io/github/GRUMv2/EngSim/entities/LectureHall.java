@@ -2,8 +2,6 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import io.github.GRUMv2.EngSim.client.InputHandler;
-import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class LectureHall extends Building {
 
@@ -27,24 +25,9 @@ public class LectureHall extends Building {
                 new Vector2(-1, 2),
                 new Vector2(0, 2),
                 new Vector2(1, 2),
-            }
+            },
+            Color.CYAN
         );
-    }
-
-    @Override
-    public void update(Renderer renderer, InputHandler inputHandler) {
-        Vector2 pos = new Vector2((1280 - 720) + (this.mapPos.x * CELL_WIDTH), this.mapPos.y * CELL_WIDTH);
-
-        for (Vector2 offset : this.relCellsUsed) {
-            Vector2 cellPos = new Vector2(pos.x + (offset.x * CELL_WIDTH), pos.y + (offset.y * CELL_WIDTH));
-            renderer.drawRect(cellPos, new Vector2(CELL_WIDTH, CELL_WIDTH), Color.BLUE);
-        }
-
-        renderer.drawText(
-            "Lecture Hall",
-            new Vector2(pos.x, pos.y + CELL_WIDTH),
-            Color.WHITE,
-            1.25f
-        );
+        this.setText("LectureHall");
     }
 }

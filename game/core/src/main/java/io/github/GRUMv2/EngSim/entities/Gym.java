@@ -2,8 +2,6 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import io.github.GRUMv2.EngSim.client.InputHandler;
-import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class Gym extends Building {
 
@@ -23,22 +21,9 @@ public class Gym extends Building {
                 new Vector2(0, 2),
                 new Vector2(1, 2),
                 new Vector2(2, 2),
-            }
+            },
+            Color.PURPLE
         );
-    }
-
-    // TODO: UI overhaul -> abstract
-    @Override
-    public void update(Renderer renderer, InputHandler inputHandler) {
-        Vector2 pos = new Vector2((1280 - 720) + (this.mapPos.x * CELL_WIDTH), this.mapPos.y * CELL_WIDTH);
-        Vector2 size = new Vector2(CELL_WIDTH * 3, CELL_WIDTH * 3);
-        renderer.drawRect(pos,size,Color.PURPLE);
-
-        renderer.drawText(
-            "Gym",
-            new Vector2(pos.x + 3, pos.y + size.y - 3),
-            Color.WHITE,
-            1.25f
-        );
+        this.setText("Gym");
     }
 }
