@@ -1,19 +1,22 @@
 package io.github.GRUMv2.EngSim.entities;
 
+// TODO, low priority: proper UI toolkit and rewrite
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import io.github.GRUMv2.EngSim.client.Game;
+import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class UI extends Entity {
-    private Game game;
+    private GameScreen game;
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
 
-    public UI(Game game) {
+    public UI(GameScreen game) {
         this.game = game;
         pauseButton = new PauseButton(game::togglePause);
+        // TODO: burn with fire
         buildingPlaceButtons = new BuildingPlaceButton[] {
             new BuildingPlaceButton(
                 "Pub",
@@ -42,7 +45,7 @@ public class UI extends Entity {
             new BuildingPlaceButton(
                 "Gym",
                 "A place to get bolo.",
-                3,
+                4,
             () -> game.setBuildingToPlace(Gym.class)
             )
         };
