@@ -3,7 +3,7 @@ package io.github.GRUMv2.EngSim.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-import io.github.GRUMv2.EngSim.client.Game;
+import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 
@@ -21,7 +21,7 @@ public class GameMap extends Entity {
     private ArrayList<ForegroundEntity> gameEntities;
     private int placedBuildings;
 
-    public GameMap(Game game) {
+    public GameMap(GameScreen game) {
         // TODO: Map data
         this.gameEntities = new ArrayList<ForegroundEntity>();
         // TODO: something about this

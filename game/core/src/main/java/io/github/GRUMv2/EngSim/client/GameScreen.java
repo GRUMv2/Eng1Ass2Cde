@@ -15,7 +15,7 @@ import io.github.GRUMv2.EngSim.entities.Pub;
 import io.github.GRUMv2.EngSim.entities.Restaurant;
 import io.github.GRUMv2.EngSim.entities.UI;
 
-public class Game extends AbstractGameScreen {
+public class GameScreen extends AbstractGameScreen {
     // TODO: -> Settings
     private static final float REALTIME_LENGTH = 300f;
     private static final float GAMETIME_LENGTH = 10f;
@@ -27,7 +27,7 @@ public class Game extends AbstractGameScreen {
     private GameMap map;
     private UI ui;
 
-    public Game(Renderer renderer, InputHandler inputHandler) {
+    public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
         map = new GameMap(this);
         ui = new UI(this);
@@ -85,7 +85,7 @@ public class Game extends AbstractGameScreen {
     // What this is replaced by depends heavily on how we want to handle
     // building objects
     // Potentially a BuildingManager job but alternatively, if the tracking of objects
-    // can be decoupled from Game() into a dedicated grid data type, then it may
+    // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
     public void handleCellClick(Vector2 cellPos) {
         Building building;
