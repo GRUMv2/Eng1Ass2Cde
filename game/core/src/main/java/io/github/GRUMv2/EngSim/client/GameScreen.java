@@ -53,9 +53,6 @@ public class GameScreen extends AbstractGameScreen {
         return String.format("%.2f %ss left", gameTimeLeft, GAMETIME_UNIT);
     }
 
-    // TODO: PauseScreen
-    // This likely will result in the toggle of pausing of the game to be handled
-    // by the parent Client() class instead
     public void togglePause() {
         this.changeEvent(Screens.PAUSE);
     }
