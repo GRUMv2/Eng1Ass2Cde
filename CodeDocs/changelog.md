@@ -9,3 +9,20 @@
     - introduced new entrypoint -> Main() which calls previous GameWindow entrypoint
     - renamed GameWindow to Client
     - refactored inherited code into proper packages and fixed imports
+- UI overhaul (part1)
+    - Created superclass ForegroundEntity and abstract methods of Obstacle, Building, and relevant subclasses to it
+    - new class Water extends Obstacle
+    - minor cleanup
+- UI overhaul (part2)
+    - centralised update() methods
+    - refactored, extended and abstracted text drawing methods
+- UI overhaul (part2.5) - Abstracted allocation of Runnable parameters to Entity()
+- renderer font adjustments
+    - dynamic font size and positioning based on calculated object bounds, slightly unoptimal
+- Replaced individual handling of Building and Obstacle objects in GameMap with abstracted ForegroundEntity
+- Screens
+    - new AbstractGameScreen ScreenAdapter superclass for Screen based game system
+    - refactored Game (-> GameScreen) to a screen
+    - introduced stub MenuScreen, PauseScreen, EndScreen
+    - Merged Client() functionality into Main(), add Screen switch method
+    - introduced basic screen switching framework
