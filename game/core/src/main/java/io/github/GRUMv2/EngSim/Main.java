@@ -9,6 +9,7 @@ import com.badlogic.gdx.Game;
 
 import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
+import io.github.GRUMv2.EngSim.client.Screens;
 import io.github.GRUMv2.EngSim.client.AbstractGameScreen;
 import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.PauseScreen;
@@ -29,13 +30,7 @@ public class Main extends Game {
     private AbstractGameScreen gameScreen;
 
     //private final Server server
-
-    public enum Screens {
-        MENU,
-        GAME,
-        PAUSE,
-        END
-    }
+    private GameScreen game;
 
     public Main() {
         // NOTE: At this stage of execution libGDX is not initialised
@@ -50,7 +45,8 @@ public class Main extends Game {
         this.camera = createCamera();
         this.renderer = new Renderer(this.camera);
         this.inputHandler = new InputHandler(this.camera);
-        this.gameScreen = new GameScreen(renderer, inputHandler);
+        this.game = new GameScreen(renderer, inputHandler);
+        this.gameScreen = this.game;
         this.setScreen(this.gameScreen);
     }
 
@@ -62,7 +58,7 @@ public class Main extends Game {
                 break;
             case GAME:
                 //this.server.start_or_resume();
-                this.gameScreen = new GameScreen(renderer, inputHandler);
+                this.gameScreen = this.game;
                 break;
             case PAUSE:
                 //this.server.pause();
