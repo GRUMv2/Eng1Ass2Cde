@@ -11,6 +11,9 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.AbstractGameScreen;
 import io.github.GRUMv2.EngSim.client.GameScreen;
+import io.github.GRUMv2.EngSim.client.PauseScreen;
+import io.github.GRUMv2.EngSim.client.MenuScreen;
+import io.github.GRUMv2.EngSim.client.EndScreen;
 
 /**
  * Main
@@ -55,27 +58,24 @@ public class Main extends Game {
         this.gameScreen.dispose();
         switch (screen) {
             case MENU:
-                //this.gameScreen = new MenuScreen(renderer, inputHandler);
-                //this.setGameScreen();
+                this.gameScreen = new MenuScreen(renderer, inputHandler);
                 break;
             case GAME:
                 //this.server.start_or_resume();
                 this.gameScreen = new GameScreen(renderer, inputHandler);
-                this.setScreen(this.gameScreen);
                 break;
             case PAUSE:
                 //this.server.pause();
-                //this.gameScreen = new PauseScreen(renderer, inputHandler);
-                //this.setGameScreen();
+                this.gameScreen = new PauseScreen(renderer, inputHandler);
                 break;
             case END:
                 //this.server.stop();
-                //this.gameScreen = new EndScreen(renderer, inputHandler);
-                //this.setGameScreen();
+                this.gameScreen = new EndScreen(renderer, inputHandler);
                 break;
             default:
                 break;
         }
+        this.setScreen(this.gameScreen);
     }
 
     // Not sure why it's necessary to create a custom camera here rather than
