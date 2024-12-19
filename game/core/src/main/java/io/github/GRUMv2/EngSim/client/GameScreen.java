@@ -1,7 +1,6 @@
 package io.github.GRUMv2.EngSim.client;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.entities.Building;
@@ -22,7 +21,6 @@ public class GameScreen extends AbstractGameScreen {
     private static final String GAMETIME_UNIT = "year";
 
     private float timeElapsed = 0f;  // TODO: -> Server
-    private boolean paused = false; // TODO: -> Client
     private Class<? extends Building> buildingToPlace = null;
     private GameMap map;
     private UI ui;
@@ -34,19 +32,12 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
-        // TODO: PauseScreen
-        if (!paused) {
-            timeElapsed += Gdx.graphics.getDeltaTime();
-        }
+        timeElapsed += Gdx.graphics.getDeltaTime();
 
         // TODO: Time is a server job. Replace this with calls to server
         boolean gameComplete = timeElapsed >= REALTIME_LENGTH;
         if (gameComplete) {
-            // TODO: Dedicated GameOverScreen
-            //      - Scoreboard
-            //      - Leaderboard
-            //      - Achievements
-            renderGameOverScreen(renderer);
+            this.changeEvent(Screens.END);
             return;
         }
 
@@ -66,7 +57,7 @@ public class GameScreen extends AbstractGameScreen {
     // This likely will result in the toggle of pausing of the game to be handled
     // by the parent Client() class instead
     public void togglePause() {
-        paused = !paused;
+        this.changeEvent(Screens.PAUSE);
     }
 
     public void setBuildingToPlace(Class<? extends Building> buildingType) {
@@ -117,11 +108,5 @@ public class GameScreen extends AbstractGameScreen {
 
     public int getBuildingCount() {
         return map.getBuildingCount();
-    }
-
-    // TODO: remove
-    private void renderGameOverScreen(Renderer renderer) {
-        Vector2 pos = new Vector2(500, 700);
-        renderer.drawText("Game Over!",pos, Color.RED, 4f);
     }
 }

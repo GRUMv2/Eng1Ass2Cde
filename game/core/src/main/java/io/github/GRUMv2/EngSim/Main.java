@@ -46,8 +46,10 @@ public class Main extends Game {
         this.renderer = new Renderer(this.camera);
         this.inputHandler = new InputHandler(this.camera);
         this.game = new GameScreen(renderer, inputHandler);
+        this.game.setChangeEvent(Screens.PAUSE, () -> changeScreen(Screens.PAUSE));
+        this.game.setChangeEvent(Screens.END, () -> changeScreen(Screens.END));
         this.gameScreen = this.game;
-        this.setScreen(this.gameScreen);
+        this.changeScreen(Screens.MENU);
     }
 
     public void changeScreen(Screens screen) {
@@ -55,6 +57,8 @@ public class Main extends Game {
         switch (screen) {
             case MENU:
                 this.gameScreen = new MenuScreen(renderer, inputHandler);
+                this.gameScreen.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
+                this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
                 break;
             case GAME:
                 //this.server.start_or_resume();
@@ -63,10 +67,16 @@ public class Main extends Game {
             case PAUSE:
                 //this.server.pause();
                 this.gameScreen = new PauseScreen(renderer, inputHandler);
+                this.gameScreen.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
+                this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
                 break;
             case END:
                 //this.server.stop();
                 this.gameScreen = new EndScreen(renderer, inputHandler);
+                this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
+                break;
+            case QUIT:
+                this.quit();
                 break;
             default:
                 break;

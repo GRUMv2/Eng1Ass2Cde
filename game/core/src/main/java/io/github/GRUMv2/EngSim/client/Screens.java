@@ -4,6 +4,7 @@ public enum Screens {
     MENU,
     GAME,
     PAUSE,
-    END
+    END,
+    QUIT
 }
 
