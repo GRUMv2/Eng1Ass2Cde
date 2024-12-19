@@ -1,0 +1,26 @@
+@startuml
+package broker <<Database>> {
+    interface IClient
+    interface IServer
+    interface IDatabase
+    class Broker implements IClient, IServer, IDatabase
+    class ClientImporter
+    class ServerImporter
+
+}
+
+package client {
+}
+
+package server {
+}
+
+
+client --> ClientImporter
+ClientImporter -up-> Broker
+Broker -left-> client
+
+server --> ServerImporter
+ServerImporter -up-> Broker
+Broker -right-> server
+@enduml
