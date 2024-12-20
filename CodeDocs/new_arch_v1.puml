@@ -1,5 +1,6 @@
 @startuml
-class Main #grey
+skinparam groupInheritance 2
+
 package client {
     class Renderer
     class InputHandler
@@ -14,6 +15,8 @@ package client {
     class PauseScreen #grey extends AbstractGameScreen
     class EndScreen #grey extends AbstractGameScreen
 }
+
+class Main #grey
 
 package entities {
     class GameMap
@@ -34,6 +37,15 @@ package entities {
     class Restaurant extends Building
 }
 
+package broker #grey {
+    interface IClient
+    interface IServer
+    interface IDatabase
+    class Broker implements IClient, IServer, IDatabase
+    class ClientImporter
+    class ServerImporter
+}
+
 package server #grey {
     class Server
     package Simulation #grey {
@@ -46,33 +58,33 @@ package server #grey {
     }
 }
 
-package customs #grey {
-    class border
-    class leaderboard
-}
 
-Main --down[#blue]> Server
-Main --down[#blue]> GameScreen
-Main --down[#blue]> MenuScreen
-Main --down[#blue]> PauseScreen
-Main --down[#blue]> EndScreen
-EndScreen --down[#blue]> leaderboard
-MenuScreen --down[#blue]> leaderboard
-GameScreen --left[#blue]> GameMap
-GameScreen --left[#blue]> UI
-GameScreen --down[#blue]> border
-border --left[#blue,thickness=4]> server
-server --right[#blue,thickness=4]> border
-client --left[#blue,thickness=4]> border
-border --right[#blue,thickness=4]> client
-entities --left[#blue,thickness=8]> InputHandler
-entities --left[#blue,thickness=8]> Renderer
+GameWindow-down[#white]-AbstractGameScreen
+Renderer-down[#white]-AbstractGameScreen
+InputHandler-down[#white]-AbstractGameScreen
+
+GameScreen --[#blue]> GameMap
+GameScreen --[#blue]> UI
+client --[#blue,thickness=4]> ClientImporter
+Main --[#blue]> Server
+Main --[#blue]> GameScreen
+Main --[#blue]> MenuScreen
+Main --[#blue]> PauseScreen
+Main --[#blue]> EndScreen
+Broker --[#blue,thickness=4]> server
+Broker --[#blue,thickness=4]> client
+entities --[#blue,thickness=8]> InputHandler
+entities --[#blue,thickness=8]> Renderer
 GameMap --[#blue]> Cell
 GameMap --[#blue]> Building
 GameMap --[#blue]> Obstacle
 UI --[#blue]> BuildingPlaceButton
 UI --[#blue]> PauseButton
+server --[#blue,thickness=4]> ServerImporter
 Server --[#blue]> Simulation
 Server --[#blue]> EventHandler
 EventHandler --[#blue]> ExampleEvent
+
+ClientImporter -up-> Broker
+ServerImporter -up-> Broker
 @enduml
