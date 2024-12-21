@@ -22,37 +22,36 @@ public class UI extends Entity {
         this.broker = broker;
         this.game = game;
         pauseButton = new PauseButton(game::togglePause);
-        // TODO: burn with fire
         buildingPlaceButtons = new BuildingPlaceButton[] {
             new BuildingPlaceButton(
                 "Pub",
                 "A place to drink.",
                 0,
-            () -> game.setBuildingToPlace(Pub.class)
+            () -> game.setBuildingToPlace(BuildingFactory.Available.PUB)
             ),
             new BuildingPlaceButton(
                 "Halls Accommodation",
                 "A place to sleep.",
                 1,
-            () -> game.setBuildingToPlace(HallsAccommadation.class)
+            () -> game.setBuildingToPlace(BuildingFactory.Available.ACCOMMODATION)
             ),
             new BuildingPlaceButton(
                 "Restaurant",
                 "A place to eat.",
                 2,
-            () -> game.setBuildingToPlace(Restaurant.class)
+            () -> game.setBuildingToPlace(BuildingFactory.Available.RESTAURANT)
             ),
             new BuildingPlaceButton(
                 "Lecture Hall",
                 "A place to learn.",
                 3,
-            () -> game.setBuildingToPlace(LectureHall.class)
+            () -> game.setBuildingToPlace(BuildingFactory.Available.LECTUREHALL)
             ),
             new BuildingPlaceButton(
                 "Gym",
                 "A place to get bolo.",
                 4,
-            () -> game.setBuildingToPlace(Gym.class)
+            () -> game.setBuildingToPlace(BuildingFactory.Available.GYM)
             )
         };
 
@@ -95,7 +94,7 @@ public class UI extends Entity {
 
         // draw the selected building
         renderer.drawText(
-            "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace().getSimpleName()),
+            "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace()),
             new Vector2(200, 600),
             Color.BLACK,
             1.5f

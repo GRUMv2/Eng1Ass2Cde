@@ -5,23 +5,19 @@ import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.Building;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
-
-// To remove:
-import io.github.GRUMv2.EngSim.entities.Gym;
-import io.github.GRUMv2.EngSim.entities.HallsAccommadation;
-import io.github.GRUMv2.EngSim.entities.LectureHall;
-import io.github.GRUMv2.EngSim.entities.Pub;
-import io.github.GRUMv2.EngSim.entities.Restaurant;
 import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
 
-    private Class<? extends Building> buildingToPlace = null;
+    private Available buildingToPlace = null;
     private Modes mode;
     private GameMap map;
     private UI ui;
     private Broker broker;
+    private BuildingFactory builder;
 
     private float tmpTimer = 0f;
 
@@ -45,6 +41,7 @@ public class GameScreen extends AbstractGameScreen {
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
         broker = Broker.getInstance();
+        builder = BuildingFactory.getInstance();
         map = new GameMap(this, broker);
         ui = new UI(this, broker);
         this.mode = Modes.NORMAL;
@@ -69,7 +66,7 @@ public class GameScreen extends AbstractGameScreen {
         this.changeEvent(Screens.PAUSE);
     }
 
-    public void setBuildingToPlace(Class<? extends Building> buildingType) {
+    public void setBuildingToPlace(Available buildingType) {
         if (buildingType == buildingToPlace) {
             buildingToPlace = null;
         } else {
@@ -101,7 +98,7 @@ public class GameScreen extends AbstractGameScreen {
         }
     }
 
-    public Class<? extends Building> getBuildingToPlace() {
+    public Available getBuildingToPlace() {
         return buildingToPlace;
     }
 
@@ -129,26 +126,7 @@ public class GameScreen extends AbstractGameScreen {
     // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
     private void clickBuild(Vector2 cellPos) {
-        Building building;
-        if (buildingToPlace == Pub.class) {
-            building = new Pub(cellPos);
-        }
-        else if (buildingToPlace == HallsAccommadation.class) {
-            building = new HallsAccommadation(cellPos);
-        }
-        else if (buildingToPlace == Restaurant.class) {
-            building = new Restaurant(cellPos);
-        }
-        else if (buildingToPlace == LectureHall.class) {
-            building = new LectureHall(cellPos);
-        }
-        else if (buildingToPlace == Gym.class) {
-            building = new Gym(cellPos);
-        }
-        else {
-            return;
-        }
-
+        Building building = builder.newBuilding(buildingToPlace, cellPos);
         broker.placeBuilding(building);
     }
 
