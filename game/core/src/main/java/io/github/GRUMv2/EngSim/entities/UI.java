@@ -9,12 +9,14 @@ import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
+import io.github.GRUMv2.EngSim.client.GameScreen.Modes;
 
 public class UI extends Entity {
     private GameScreen game;
     private Broker broker;
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
+    private TmpButton[] actionButtons;
 
     public UI(GameScreen game, Broker broker) {
         this.broker = broker;
@@ -53,6 +55,19 @@ public class UI extends Entity {
             () -> game.setBuildingToPlace(Gym.class)
             )
         };
+
+        this.actionButtons = new TmpButton[] {
+            new TmpButton(
+                "Destroy",
+                new Vector2(20, 500),
+                () -> game.toggleMode(Modes.DESTROY)
+            ),
+            new TmpButton(
+                "Move",
+                new Vector2(290, 500),
+                () -> game.toggleMode(Modes.MOVE)
+            )
+        };
     }
 
     @Override
@@ -72,7 +87,7 @@ public class UI extends Entity {
 
         // draw the building count
         renderer.drawText(
-            broker.getTotalBuildings() + " Buildings Placed",
+            broker.getTotalBuildings() + " Buildings",
             new Vector2(20, 600),
             Color.BLACK,
             1.5f
@@ -81,10 +96,21 @@ public class UI extends Entity {
         // draw the selected building
         renderer.drawText(
             "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace().getSimpleName()),
-            new Vector2(250, 600),
+            new Vector2(200, 600),
             Color.BLACK,
             1.5f
         );
+
+        renderer.drawText(
+            "Mode: " + game.getMode(),
+            new Vector2(300, 650),
+            Color.BLACK,
+            1.5f
+        );
+
+        for (TmpButton button : this.actionButtons) {
+            button.update(renderer, inputHandler);
+        }
 
         // update the building place buttons
         for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
