@@ -80,21 +80,20 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     public void toggleMode(Modes mode) {
-        if (this.mode == mode) {
-            this.mode = Modes.NORMAL;
-        } else {
-            this.mode = mode;
-        }
         switch (mode) {
             case NORMAL:
                 break;
             case DESTROY:
             case MOVE:
-
                 this.buildingToPlace = null;
                 break;
             default:
                 break;
+        }
+        if (this.mode == mode) {
+            this.mode = Modes.NORMAL;
+        } else {
+            this.mode = mode;
         }
     }
 
@@ -126,6 +125,9 @@ public class GameScreen extends AbstractGameScreen {
     // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
     private void clickBuild(Vector2 cellPos) {
+        if (buildingToPlace == null) {
+            return;
+        }
         Building building = builder.newBuilding(buildingToPlace, cellPos);
         broker.placeBuilding(building);
     }
@@ -135,7 +137,20 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     private void clickMove(Vector2 cellPos) {
-        // TODO
-        this.clickDestroy(cellPos);
+        if (this.buildingToPlace == null) {
+            Building building = broker.destroyBuilding(cellPos);
+            if (building == null) {
+                return;
+            }
+            // TODO: Exception handle
+            // Theoreticaly throws IllegalArgumentException if building is not within the enum
+            // In practice I don't see how this could ever be triggered, because destroyBuilding
+            // implies a previous placeBuilding, triggered by user UI interaction,
+            // which is generated from the values of Available
+            this.buildingToPlace = Available.valueOf(building.getClass().getSimpleName().toUpperCase());
+        } else {
+            this.clickBuild(cellPos);
+            this.toggleMode(Modes.MOVE);
+        }
     }
 }

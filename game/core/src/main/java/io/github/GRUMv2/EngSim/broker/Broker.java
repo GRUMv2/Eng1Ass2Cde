@@ -173,12 +173,12 @@ public final class Broker {
         return building;
     }
 
-    public boolean destroyBuilding(Vector2 click) {
+    public Building destroyBuilding(Vector2 click) {
         Building building = this.removeBuilding(click);
         if (building == null) {
-            return false;
+            return null;
         }
         this.buildingCount.put(building, this.getBuildingCount(building) - 1);
-        return true;
+        return building;
     }
 }
