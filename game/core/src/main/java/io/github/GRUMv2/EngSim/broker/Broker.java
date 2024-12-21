@@ -1,6 +1,5 @@
 package io.github.GRUMv2.EngSim.broker;
 
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -94,6 +93,23 @@ public final class Broker {
         return count;
     }
 
+    private Vector2[] relativeCellsToAbsolute(Vector2 mapPos, Vector2[] relCells) {
+        Vector2[] cells = new Vector2[relCells.length];
+        int i;
+        for (i = 0; i < relCells.length; i++) {
+            cells[i] = new Vector2(mapPos.x + relCells[i].x,
+                                    mapPos.y + relCells[i].y);
+        }
+        return cells;
+    }
+
+    private Vector2[] relativeCellsToAbsolute(ForegroundEntity entity) {
+        return this.relativeCellsToAbsolute(
+            entity.getMapPos(),
+            entity.getRelCellsUsed()
+        );
+    }
+
     private boolean cellInBounds(Vector2 cell) {
         return cell.x <= this.MAP_CELLS &&
                 cell.y <= this.MAP_CELLS &&
@@ -120,15 +136,7 @@ public final class Broker {
     }
 
     private boolean placeEntity(ForegroundEntity entity) {
-        Vector2 entityPos = entity.getMapPos();
-        Vector2[] entityRelCells = entity.getRelCellsUsed();
-        Vector2[] cells = new Vector2[entityRelCells.length];
-        int i;
-        for (i = 0; i < entityRelCells.length; i++) {
-            System.out.println("$ " + entityPos + " " + entityRelCells[i]);
-            cells[i] = new Vector2(entityPos.x + entityRelCells[i].x,
-                                    entityPos.y + entityRelCells[i].y);
-        }
+        Vector2[] cells = this.relativeCellsToAbsolute(entity);
         if (!checkCoordsFree(cells)) {
             return false;
         }
@@ -147,9 +155,30 @@ public final class Broker {
         if (!placeEntity(building)) {
             return false;
         }
-        System.out.println("placed");
         this.buildingCount.put(building, this.getBuildingCount(building) + 1);
         return true;
     }
 
+    private Building removeBuilding(Vector2 click) {
+        ForegroundEntity entity = this.grid.get(click);
+        if (!(entity instanceof Building)) {
+            return null;
+        }
+        Building building = (Building) entity;
+        Vector2[] cells = this.relativeCellsToAbsolute(building);
+        for (Vector2 cell : cells) {
+            this.grid.remove(cell);
+        }
+        this.entities.remove(building);
+        return building;
+    }
+
+    public boolean destroyBuilding(Vector2 click) {
+        Building building = this.removeBuilding(click);
+        if (building == null) {
+            return false;
+        }
+        this.buildingCount.put(building, this.getBuildingCount(building) - 1);
+        return true;
+    }
 }
