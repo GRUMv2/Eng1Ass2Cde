@@ -18,17 +18,36 @@ import io.github.GRUMv2.EngSim.entities.UI;
 public class GameScreen extends AbstractGameScreen {
 
     private Class<? extends Building> buildingToPlace = null;
+    private Modes mode;
     private GameMap map;
     private UI ui;
     private Broker broker;
 
     private float tmpTimer = 0f;
 
+    public enum Modes {
+        NORMAL("Normal"),
+        DESTROY("Destroy"),
+        MOVE("Move");
+
+        private String text;
+
+        private Modes(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
+        }
+    }
+
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
         broker = Broker.getInstance();
         map = new GameMap(this, broker);
         ui = new UI(this, broker);
+        this.mode = Modes.NORMAL;
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
@@ -56,10 +75,51 @@ public class GameScreen extends AbstractGameScreen {
         } else {
             buildingToPlace = buildingType;
         }
+        this.toggleMode(Modes.NORMAL);
+    }
+
+    public Modes getMode() {
+        return mode;
+    }
+
+    public void toggleMode(Modes mode) {
+        if (this.mode == mode) {
+            this.mode = Modes.NORMAL;
+        } else {
+            this.mode = mode;
+        }
+        switch (mode) {
+            case NORMAL:
+                break;
+            case DESTROY:
+            case MOVE:
+
+                this.buildingToPlace = null;
+                break;
+            default:
+                break;
+        }
     }
 
     public Class<? extends Building> getBuildingToPlace() {
         return buildingToPlace;
+    }
+
+    public void handleCellClick(Vector2 cellPos) {
+        switch (this.mode) {
+            case NORMAL:
+                this.clickBuild(cellPos);
+                break;
+
+            case DESTROY:
+                this.clickDestroy(cellPos);
+                break;
+            case MOVE:
+                this.clickMove(cellPos);
+                break;
+            default:
+                break;
+        }
     }
 
     // TODO: remove
@@ -68,7 +128,7 @@ public class GameScreen extends AbstractGameScreen {
     // Potentially a BuildingManager job but alternatively, if the tracking of objects
     // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
-    public void handleCellClick(Vector2 cellPos) {
+    private void clickBuild(Vector2 cellPos) {
         Building building;
         if (buildingToPlace == Pub.class) {
             building = new Pub(cellPos);
@@ -90,5 +150,14 @@ public class GameScreen extends AbstractGameScreen {
         }
 
         broker.placeBuilding(building);
+    }
+
+    private void clickDestroy(Vector2 cellPos) {
+        broker.destroyBuilding(cellPos);
+    }
+
+    private void clickMove(Vector2 cellPos) {
+        // TODO
+        this.clickDestroy(cellPos);
     }
 }
