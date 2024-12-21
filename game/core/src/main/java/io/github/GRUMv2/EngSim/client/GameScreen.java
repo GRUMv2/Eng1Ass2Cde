@@ -124,12 +124,12 @@ public class GameScreen extends AbstractGameScreen {
     // Potentially a BuildingManager job but alternatively, if the tracking of objects
     // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
-    private void clickBuild(Vector2 cellPos) {
+    private boolean clickBuild(Vector2 cellPos) {
         if (buildingToPlace == null) {
-            return;
+            return false;
         }
         Building building = builder.newBuilding(buildingToPlace, cellPos);
-        broker.placeBuilding(building);
+        return broker.placeBuilding(building);
     }
 
     private void clickDestroy(Vector2 cellPos) {
@@ -149,8 +149,9 @@ public class GameScreen extends AbstractGameScreen {
             // which is generated from the values of Available
             this.buildingToPlace = Available.valueOf(building.getClass().getSimpleName().toUpperCase());
         } else {
-            this.clickBuild(cellPos);
-            this.toggleMode(Modes.MOVE);
+            if (this.clickBuild(cellPos)) {
+                this.toggleMode(Modes.MOVE);
+            }
         }
     }
 }
