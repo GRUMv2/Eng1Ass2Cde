@@ -97,8 +97,8 @@ public final class Broker {
     private boolean cellInBounds(Vector2 cell) {
         return cell.x <= this.MAP_CELLS &&
                 cell.y <= this.MAP_CELLS &&
-                cell.x > 0 &&
-                cell.y > 0;
+                cell.x >= 0 &&
+                cell.y >= 0;
     }
 
     private boolean checkCoordsFree(Vector2[] interlinked, ForegroundEntity self) {
