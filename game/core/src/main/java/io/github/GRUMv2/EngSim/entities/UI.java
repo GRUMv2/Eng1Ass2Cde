@@ -4,16 +4,20 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class UI extends Entity {
     private GameScreen game;
+    private Broker broker;
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
 
-    public UI(GameScreen game) {
+    public UI(GameScreen game, Broker broker) {
+        this.broker = broker;
         this.game = game;
         pauseButton = new PauseButton(game::togglePause);
         // TODO: burn with fire
@@ -59,7 +63,7 @@ public class UI extends Entity {
         renderer.drawText("University Simulator", titlePos, Color.BLACK, 2f);
 
         // draw the time display
-        String timeLeftString = game.getTimeLeftString();
+        String timeLeftString = broker.getTimeLeftString();
         Vector2 timePos = new Vector2(20, 650);
         renderer.drawText(timeLeftString, timePos, Color.BLACK, 1.5f);
 
@@ -68,7 +72,7 @@ public class UI extends Entity {
 
         // draw the building count
         renderer.drawText(
-            game.getBuildingCount() + " Buildings Placed",
+            broker.getTotalBuildings() + " Buildings Placed",
             new Vector2(20, 600),
             Color.BLACK,
             1.5f
