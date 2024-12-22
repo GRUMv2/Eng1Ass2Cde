@@ -1,8 +1,11 @@
 package io.github.GRUMv2.EngSim.Server;
 
 
+import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
+
+import java.util.ArrayList;
 
 
 public class Server extends Thread {
@@ -12,7 +15,8 @@ public class Server extends Thread {
 
     private final Simulation simulation = new Simulation();
     private final EventHandler eventHandler = new EventHandler();
-    private final TimeKeeper timeKeeper = new TimeKeeper(1);
+    public final TimeKeeper timeKeeper = new TimeKeeper(1);
+    public final PopupManager popupManager = new PopupManager(timeKeeper);
 
     public Server(int targetTPS) {
         super("Server");
@@ -43,6 +47,8 @@ public class Server extends Thread {
     public void Stop() {
         isRunning = false;
     }
+
+    // Simulation passthroughs
 
     // Driven by:
     // - Location of buildings
@@ -101,6 +107,7 @@ public class Server extends Thread {
         return simulation.getIncome();
     }
 
+    // TimeHandler passthroughs
     public long getGameTime() {
         return this.timeKeeper.currentGameTime();
     }
@@ -108,7 +115,6 @@ public class Server extends Thread {
     public String getGameTimeFormatted() {
         return this.timeKeeper.currentGameTimeFormatted();
     }
-
 
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
@@ -138,12 +144,9 @@ public class Server extends Thread {
         }
     }
 
-    private void updateInternalGridCache() {}
-
     private void tick(double delta) {
-        updateInternalGridCache();
-
         simulation.tick(delta);
         eventHandler.tick(delta);
+        popupManager.serverTick(delta);
     }
 }
