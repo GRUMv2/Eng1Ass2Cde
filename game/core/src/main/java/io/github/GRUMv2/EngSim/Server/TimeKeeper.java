@@ -4,6 +4,11 @@ public class TimeKeeper {
     private long startTime = 0;
     private long pausedTime = 0;
     private boolean isPaused = false;
+    private final long yearsPerMinute;
+
+    public TimeKeeper(long yearsPerMinute) {
+        this.yearsPerMinute = yearsPerMinute;
+    }
 
     public void start() {
         this.startTime = System.currentTimeMillis();
@@ -38,8 +43,11 @@ public class TimeKeeper {
     }
 
     public String currentGameTimeFormatted() {
-        return "" + this.currentGameTime();
-        // yeah this works but (String) x does not
-        // TODO: Calculate date given time elapsed
+        double minutes = ((double) currentGameTime() / 60) / 1000;
+        double years = minutes * yearsPerMinute;
+        int yearFormatted = (int) Math.floor(years) + 2024;
+        int month = (int)Math.floor((years - Math.floor(years)) * 12);
+        String monthFormatted = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}[month];
+        return monthFormatted + " " + yearFormatted;
     }
 }

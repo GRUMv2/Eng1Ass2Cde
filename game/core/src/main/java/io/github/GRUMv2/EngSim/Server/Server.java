@@ -12,7 +12,7 @@ public class Server extends Thread {
 
     private final Simulation simulation = new Simulation();
     private final EventHandler eventHandler = new EventHandler();
-    private final TimeKeeper timeKeeper = new TimeKeeper();
+    private final TimeKeeper timeKeeper = new TimeKeeper(1);
 
     public Server(int targetTPS) {
         super("Server");
@@ -105,7 +105,7 @@ public class Server extends Thread {
         return this.timeKeeper.currentGameTime();
     }
 
-    public Simulation getGameTimeFormatted() {
+    public String getGameTimeFormatted() {
         return this.timeKeeper.currentGameTimeFormatted();
     }
 
