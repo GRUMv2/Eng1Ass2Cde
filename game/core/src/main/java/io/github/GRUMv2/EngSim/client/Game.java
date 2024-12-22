@@ -14,8 +14,6 @@ import io.github.GRUMv2.EngSim.entities.Pub;
 import io.github.GRUMv2.EngSim.entities.Restaurant;
 import io.github.GRUMv2.EngSim.entities.UI;
 
-import io.github.GRUMv2.EngSim.Server.Server;
-
 public class Game {
     private static final float REALTIME_LENGTH = 300f;
     private static final float GAMETIME_LENGTH = 10f;
@@ -24,16 +22,12 @@ public class Game {
     private float timeElapsed = 0f;
     private boolean paused = false;
     private Class<? extends Building> buildingToPlace = null;
-    private final GameMap map;
-    private final UI ui;
-    private final Server server;
+    private GameMap map;
+    private UI ui;
 
     public Game() {
         map = new GameMap(this);
         ui = new UI(this);
-
-        server = new Server(120);
-        server.start();
     }
 
     public void update(float delta, Renderer renderer, InputHandler inputHandler) {
@@ -110,10 +104,5 @@ public class Game {
     private void renderGameOverScreen(Renderer renderer) {
         Vector2 pos = new Vector2(500, 700);
         renderer.drawText("Game Over!",pos, Color.RED, 4f);
-    }
-
-    // TODO: tell my whyyyyyyyyyyy
-    public void dispose() {
-        server.Stop();
     }
 }
