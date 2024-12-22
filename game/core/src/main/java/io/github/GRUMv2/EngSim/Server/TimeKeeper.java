@@ -42,12 +42,16 @@ public class TimeKeeper {
         return System.currentTimeMillis() - startTime;
     }
 
-    public String currentGameTimeFormatted() {
-        double minutes = ((double) currentGameTime() / 60) / 1000;
+    public String timeFormatted(double time) {
+        double minutes = (time / 60) / 1000;
         double years = minutes * yearsPerMinute;
         int yearFormatted = (int) Math.floor(years) + 2024;
         int month = (int)Math.floor((years - Math.floor(years)) * 12);
         String monthFormatted = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"}[month];
         return monthFormatted + " " + yearFormatted;
+    }
+
+    public String currentGameTimeFormatted() {
+        return timeFormatted(currentGameTime());
     }
 }
