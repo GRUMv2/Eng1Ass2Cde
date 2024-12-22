@@ -26,3 +26,7 @@
     - introduced stub MenuScreen, PauseScreen, EndScreen
     - Merged Client() functionality into Main(), add Screen switch method
     - introduced basic screen switching framework
+- Broker
+    - Add Broker class to centralise data shared between client and server and act as the database
+    - refactored client logic to make use of functions from Broker rather than the inherited functions on the clientside
+    - add framework for server hook-in to Broker
