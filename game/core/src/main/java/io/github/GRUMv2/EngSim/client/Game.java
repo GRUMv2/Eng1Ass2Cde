@@ -3,9 +3,6 @@ package io.github.GRUMv2.EngSim.client;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-// Should really refactor out the .* if possible
-import io.github.GRUMv2.EngSim.Renderer.*;
-
 import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.GameMap;
 import io.github.GRUMv2.EngSim.entities.Gym;
