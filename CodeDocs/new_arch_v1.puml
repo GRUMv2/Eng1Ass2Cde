@@ -1,0 +1,76 @@
+@startuml
+class Main #grey
+package client {
+    class Client
+    note top of Client : formerly GameWindow
+    class Renderer
+    class InputHandler
+    class Menu #grey
+    class Game
+    class Pause #grey
+    class End #grey
+}
+
+package entities {
+    class GameMap
+    class UI
+    note top of UI : to rewrite
+    abstract class Entity
+    abstract class ForegroundEntity #grey extends Entity
+    class Cell extends Entity
+    abstract class Obstacle #grey extends ForegroundEntity
+    class Water #grey extends Obstacle
+    abstract class Button #grey extends Entity
+    class BuildingPlaceButton extends Button
+    class PauseButton extends Button
+    abstract class Building extends ForegroundEntity
+    class Gym extends Building
+    class HallsAccommodation extends Building
+    class LectureHall extends Building
+    class Pub extends Building
+    class Restaurant extends Building
+}
+
+package server #grey {
+    class Server
+    package Simulation #grey {
+        class Simulation
+    }
+    package EventHandler #grey {
+        class EventHandler
+        abstract class Event
+        class ExampleEvent extends Event
+    }
+}
+
+package customs #grey {
+    class border
+    class leaderboard
+}
+
+Main --[#blue]> Client
+Main --[#blue]> Server
+Client --[#blue]> Game
+Client --[#blue]> Menu
+Client --[#blue]> Pause
+Client --[#blue]> End
+End --[#blue]> leaderboard
+Menu --[#blue]> leaderboard
+Game --[#blue]> GameMap
+Game --[#blue]> UI
+Game --[#blue]> border
+border --[#blue,thickness=4]> server
+server --[#blue,thickness=4]> border
+client --[#blue,thickness=4]> border
+border --[#blue,thickness=4]> client
+entities --[#blue,thickness=8]> InputHandler
+entities --[#blue,thickness=8]> Renderer
+GameMap --[#blue]> Cell
+GameMap --[#blue]> Building
+GameMap --[#blue]> Obstacle
+UI --[#blue]> BuildingPlaceButton
+UI --[#blue]> PauseButton
+Server --[#blue]> Simulation
+Server --[#blue]> EventHandler
+EventHandler --[#blue]> ExampleEvent
+@enduml
