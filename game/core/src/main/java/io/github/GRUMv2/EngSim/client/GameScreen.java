@@ -10,6 +10,8 @@ import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
+import io.github.GRUMv2.EngSim.entities.TmpInfoPopup;
+import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
 import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
@@ -59,7 +61,6 @@ public class GameScreen extends AbstractGameScreen {
         if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
             this.changeEvent(Screens.END);
         }
-
     }
 
     public void togglePause() {
