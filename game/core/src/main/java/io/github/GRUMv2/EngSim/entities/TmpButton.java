@@ -21,7 +21,7 @@ public class TmpButton extends Button {
         // TODO: burn with fire
         Vector2 size = new Vector2(250, 60);
         renderer.drawRect(pos, size, Color.GRAY);
-        renderer.drawText("Action: " + this.text, new Vector2(pos.x + 10, pos.y + size.y / 2), Color.BLACK, 1.5f);
+        renderer.drawText(this.text, new Vector2(pos.x + 10, pos.y + size.y / 2), Color.BLACK, 1.5f);
 
         if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(pos, size)) {
             this.click();
