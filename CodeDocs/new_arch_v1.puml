@@ -1,20 +1,23 @@
 @startuml
 class Main #grey
 package client {
-    class Client
-    note top of Client : formerly GameWindow
     class Renderer
     class InputHandler
-    class Menu #grey
-    class Game
-    class Pause #grey
-    class End #grey
+    class GameWindow #red {
+        REMOVED
+    }
+    abstract class AbstractGameScreen #grey
+    class MenuScreen #grey extends AbstractGameScreen
+    class GameScreen extends AbstractGameScreen {
+        (Formerly Game)
+    }
+    class PauseScreen #grey extends AbstractGameScreen
+    class EndScreen #grey extends AbstractGameScreen
 }
 
 package entities {
     class GameMap
     class UI
-    note top of UI : to rewrite
     abstract class Entity
     abstract class ForegroundEntity #grey extends Entity
     class Cell extends Entity
@@ -48,23 +51,22 @@ package customs #grey {
     class leaderboard
 }
 
-Main --[#blue]> Client
-Main --[#blue]> Server
-Client --[#blue]> Game
-Client --[#blue]> Menu
-Client --[#blue]> Pause
-Client --[#blue]> End
-End --[#blue]> leaderboard
-Menu --[#blue]> leaderboard
-Game --[#blue]> GameMap
-Game --[#blue]> UI
-Game --[#blue]> border
-border --[#blue,thickness=4]> server
-server --[#blue,thickness=4]> border
-client --[#blue,thickness=4]> border
-border --[#blue,thickness=4]> client
-entities --[#blue,thickness=8]> InputHandler
-entities --[#blue,thickness=8]> Renderer
+Main --down[#blue]> Server
+Main --down[#blue]> GameScreen
+Main --down[#blue]> MenuScreen
+Main --down[#blue]> PauseScreen
+Main --down[#blue]> EndScreen
+EndScreen --down[#blue]> leaderboard
+MenuScreen --down[#blue]> leaderboard
+GameScreen --left[#blue]> GameMap
+GameScreen --left[#blue]> UI
+GameScreen --down[#blue]> border
+border --left[#blue,thickness=4]> server
+server --right[#blue,thickness=4]> border
+client --left[#blue,thickness=4]> border
+border --right[#blue,thickness=4]> client
+entities --left[#blue,thickness=8]> InputHandler
+entities --left[#blue,thickness=8]> Renderer
 GameMap --[#blue]> Cell
 GameMap --[#blue]> Building
 GameMap --[#blue]> Obstacle
