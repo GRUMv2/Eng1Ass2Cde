@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.Simultion;
+package io.github.GRUMv2.EngSim.Server.Simulation;
 
 public class Simulation {
     public Simulation() {

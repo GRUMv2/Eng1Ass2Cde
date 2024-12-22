@@ -1,7 +1,7 @@
 package io.github.GRUMv2.EngSim.Server;
 
 
-import io.github.GRUMv2.EngSim.Server.Simultion.Simulation;
+import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 
 
