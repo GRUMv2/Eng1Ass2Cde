@@ -95,8 +95,8 @@ public final class Broker {
     }
 
     private boolean cellInBounds(Vector2 cell) {
-        return cell.x <= this.MAP_CELLS &&
-                cell.y <= this.MAP_CELLS &&
+        return cell.x < this.MAP_CELLS &&
+                cell.y < this.MAP_CELLS &&
                 cell.x >= 0 &&
                 cell.y >= 0;
     }
