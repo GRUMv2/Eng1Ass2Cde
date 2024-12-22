@@ -1,5 +1,5 @@
 @startuml
-skinparam groupInheritance 2
+/'skinparam groupInheritance 2'/
 
 package client {
     class Renderer
@@ -7,6 +7,7 @@ package client {
     class GameWindow #red {
         REMOVED
     }
+    enum Screens #grey
     abstract class AbstractGameScreen #grey
     class MenuScreen #grey extends AbstractGameScreen
     class GameScreen extends AbstractGameScreen {
@@ -38,12 +39,7 @@ package entities {
 }
 
 package broker #grey {
-    interface IClient
-    interface IServer
-    interface IDatabase
-    class Broker implements IClient, IServer, IDatabase
-    class ClientImporter
-    class ServerImporter
+    class Broker
 }
 
 package server #grey {
@@ -65,7 +61,7 @@ InputHandler-down[#white]-AbstractGameScreen
 
 GameScreen --[#blue]> GameMap
 GameScreen --[#blue]> UI
-client --[#blue,thickness=4]> ClientImporter
+client --[#blue,thickness=4]> Broker
 Main --[#blue]> Server
 Main --[#blue]> GameScreen
 Main --[#blue]> MenuScreen
@@ -80,11 +76,8 @@ GameMap --[#blue]> Building
 GameMap --[#blue]> Obstacle
 UI --[#blue]> BuildingPlaceButton
 UI --[#blue]> PauseButton
-server --[#blue,thickness=4]> ServerImporter
+server --[#blue,thickness=4]> Broker
 Server --[#blue]> Simulation
 Server --[#blue]> EventHandler
 EventHandler --[#blue]> ExampleEvent
-
-ClientImporter -up-> Broker
-ServerImporter -up-> Broker
 @enduml
