@@ -147,7 +147,7 @@ public class GameScreen extends AbstractGameScreen {
             // In practice I don't see how this could ever be triggered, because destroyBuilding
             // implies a previous placeBuilding, triggered by user UI interaction,
             // which is generated from the values of Available
-            this.buildingToPlace = Available.valueOf(building.getClass().getSimpleName().toUpperCase());
+            this.buildingToPlace = Available.get(building.getClass());
         } else {
             if (this.clickBuild(cellPos)) {
                 this.toggleMode(Modes.MOVE);
