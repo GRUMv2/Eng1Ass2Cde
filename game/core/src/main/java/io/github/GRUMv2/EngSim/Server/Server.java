@@ -12,23 +12,27 @@ public class Server extends Thread {
 
     private final Simulation simulation = new Simulation();
     private final EventHandler eventHandler = new EventHandler();
+    private final TimeKeeper timeKeeper = new TimeKeeper();
 
     public Server(int targetTPS) {
         super("Server");
         this.targetTPS = targetTPS;
 
         System.out.println("[ SVR ] Server created");
-
     }
 
     // Pause's the server, events, and simulation
     public void Pause() {
         isPaused = true;
+
+        this.timeKeeper.pause();
     }
 
     // Unpauses the above
     public void Resume() {
         isPaused = false;
+
+        this.timeKeeper.unpause();
     }
 
     public boolean isPaused() {
@@ -97,14 +101,19 @@ public class Server extends Thread {
         return simulation.getIncome();
     }
 
-    public String getGameTime() {
-        return "Dec 2024";
+    public long getGameTime() {
+        return this.timeKeeper.currentGameTime();
+    }
+
+    public Simulation getGameTimeFormatted() {
+        return this.timeKeeper.currentGameTimeFormatted();
     }
 
 
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
         System.out.println("[ SVR ] Running in thread " + Thread.currentThread().getName());
+        this.timeKeeper.start();
 
         long processTime = 0;
 
