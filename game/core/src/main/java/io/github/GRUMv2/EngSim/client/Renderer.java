@@ -93,6 +93,8 @@ public class Renderer {
         spriteBatch.end();
     }
 
+    // TODO: text wrapping for stats maybe
+
     public void drawText(String text, Vector2 position, Color color, float fontSize) {
         this.drawText(text, position, color, fontSize, Align.left);
     }
