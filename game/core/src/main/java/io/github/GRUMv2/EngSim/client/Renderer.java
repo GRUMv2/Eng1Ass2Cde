@@ -56,12 +56,17 @@ public class Renderer {
     // rather than the current "draw a box of hardcoded size then draw text of hardcoded size on top"
 
 
-    public float calcFontScale(Vector2 boundSize, String text) {
+    public float calcFontScale(Vector2 boundSize, String text, float maxSize) {
         // Scaling hack
         // There are numerous better ways of doing this that would require a rewrite of a lot of other stuff
         font.getData().setScale(1.0f);
         glyphLayout.setText(font, text);
-        return Float.min(boundSize.x / glyphLayout.width, boundSize.y / glyphLayout.height);
+        float scaleSize = Float.min(boundSize.x / glyphLayout.width, boundSize.y / glyphLayout.height);
+        return Float.min(scaleSize, maxSize);
+    }
+
+    public float calcFontScale(Vector2 boundSize, String text) {
+        return this.calcFontScale(boundSize, text, Float.MAX_VALUE);
     }
 
 

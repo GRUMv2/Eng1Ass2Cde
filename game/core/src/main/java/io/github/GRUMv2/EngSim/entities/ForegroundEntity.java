@@ -134,7 +134,7 @@ public abstract class ForegroundEntity extends Entity {
                 this.text,
                 new Vector2(this.textMidpoint.x, this.textMidpoint.y),
                 this.textColor, // Color gets set when text does
-                renderer.calcFontScale(this.fontBounds, this.text),
+                renderer.calcFontScale(this.fontBounds, this.text, /* max-size, TODO unhardcode */ 2.0f),
                 Align.center
             );
         }
