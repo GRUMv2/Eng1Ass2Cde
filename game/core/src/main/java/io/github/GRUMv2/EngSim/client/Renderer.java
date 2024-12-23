@@ -1,6 +1,6 @@
 package io.github.GRUMv2.EngSim.client;
 
-//import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -48,14 +48,21 @@ public class Renderer {
     }
 
 
+    public void drawBorder(Vector2 position, Vector2 size, Color color, float borderWidth) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(color);
+        Gdx.gl.glLineWidth(borderWidth);
+        shapeRenderer.rect(position.x, position.y, size.x, size.y);
+        shapeRenderer.end();
+    }
+
+
     // TODO, low priority: Rewrite font rendering
     // There's no context of bounds to the existing system outside of the
     // hack added in drawScalingText
     // The entire system needs to be replaced with, at very minimum,
     // the concept of "objects with text" that control their own font scaling
     // rather than the current "draw a box of hardcoded size then draw text of hardcoded size on top"
-
-
     public float calcFontScale(Vector2 boundSize, String text, float maxSize) {
         // Scaling hack
         // There are numerous better ways of doing this that would require a rewrite of a lot of other stuff
