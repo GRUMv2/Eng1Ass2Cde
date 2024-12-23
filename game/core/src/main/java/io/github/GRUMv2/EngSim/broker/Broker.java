@@ -1,5 +1,6 @@
 package io.github.GRUMv2.EngSim.broker;
 
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,12 +22,13 @@ public final class Broker {
     private final String GAMETIME_UNIT = "year";
 
 
+    // thread-safe
     private volatile float timeElapsed = 0f; // Delta time elapsed since start
     private volatile boolean gameComplete = false;
 
-    // thread-safe
     private ConcurrentHashMap<Building, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
+    private ConcurrentHashMap<String, Integer> leaderboard;
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
@@ -180,5 +182,33 @@ public final class Broker {
         }
         this.buildingCount.put(building, this.getBuildingCount(building) - 1);
         return building;
+    }
+
+    private boolean validateScore(int score) {
+        if (score < 0) {
+            return false;
+        }
+        /**
+         * else if (score > this.MAX_SCORE) {
+         * return false;
+         * } ...
+         */
+        return true;
+    }
+
+    public boolean updateLeaderboard(String name, int score) {
+        if (!this.validateScore(score)) {
+            return false;
+        }
+        this.leaderboard.put(name, score);
+        return true;
+    }
+
+    public ConcurrentHashMap<String, Integer> getLeaderboard() {
+        return leaderboard;
+    }
+
+    public int getHighScore() {
+        return Collections.max(this.leaderboard.values());
     }
 }
