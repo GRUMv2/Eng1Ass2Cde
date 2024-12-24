@@ -17,6 +17,8 @@ public final class Broker {
     private static Broker instance;
 
     private final int MAP_CELLS = 30;
+    private final int MAP_SIZE = 720;
+
     private final float REALTIME_LENGTH = 300f;
     private final float GAMETIME_LENGTH = 10f;
     private final String GAMETIME_UNIT = "year";
@@ -47,6 +49,11 @@ public final class Broker {
     public int getMapCells() {
         return this.MAP_CELLS;
     }
+
+    public int getMapSize() {
+        return this.MAP_SIZE;
+    }
+
 
     public String getTimeLeftString() {
         float progress = (timeElapsed / REALTIME_LENGTH);
