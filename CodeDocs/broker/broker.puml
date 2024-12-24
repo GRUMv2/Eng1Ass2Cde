@@ -1,0 +1,82 @@
+@startuml
+package broker <<Database>> {
+    interface IClient {
+        - Screen @ MVP++
+        - JSON config @ MVP++
+    }
+    interface IServer {
+        - Popups[] Popups @ MVP
+        - JSON config @ MVP++
+    }
+    interface IDatabase {
+        - <Some data type> entityDB @ MVP
+        - <Some data type> grid @ MVP
+        - Map<Buildings, int> placedBuildings @ MVP
+        - <Some data type> leaderboard @ MVP
+        - <Some data type>[] achievements @ MVP
+        * float REALTIME_LENGTH
+        * float GAMETIME_LENGTH
+        * float GAMETIME_UNIT
+        - ? Maybe settings @ MVP++
+    }
+    class Broker implements IClient, IServer, IDatabase {
+        +String[] getStats()                          : (read-db) @ MVP
+        +String getTimeLeftString()                   : (read-db) @ MVP
+        +TBC getEntities()                            : (read-db) @ MVP
+        +TBC getGrid()                                : (read-db) @ MVP
+        +Map<Building, Vector2[]>[] getAll(Building)  : (read-db) @ MVP
+        +Map<Buildings, int> getPlaced()              : (read-db) @ MVP
+        +TBC getLeaderboard()                         : (read-db) @ MVP
+        +TBC getAchievements()                        : (read-db) @ MVP
+        +Popups[] getPopups()                         : (read-db) @ MVP
+        +void updateEntities(Entity)                  : (push-data) @ MVP
+        +void updateGrid(TBC)                         : (push-data) @ MVP
+        +void unlockAchievement(TBC)                  : (push-data) @ MVP
+        +void updateLeaderboard(TBC)                  : (push-data) @ MVP
+        +bool putPopup(Popup)                         : (push-data) @ MVP
+        +bool setName(String name)                    : (push-data) @ MVP
+        +bool setTime(float)                          : (push-data) @ MVP
+        +bool setStats(String[])                      : (push-data) @ MVP
+        +bool canPlaceBuilding(Building, location)    : (check) @ MVP
+        +Enum getScreen()                             : (read-db) @ MVP++
+        +TBC getClientConfig()                        : (read-db) @ MVP++
+        +TBC getServerConfig()                        : (read-db) @ MVP++
+        +bool changeScreen(Screen)                    : (push-data) @ MVP++
+    }
+
+    class ClientImporter {
+        +bool updateEntities(Entity)
+        -bool checkValidEntityUpdate()
+        +bool updateGrid(TBC)
+        -bool checkValidGridUpdate()
+        +bool placeBuilding(Building, location)
+        +bool changeScreen(Screen)
+        +bool setName(String name)
+    }
+    class ServerImporter {
+        +bool unlockAchievement(Achievement)
+        -bool validateAchievement(Achievement)
+        +bool updateLeaderboard(TBC)
+        -bool validateLeaderboard(TBC)
+        +bool putPopup(Popup)
+        +bool setTime(float)
+        +bool setStats(String[])
+    }
+
+}
+
+package client {
+}
+
+package server {
+}
+
+
+client --> ClientImporter
+ClientImporter -up-> Broker
+Broker -left-> client
+
+server --> ServerImporter
+ServerImporter -up-> Broker
+Broker -right-> server
+@enduml

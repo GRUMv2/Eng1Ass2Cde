@@ -3,29 +3,28 @@ package io.github.GRUMv2.EngSim.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 
-import java.util.ArrayList;
-
 public class GameMap extends Entity {
     // TODO -> Settings
-    private static final int CELLS_PER_ROW = 30;
-    private Cell[] cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
+    private Cell[] cells;
     // TODO: Map data
     // Similarly to attributes of Game, these might be better suited to a
     // dedicated class that keeps track of game state
     // This both prevents server having to reach all the way across into client
     // and means that the GameMap Entity class is more concise in purpose
-    private ArrayList<ForegroundEntity> gameEntities;
-    private int placedBuildings;
 
-    public GameMap(GameScreen game) {
-        // TODO: Map data
-        this.gameEntities = new ArrayList<ForegroundEntity>();
+    private Broker broker;
+
+    public GameMap(GameScreen game, Broker broker) {
+        this.broker = broker;
+        final int CELLS_PER_ROW = broker.getMapCells();
+        this.cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
         // TODO: something about this
-        this.gameEntities.add(
+        broker.placeObstacle(
             new Water(
                 new Vector2(5, 5),
                 new Vector2[] {
@@ -46,7 +45,7 @@ public class GameMap extends Entity {
                 }
             )
         );
-        this.gameEntities.add(
+        broker.placeObstacle(
             new Water(
                 new Vector2(20, 25),
                 new Vector2[] {
@@ -94,54 +93,8 @@ public class GameMap extends Entity {
             cell.update(renderer, inputHandler);
         }
 
-        for (ForegroundEntity entity : gameEntities) {
+        for (ForegroundEntity entity : this.broker.getEntities()) {
             entity.update(renderer, inputHandler);
         }
-    }
-
-    public void placeBuilding(Building building) {
-        this.placedBuildings++;
-        gameEntities.add(building);
-    }
-
-
-    public boolean getCanPlace(Building building) {
-        Vector2 mapPos = building.getMapPos();
-        Vector2[] relCellsUsed = building.getRelCellsUsed();
-
-        for (Vector2 relCell : relCellsUsed) {
-            Vector2 cellPos = new Vector2(mapPos.x + relCell.x, mapPos.y + relCell.y);
-            if (!getCellIsFree(cellPos)) {
-                return false;
-            }
-
-            if (cellPos.x < 0 || cellPos.x >= CELLS_PER_ROW || cellPos.y < 0 || cellPos.y >= CELLS_PER_ROW) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean getCellIsFree(Vector2 cellPos) {
-        for (ForegroundEntity entity : gameEntities) {
-            Vector2[] relCellsUsed = entity.getRelCellsUsed();
-            Vector2 mapPos = entity.getMapPos();
-
-            for (Vector2 relCell : relCellsUsed) {
-                Vector2 usedCellPos = new Vector2(mapPos.x + relCell.x, mapPos.y + relCell.y);
-
-                if (usedCellPos.equals(cellPos)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    // TODO: -> Server
-    public int getBuildingCount() {
-        return this.placedBuildings;
     }
 }

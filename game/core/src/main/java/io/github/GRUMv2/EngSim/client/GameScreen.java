@@ -3,6 +3,7 @@ package io.github.GRUMv2.EngSim.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.GameMap;
 
@@ -15,42 +16,34 @@ import io.github.GRUMv2.EngSim.entities.Restaurant;
 import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
-    // TODO: -> Settings
-    private static final float REALTIME_LENGTH = 300f;
-    private static final float GAMETIME_LENGTH = 10f;
-    private static final String GAMETIME_UNIT = "year";
 
-    private float timeElapsed = 0f;  // TODO: -> Server
     private Class<? extends Building> buildingToPlace = null;
     private GameMap map;
     private UI ui;
+    private Broker broker;
+
+    private float tmpTimer = 0f;
 
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
-        map = new GameMap(this);
-        ui = new UI(this);
+        broker = Broker.getInstance();
+        map = new GameMap(this, broker);
+        ui = new UI(this, broker);
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
-        timeElapsed += Gdx.graphics.getDeltaTime();
 
-        // TODO: Time is a server job. Replace this with calls to server
-        boolean gameComplete = timeElapsed >= REALTIME_LENGTH;
-        if (gameComplete) {
+        // XXX: PLACEHOLDER
+        tmpTimer += Gdx.graphics.getDeltaTime();
+        broker.setTime(tmpTimer);
+
+        if (broker.isGameComplete()) {
             this.changeEvent(Screens.END);
             return;
         }
 
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
-    }
-
-    // TODO: Time is a server job. Replace this with calls to server
-    public String getTimeLeftString() {
-        float progress = timeElapsed / REALTIME_LENGTH;
-        float gameTimeElapsed = progress * GAMETIME_LENGTH;
-        float gameTimeLeft = GAMETIME_LENGTH - gameTimeElapsed;
-        return String.format("%.2f %ss left", gameTimeLeft, GAMETIME_UNIT);
     }
 
     public void togglePause() {
@@ -96,14 +89,6 @@ public class GameScreen extends AbstractGameScreen {
             return;
         }
 
-        if (!map.getCanPlace(building)) {
-            return;
-        }
-
-        map.placeBuilding(building);
-    }
-
-    public int getBuildingCount() {
-        return map.getBuildingCount();
+        broker.placeBuilding(building);
     }
 }

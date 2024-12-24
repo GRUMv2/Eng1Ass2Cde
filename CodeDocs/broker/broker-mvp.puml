@@ -1,0 +1,58 @@
+@startuml
+package broker <<Database>> {
+    class Broker {
+        - Screen @ MVP++
+        - JSON configClient @ MVP++
+        - Popups[] Popups @ MVP
+        - JSON configServer @ MVP++
+        - <Some data type> entityDB @ MVP
+        - <Some data type> grid @ MVP
+        - Map<Buildings, int> placedBuildings @ MVP
+        - <Some data type> leaderboard @ MVP
+        - <Some data type>[] achievements @ MVP
+        * float REALTIME_LENGTH
+        * float GAMETIME_LENGTH
+        * float GAMETIME_UNIT
+        - ? Maybe settings @ MVP++
+        +String[] getStats()                          : (read-db) @ MVP
+        +String getTimeLeftString()                   : (read-db) @ MVP
+        +TBC getEntities()                            : (read-db) @ MVP
+        +TBC getGrid()                                : (read-db) @ MVP
+        +Map<Building, Vector2[]>[] getAll(Building)  : (read-db) @ MVP
+        +Map<Buildings, int> getPlaced()              : (read-db) @ MVP
+        +TBC getLeaderboard()                         : (read-db) @ MVP
+        +TBC getAchievements()                        : (read-db) @ MVP
+        +Popups[] getPopups()                         : (read-db) @ MVP
+        +void updateEntities(Entity)                  : (push-data) @ MVP
+        -bool checkValidEntityUpdate()
+        +void updateGrid(TBC)                         : (push-data) @ MVP
+        -bool checkValidGridUpdate()
+        +void unlockAchievement(TBC)                  : (push-data) @ MVP
+        -bool validateAchievement(Achievement)
+        +void updateLeaderboard(TBC)                  : (push-data) @ MVP
+        -bool validateLeaderboard(TBC)
+        +bool putPopup(Popup)                         : (push-data) @ MVP
+        +bool setName(String name)                    : (push-data) @ MVP
+        +bool setTime(float)                          : (push-data) @ MVP
+        +bool setStats(String[])                      : (push-data) @ MVP
+        +bool canPlaceBuilding(Building, location)    : (check) @ MVP
+        +Enum getScreen()                             : (read-db) @ MVP++
+        +TBC getClientConfig()                        : (read-db) @ MVP++
+        +TBC getServerConfig()                        : (read-db) @ MVP++
+        +bool changeScreen(Screen)                    : (push-data) @ MVP++
+    }
+}
+
+package client {
+}
+
+package server {
+}
+
+
+client -right-> Broker
+Broker -left-> client
+
+server -left-> Broker
+Broker -right-> server
+@enduml
