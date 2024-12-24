@@ -1,6 +1,6 @@
 package io.github.GRUMv2.EngSim.broker;
 
-import java.util.Collections;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -28,13 +28,14 @@ public final class Broker {
 
     private ConcurrentHashMap<Building, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
-    private ConcurrentHashMap<String, Integer> leaderboard;
+    private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
     private Broker() {
         this.buildingCount = new ConcurrentHashMap<>();
         this.grid = new ConcurrentHashMap<>();
+        this.leaderboard = new CopyOnWriteArrayList<>();
         this.entities = new CopyOnWriteArrayList<>();
     }
 
@@ -200,15 +201,23 @@ public final class Broker {
         if (!this.validateScore(score)) {
             return false;
         }
-        this.leaderboard.put(name, score);
+        SimpleImmutableEntry<String, Integer> newEntry = new SimpleImmutableEntry<String, Integer>(name, score);
+        for (int i = 0; i < this.leaderboard.size(); i++) {
+            if (score > this.leaderboard.get(i).getValue()) {
+                this.leaderboard.add(i, newEntry);
+                return true;
+            }
+        }
+        this.leaderboard.add(newEntry);
         return true;
     }
 
-    public ConcurrentHashMap<String, Integer> getLeaderboard() {
+    public CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> getLeaderboard() {
         return leaderboard;
     }
 
     public int getHighScore() {
-        return Collections.max(this.leaderboard.values());
+        // leaderboard presumed to be sorted at rest
+        return this.leaderboard.get(0).getValue();
     }
 }

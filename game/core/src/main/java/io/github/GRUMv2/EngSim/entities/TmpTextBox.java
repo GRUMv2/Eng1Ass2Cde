@@ -71,6 +71,10 @@ public class TmpTextBox extends Entity {
         this.content = content;
     }
 
+    public void setContent(String[] content) {
+        this.setContent(String.join("\n", content));
+    }
+
     public Color getTextColor() {
         return textColor;
     }
@@ -90,7 +94,9 @@ public class TmpTextBox extends Entity {
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
 
-        renderer.drawBorder(this.pos, this.size, this.borderColor, this.borderWidth);
+        if (this.borderWidth > 0) {
+            renderer.drawBorder(this.pos, this.size, this.borderColor, this.borderWidth);
+        }
 
         Vector2 textPos = new Vector2(
             // Draw text at the left wall of the bounding box, offset by the border width and

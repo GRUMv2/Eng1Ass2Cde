@@ -1,10 +1,14 @@
 package io.github.GRUMv2.EngSim.client;
 
+import java.util.ArrayList;
+import java.util.AbstractMap.SimpleImmutableEntry;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.Leaderboard;
 
 // >"MenuScreen"
@@ -29,6 +33,14 @@ public class MenuScreen extends AbstractGameScreen {
             new Vector2(440, 40),
             new Vector2(400, 280)
         );
+        Broker broker = Broker.getInstance();
+
+        // XXX: placeholder
+        broker.updateLeaderboard("Alice", 123);
+        broker.updateLeaderboard("Mallory", 1000);
+        broker.updateLeaderboard("Eve", 0);
+        broker.updateLeaderboard("Bob", 1000);
+        this.leaderboard.setValues(new ArrayList<SimpleImmutableEntry<String, Integer>>(broker.getLeaderboard()));
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
