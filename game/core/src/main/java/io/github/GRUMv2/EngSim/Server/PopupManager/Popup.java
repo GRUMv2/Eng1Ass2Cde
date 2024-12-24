@@ -3,15 +3,70 @@ package io.github.GRUMv2.EngSim.Server.PopupManager;
 import io.github.GRUMv2.EngSim.Server.TimeKeeper;
 
 public class Popup {
-    public String name;
-    public String description;
-    public PopupType type;
-    public long autoKillAt;
+    private boolean dismissed = false;
 
-    public Popup(String name, String description, PopupType type, int lastsFor, TimeKeeper timeKeeper) {
+    private String name;
+    private String description;
+    private boolean transience;
+    private long autoKillAt;
+
+    private String[] options;
+    private int response;
+
+    public Popup(String name, String description, String[] options) {
+        // Interactive popup
+        this.transience = false;
         this.name = name;
         this.description = description;
-        this.type = type;
+        this.options = options;
+    }
+
+    public Popup(String name, String description, TimeKeeper timeKeeper, int lastsFor) {
+        // Transient popup
+        this.transience = true;
+        this.name = name;
+        this.description = description;
         this.autoKillAt = (timeKeeper.currentGameTime() + (lastsFor * 1000));
     }
+
+    public boolean isTransient() {
+        return transience;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getAutoKillAt() {
+        return autoKillAt;
+    }
+
+    public void dismiss() {
+        this.dismissed = true;
+    }
+
+    public void dismiss(int response) {
+        this.response = response;
+        this.dismissed = true;
+    }
+
+    public boolean isDismissed() {
+        return dismissed;
+    }
+
+    public String[] getOptions() {
+        if (!this.transience) {
+            return options;
+        }
+        return new String[]{};
+    }
+
+    public int getResponse() {
+        return response;
+    }
+
 }
