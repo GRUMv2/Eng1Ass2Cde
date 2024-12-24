@@ -1,12 +1,13 @@
 package io.github.GRUMv2.EngSim.Server.PopupManager;
 
 import io.github.GRUMv2.EngSim.Server.TimeKeeper;
+import io.github.GRUMv2.EngSim.broker.PopupTicket;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PopupManager {
-    private final ArrayList<Popup> popups;
+    private final ArrayList<PopupTicket> popups;
     private final TimeKeeper timeKeeper;
 
     public PopupManager(TimeKeeper timeKeeper) {
@@ -15,31 +16,31 @@ public class PopupManager {
     }
 
     public void serverTick(double delta) {
-        Iterator<Popup> iterator = popups.iterator();
+        Iterator<PopupTicket> iterator = popups.iterator();
         long cTime = timeKeeper.currentGameTime();
 
         while (iterator.hasNext()) {
-            Popup popup = iterator.next();
+            PopupTicket popup = iterator.next();
 
-            if (popup.autoKillAt > cTime) {
+            if (popup.getAutoKillAt() > cTime) {
                 iterator.remove();
-                System.out.println(" [ POP ] Popup " + popup.name + " expired (EOL)");
+                System.out.println(" [ POP ] Popup " + popup.getName() + " expired (EOL)");
             }
         }
 
     }
 
-    public ArrayList<Popup> getPopups() {
+    public ArrayList<PopupTicket> getPopups() {
         return popups;
     }
 
-    public void removePopup(Popup popup) {
+    public void removePopup(PopupTicket popup) {
         popups.remove(popup);
-        System.out.println(" [ POP ] Popup " + popup.name + " removed (DISMISSED)");
+        System.out.println(" [ POP ] Popup " + popup.getName() + " removed (DISMISSED)");
     }
 
-    public void addPopup(String title, String description, PopupType type) {
-        Popup p = new Popup(title, description, type, 60, timeKeeper);
+    public void addPopup(String title, String description) {
+        PopupTicket p = new PopupTicket(title, description, timeKeeper, 60);
         popups.add(p);
     }
 }

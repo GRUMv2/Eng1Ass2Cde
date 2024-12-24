@@ -1,8 +1,8 @@
-package io.github.GRUMv2.EngSim.Server.PopupManager;
+package io.github.GRUMv2.EngSim.broker;
 
 import io.github.GRUMv2.EngSim.Server.TimeKeeper;
 
-public class Popup {
+public class PopupTicket {
     private boolean dismissed = false;
 
     private String name;
@@ -13,7 +13,7 @@ public class Popup {
     private String[] options;
     private int response;
 
-    public Popup(String name, String description, String[] options) {
+    public PopupTicket(String name, String description, String[] options) {
         // Interactive popup
         this.transience = false;
         this.name = name;
@@ -21,7 +21,7 @@ public class Popup {
         this.options = options;
     }
 
-    public Popup(String name, String description, TimeKeeper timeKeeper, int lastsFor) {
+    public PopupTicket(String name, String description, TimeKeeper timeKeeper, int lastsFor) {
         // Transient popup
         this.transience = true;
         this.name = name;
