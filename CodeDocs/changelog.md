@@ -30,3 +30,8 @@
     - Add Broker class to centralise data shared between client and server and act as the database
     - refactored client logic to make use of functions from Broker rather than the inherited functions on the clientside
     - add framework for server hook-in to Broker
+- Move and Destroy Buildings
+    - Added ability to destroy buildings through the handling of Broker's entity DB
+    - Added separate building modes for building (normal), moving and destroying 
+    - Replaced hardcoded building instantiation of buildings in UI logic with a dynamically generating system
+    - Add ability to move buildings through the handling of Broker's entity DB
