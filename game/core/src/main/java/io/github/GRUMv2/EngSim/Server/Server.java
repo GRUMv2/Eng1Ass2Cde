@@ -1,8 +1,11 @@
 package io.github.GRUMv2.EngSim.Server;
 
 
+import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
+
+import java.util.ArrayList;
 
 
 public class Server extends Thread {
@@ -12,23 +15,28 @@ public class Server extends Thread {
 
     private final Simulation simulation = new Simulation();
     private final EventHandler eventHandler = new EventHandler();
+    public final TimeKeeper timeKeeper = new TimeKeeper(1);
+    public final PopupManager popupManager = new PopupManager(timeKeeper);
 
     public Server(int targetTPS) {
         super("Server");
         this.targetTPS = targetTPS;
 
         System.out.println("[ SVR ] Server created");
-
     }
 
     // Pause's the server, events, and simulation
     public void Pause() {
         isPaused = true;
+
+        this.timeKeeper.pause();
     }
 
     // Unpauses the above
     public void Resume() {
         isPaused = false;
+
+        this.timeKeeper.unpause();
     }
 
     public boolean isPaused() {
@@ -39,6 +47,8 @@ public class Server extends Thread {
     public void Stop() {
         isRunning = false;
     }
+
+    // Simulation passthroughs
 
     // Driven by:
     // - Location of buildings
@@ -97,14 +107,19 @@ public class Server extends Thread {
         return simulation.getIncome();
     }
 
-    public String getGameTime() {
-        return "Dec 2024";
+    // TimeHandler passthroughs
+    public long getGameTime() {
+        return this.timeKeeper.currentGameTime();
     }
 
+    public String getGameTimeFormatted() {
+        return this.timeKeeper.currentGameTimeFormatted();
+    }
 
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
         System.out.println("[ SVR ] Running in thread " + Thread.currentThread().getName());
+        this.timeKeeper.start();
 
         long processTime = 0;
 
@@ -129,12 +144,9 @@ public class Server extends Thread {
         }
     }
 
-    private void updateInternalGridCache() {}
-
     private void tick(double delta) {
-        updateInternalGridCache();
-
         simulation.tick(delta);
         eventHandler.tick(delta);
+        popupManager.serverTick(delta);
     }
 }
