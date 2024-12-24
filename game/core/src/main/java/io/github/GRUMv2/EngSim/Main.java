@@ -16,6 +16,8 @@ import io.github.GRUMv2.EngSim.client.PauseScreen;
 import io.github.GRUMv2.EngSim.client.MenuScreen;
 import io.github.GRUMv2.EngSim.client.EndScreen;
 
+import io.github.GRUMv2.EngSim.Server.Server;
+
 /**
  * Main
  */
@@ -29,7 +31,6 @@ public class Main extends Game {
     private InputHandler inputHandler;
     private AbstractGameScreen gameScreen;
 
-    //private final Server server
     private GameScreen game;
 
     public Main() {
@@ -37,8 +38,6 @@ public class Main extends Game {
         // and will not be until it calls Main.create()
         // Anything within the constructor of Client cannot attempt
         // to interact with libGDX objects until its create() function
-        //server = new Server(120);
-        //server.start();
     }
 
     public void create() {

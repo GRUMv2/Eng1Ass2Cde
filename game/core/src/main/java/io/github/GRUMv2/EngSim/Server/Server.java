@@ -3,6 +3,7 @@ package io.github.GRUMv2.EngSim.Server;
 
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
+import io.github.GRUMv2.EngSim.broker.Broker;
 
 
 public class Server extends Thread {
@@ -10,15 +11,17 @@ public class Server extends Thread {
     private boolean isPaused = false;
     private final int targetTPS;
 
-    private final Simulation simulation = new Simulation();
-    private final EventHandler eventHandler = new EventHandler();
+    private final Simulation simulation;
+    private final EventHandler eventHandler;
 
-    public Server(int targetTPS) {
+    public Server(int targetTPS, Broker broker) {
         super("Server");
         this.targetTPS = targetTPS;
 
         System.out.println("[ SVR ] Server created");
 
+        simulation = new Simulation(broker);
+        eventHandler = new EventHandler();
     }
 
     // Pause's the server, events, and simulation
