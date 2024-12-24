@@ -2,8 +2,10 @@ package io.github.GRUMv2.EngSim.Server;
 
 
 import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
+import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
+import io.github.GRUMv2.EngSim.broker.Broker;
 
 import java.util.ArrayList;
 
@@ -13,16 +15,20 @@ public class Server extends Thread {
     private boolean isPaused = false;
     private final int targetTPS;
 
-    private final Simulation simulation = new Simulation();
-    private final EventHandler eventHandler = new EventHandler();
+    private final Simulation simulation;
+    private final EventHandler eventHandler;
     public final TimeKeeper timeKeeper = new TimeKeeper(1);
     public final PopupManager popupManager = new PopupManager(timeKeeper);
 
-    public Server(int targetTPS) {
+
+    public Server(int targetTPS, Broker broker) {
         super("Server");
         this.targetTPS = targetTPS;
 
         System.out.println("[ SVR ] Server created");
+
+        simulation = new Simulation(broker);
+        eventHandler = new EventHandler();
     }
 
     // Pause's the server, events, and simulation
@@ -144,7 +150,11 @@ public class Server extends Thread {
         }
     }
 
+    private void updateInternalGridCache() {}
+
     private void tick(double delta) {
+        updateInternalGridCache();
+
         simulation.tick(delta);
         eventHandler.tick(delta);
         popupManager.serverTick(delta);

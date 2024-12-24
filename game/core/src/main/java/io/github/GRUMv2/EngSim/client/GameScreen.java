@@ -3,6 +3,7 @@ package io.github.GRUMv2.EngSim.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
+import io.github.GRUMv2.EngSim.Server.Server;
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.GameMap;
@@ -22,6 +23,8 @@ public class GameScreen extends AbstractGameScreen {
     private UI ui;
     private Broker broker;
 
+    private final Server server;
+
     private float tmpTimer = 0f;
 
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
@@ -29,6 +32,9 @@ public class GameScreen extends AbstractGameScreen {
         broker = Broker.getInstance();
         map = new GameMap(this, broker);
         ui = new UI(this, broker);
+
+        server = new Server(120, broker);
+        server.start();
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {

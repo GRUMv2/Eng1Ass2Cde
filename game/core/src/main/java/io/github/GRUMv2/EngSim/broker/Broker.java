@@ -70,11 +70,11 @@ public final class Broker {
         return gameComplete;
     }
 
-    public CopyOnWriteArrayList<ForegroundEntity> getEntities() {
+    public synchronized CopyOnWriteArrayList<ForegroundEntity> getEntities() {
         return entities;
     }
 
-    public ConcurrentHashMap<Vector2, ForegroundEntity> getGrid() {
+    public synchronized ConcurrentHashMap<Vector2, ForegroundEntity> getGrid() {
         return grid;
     }
 
