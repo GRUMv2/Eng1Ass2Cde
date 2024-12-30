@@ -13,54 +13,61 @@ public class StudentWalkSimulation {
     Map<AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>>, Integer> thingsToCheck = new HashMap<>();
 
     StudentWalkSimulation() {
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, HallsAccommadation.class), 1);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, HallsAccommadation.class), 10);
     }
 
-    double distanceByDijkstra(ConcurrentHashMap<Vector2, ForegroundEntity> grid, Vector2 from, Vector2 to) {
-        // Avoids any tiles without an entry in the grid
-        // returns just the distance between the two points
-
-        if (!grid.containsKey(from) || !grid.containsKey(to)) return -1;
-
-        double ttl = 1000;
-
-        Map<Vector2, Double> distances = new HashMap<>();
-        distances.put(from, 0.0);
+    double hdist(Vector2 a, Vector2 b) {
+        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+    }
 
 
-        while (!distances.isEmpty()) {
-            ttl -= 1;
+    double distanceByAStar(ConcurrentHashMap<Vector2, ForegroundEntity> grid, Vector2 from, Vector2 to, double maxDistance) {
+        Map<Vector2, Double> current_score = new HashMap<>();
+        Map<Vector2, Double> straight_line_score = new HashMap<>();
 
-            if (ttl < 0) {
-                return -1;
+        // saves almost 4ms per 32 iterations!!!!!
+        PriorityQueue<Vector2> queue = new PriorityQueue<>(Comparator.comparingDouble(node -> straight_line_score.getOrDefault(node, Double.MAX_VALUE)));
+
+        Set<Vector2> visited = new HashSet<>();
+
+        current_score.put(from, 0.0);
+        straight_line_score.put(from, hdist(from, to));
+        queue.add(from);
+
+        while (!queue.isEmpty()) {
+            Vector2 current = queue.poll();
+
+            // TODO: Is returning the maxDistance the best way to handle this?
+            if (current_score.getOrDefault(current, Double.MAX_VALUE) > maxDistance) {
+                // System.out.println("Maximum allowed distance exceeded.");
+                return maxDistance;
             }
-
-            Vector2 current = distances.keySet().iterator().next();
-            double distance = distances.get(current);
 
             if (current.equals(to)) {
-                return distance;
+                return current_score.get(current);
             }
 
-            if (!grid.containsKey(new Vector2(current.x + 1, current.y))) {
-                distances.put(new Vector2(current.x + 1, current.y), distance + 1);
-            }
+            if (visited.contains(current)) continue;
+            visited.add(current);
 
-            if (!grid.containsKey(new Vector2(current.x - 1, current.y))) {
-                distances.put(new Vector2(current.x - 1, current.y), distance + 1);
-            }
+            // Why oh why does java have to be so... java
+            // for direction in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            for (int[] direction : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
+                Vector2 neighbor = new Vector2(current.x + direction[0], current.y + direction[1]);
 
-            if (!grid.containsKey(new Vector2(current.x, current.y + 1))) {
-                distances.put(new Vector2(current.x, current.y + 1), distance + 1);
-            }
+                if (grid.containsKey(neighbor) && !neighbor.equals(to)) continue;
 
-            if (!grid.containsKey(new Vector2(current.x, current.y - 1))) {
-                distances.put(new Vector2(current.x, current.y - 1), distance + 1);
+                double tentativeGScore = current_score.get(current) + 1;
+                if (tentativeGScore < current_score.getOrDefault(neighbor, Double.MAX_VALUE)) {
+                    current_score.put(neighbor, tentativeGScore);
+                    straight_line_score.put(neighbor, tentativeGScore + hdist(neighbor, to));
+                    queue.add(neighbor);
+                }
             }
-
-            distances.remove(current);
         }
 
+        // womp womp
+        // TODO: Should this be -1 or maxDistance?
         return -1;
     }
 
@@ -73,16 +80,27 @@ public class StudentWalkSimulation {
             if (!map.containsKey(thingA)) continue;
             if (!map.containsKey(thingB)) continue;
 
+            System.out.println("Checking " + thingA.getSimpleName() + " and " + thingB.getSimpleName());
+
             ArrayList<Vector2> allOfA = map.get(thingA);
             ArrayList<Vector2> allOfB = map.get(thingB);
 
             ArrayList<Double> distances = new ArrayList<>();
 
-            // TODO: randomly select a set of points to check
-            for (Vector2 a : allOfA) {
-                for (Vector2 b : allOfB) {
-                    distances.add(distanceByDijkstra(grid, a, b));
-                }
+            // TODO: discus weather random should be centralized/seeded
+            Random random = new Random();
+
+            // System.out.println("Checking 8 instead of " + allOfA.size() * allOfB.size() + " points");
+
+            int samples = 8;
+            for (int i = 0; i < samples; i++) {
+                // Randomly select a point from allOfA and allOfB
+                Vector2 a = allOfA.get(random.nextInt(allOfA.size()));
+                Vector2 b = allOfB.get(random.nextInt(allOfB.size()));
+
+                // Calculate the distance and store it
+                double distance = distanceByAStar(grid, a, b, 32);
+                distances.add(distance);
             }
 
             double sum = 0;
@@ -93,7 +111,7 @@ public class StudentWalkSimulation {
 
                 sum += d;
             }
-            double avg = sum / distances.size();
+            double avg = (sum / distances.size()) * thingsToCheck.get(thing);
 
             System.out.println("Average distance between " + thingA.getSimpleName() + " and " + thingB.getSimpleName() + " is " + avg);
         }
