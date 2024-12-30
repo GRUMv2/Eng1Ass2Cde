@@ -121,6 +121,12 @@ public class Server extends Thread {
             }
 
             processTime = System.nanoTime() - lastTime;
+
+            // check if iteration ran over time budget
+            if (processTime > 1_000_000_000 / targetTPS) {
+                System.out.println("[ SVR ] Tick took too long: " + processTime / 1_000_000.0 + "ms");
+            }
+
             long sleepFor = Math.max(0, (1_000_000_000 / targetTPS) - processTime);
 
             // ... and account for that in the sleep time
