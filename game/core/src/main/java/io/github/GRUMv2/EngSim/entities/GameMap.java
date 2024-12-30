@@ -9,15 +9,9 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 
 public class GameMap extends Entity {
-    // TODO -> Settings
-    private Cell[] cells;
-    // TODO: Map data
-    // Similarly to attributes of Game, these might be better suited to a
-    // dedicated class that keeps track of game state
-    // This both prevents server having to reach all the way across into client
-    // and means that the GameMap Entity class is more concise in purpose
 
     private Broker broker;
+    private Cell[] cells;
 
     public GameMap(GameScreen game, Broker broker) {
         this.broker = broker;
