@@ -1,5 +1,6 @@
 package io.github.GRUMv2.EngSim.broker;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,18 +22,20 @@ public final class Broker {
     private final String GAMETIME_UNIT = "year";
 
 
+    // thread-safe
     private volatile float timeElapsed = 0f; // Delta time elapsed since start
     private volatile boolean gameComplete = false;
 
-    // thread-safe
     private ConcurrentHashMap<Building, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
+    private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
     private Broker() {
         this.buildingCount = new ConcurrentHashMap<>();
         this.grid = new ConcurrentHashMap<>();
+        this.leaderboard = new CopyOnWriteArrayList<>();
         this.entities = new CopyOnWriteArrayList<>();
     }
 
@@ -180,5 +183,41 @@ public final class Broker {
         }
         this.buildingCount.put(building, this.getBuildingCount(building) - 1);
         return building;
+    }
+
+    private boolean validateScore(int score) {
+        if (score < 0) {
+            return false;
+        }
+        /**
+         * else if (score > this.MAX_SCORE) {
+         * return false;
+         * } ...
+         */
+        return true;
+    }
+
+    public boolean updateLeaderboard(String name, int score) {
+        if (!this.validateScore(score)) {
+            return false;
+        }
+        SimpleImmutableEntry<String, Integer> newEntry = new SimpleImmutableEntry<String, Integer>(name, score);
+        for (int i = 0; i < this.leaderboard.size(); i++) {
+            if (score > this.leaderboard.get(i).getValue()) {
+                this.leaderboard.add(i, newEntry);
+                return true;
+            }
+        }
+        this.leaderboard.add(newEntry);
+        return true;
+    }
+
+    public CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> getLeaderboard() {
+        return leaderboard;
+    }
+
+    public int getHighScore() {
+        // leaderboard presumed to be sorted at rest
+        return this.leaderboard.get(0).getValue();
     }
 }
