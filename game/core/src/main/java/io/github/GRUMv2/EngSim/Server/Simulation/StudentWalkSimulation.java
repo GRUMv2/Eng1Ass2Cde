@@ -5,6 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
 import io.github.GRUMv2.EngSim.entities.Water;
 import io.github.GRUMv2.EngSim.entities.HallsAccommadation;
+import io.github.GRUMv2.EngSim.entities.LectureHall;
+import io.github.GRUMv2.EngSim.entities.Pub;
+import io.github.GRUMv2.EngSim.entities.Restaurant;
+import io.github.GRUMv2.EngSim.entities.Gym;
+
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +18,16 @@ public class StudentWalkSimulation {
     Map<AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>>, Integer> thingsToCheck = new HashMap<>();
 
     StudentWalkSimulation() {
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, HallsAccommadation.class), 10);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, HallsAccommadation.class), 2);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, Restaurant.class), 6);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, Gym.class), 4);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, Pub.class), 6);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, Restaurant.class), 1);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, LectureHall.class), 8);
+
+        // Dont put pubs next to restaurants or gyms
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Restaurant.class, Pub.class), -2);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Gym.class, Pub.class), -2);
     }
 
     double hdist(Vector2 a, Vector2 b) {
@@ -115,5 +129,6 @@ public class StudentWalkSimulation {
 
             System.out.println("Average distance between " + thingA.getSimpleName() + " and " + thingB.getSimpleName() + " is " + avg);
         }
+        // TODO average of averages you know
     }
 }
