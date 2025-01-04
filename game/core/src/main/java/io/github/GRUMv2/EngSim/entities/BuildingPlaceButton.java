@@ -21,7 +21,7 @@ public class BuildingPlaceButton extends Button {
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         // TODO: burn with fire
-        Vector2 pos = new Vector2(20, 500 - (index * 80));
+        Vector2 pos = new Vector2(20, 400 - (index * 80));
         Vector2 size = new Vector2(520, 60);
         renderer.drawRect(pos, size, Color.LIGHT_GRAY);
         renderer.drawText("Place: " + buildingName, new Vector2(pos.x + 10, pos.y + size.y - 10), Color.BLACK, 1.5f);

@@ -3,35 +3,50 @@ package io.github.GRUMv2.EngSim.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
-import io.github.GRUMv2.EngSim.Server.Server;
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.Building;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
-
-// To remove:
-import io.github.GRUMv2.EngSim.entities.Gym;
-import io.github.GRUMv2.EngSim.entities.HallsAccommadation;
-import io.github.GRUMv2.EngSim.entities.LectureHall;
-import io.github.GRUMv2.EngSim.entities.Pub;
-import io.github.GRUMv2.EngSim.entities.Restaurant;
 import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
 
-    private Class<? extends Building> buildingToPlace = null;
+    private Available buildingToPlace = null;
+    private Modes mode;
     private GameMap map;
     private UI ui;
     private Broker broker;
+    private BuildingFactory builder;
 
     private final Server server;
 
     private float tmpTimer = 0f;
 
+    public enum Modes {
+        NORMAL("Normal"),
+        DESTROY("Destroy"),
+        MOVE("Move");
+
+        private String text;
+
+        private Modes(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
+        }
+    }
+
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
         broker = Broker.getInstance();
+        builder = BuildingFactory.getInstance();
         map = new GameMap(this, broker);
-        ui = new UI(this, broker);
+        ui = new UI(this, broker, builder);
+        this.mode = Modes.NORMAL;
 
         server = new Server(120, broker);
         server.start();
@@ -56,16 +71,56 @@ public class GameScreen extends AbstractGameScreen {
         this.changeEvent(Screens.PAUSE);
     }
 
-    public void setBuildingToPlace(Class<? extends Building> buildingType) {
+    public void setBuildingToPlace(Available buildingType) {
         if (buildingType == buildingToPlace) {
             buildingToPlace = null;
         } else {
             buildingToPlace = buildingType;
         }
+        this.toggleMode(Modes.NORMAL);
     }
 
-    public Class<? extends Building> getBuildingToPlace() {
+    public Modes getMode() {
+        return mode;
+    }
+
+    public void toggleMode(Modes mode) {
+        switch (mode) {
+            case NORMAL:
+                break;
+            case DESTROY:
+            case MOVE:
+                this.buildingToPlace = null;
+                break;
+            default:
+                break;
+        }
+        if (this.mode == mode) {
+            this.mode = Modes.NORMAL;
+        } else {
+            this.mode = mode;
+        }
+    }
+
+    public Available getBuildingToPlace() {
         return buildingToPlace;
+    }
+
+    public void handleCellClick(Vector2 cellPos) {
+        switch (this.mode) {
+            case NORMAL:
+                this.clickBuild(cellPos);
+                break;
+
+            case DESTROY:
+                this.clickDestroy(cellPos);
+                break;
+            case MOVE:
+                this.clickMove(cellPos);
+                break;
+            default:
+                break;
+        }
     }
 
     // TODO: remove
@@ -74,27 +129,34 @@ public class GameScreen extends AbstractGameScreen {
     // Potentially a BuildingManager job but alternatively, if the tracking of objects
     // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
-    public void handleCellClick(Vector2 cellPos) {
-        Building building;
-        if (buildingToPlace == Pub.class) {
-            building = new Pub(cellPos);
+    private boolean clickBuild(Vector2 cellPos) {
+        if (buildingToPlace == null) {
+            return false;
         }
-        else if (buildingToPlace == HallsAccommadation.class) {
-            building = new HallsAccommadation(cellPos);
-        }
-        else if (buildingToPlace == Restaurant.class) {
-            building = new Restaurant(cellPos);
-        }
-        else if (buildingToPlace == LectureHall.class) {
-            building = new LectureHall(cellPos);
-        }
-        else if (buildingToPlace == Gym.class) {
-            building = new Gym(cellPos);
-        }
-        else {
-            return;
-        }
+        Building building = builder.newBuilding(buildingToPlace, cellPos);
+        return broker.placeBuilding(building);
+    }
 
-        broker.placeBuilding(building);
+    private void clickDestroy(Vector2 cellPos) {
+        broker.destroyBuilding(cellPos);
+    }
+
+    private void clickMove(Vector2 cellPos) {
+        if (this.buildingToPlace == null) {
+            Building building = broker.destroyBuilding(cellPos);
+            if (building == null) {
+                return;
+            }
+            // TODO: Exception handle
+            // Theoreticaly throws IllegalArgumentException if building is not within the enum
+            // In practice I don't see how this could ever be triggered, because destroyBuilding
+            // implies a previous placeBuilding, triggered by user UI interaction,
+            // which is generated from the values of Available
+            this.buildingToPlace = Available.get(building.getClass());
+        } else {
+            if (this.clickBuild(cellPos)) {
+                this.toggleMode(Modes.MOVE);
+            }
+        }
     }
 }

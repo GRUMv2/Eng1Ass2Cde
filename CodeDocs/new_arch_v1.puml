@@ -30,6 +30,8 @@ package entities {
     abstract class Button #grey extends Entity
     class BuildingPlaceButton extends Button
     class PauseButton extends Button
+    class TmpButton #grey extends Button
+    class BuildingFactory #grey
     abstract class Building extends ForegroundEntity
     class Gym extends Building
     class HallsAccommodation extends Building
@@ -61,23 +63,28 @@ InputHandler-down[#white]-AbstractGameScreen
 
 GameScreen --[#blue]> GameMap
 GameScreen --[#blue]> UI
-client --[#blue,thickness=4]> Broker
+GameScreen --[#blue]> Broker
+GameScreen --[#blue]> BuildingFactory
 Main --[#blue]> Server
-Main --[#blue]> GameScreen
-Main --[#blue]> MenuScreen
-Main --[#blue]> PauseScreen
-Main --[#blue]> EndScreen
+Main --[#blue]> AbstractGameScreen
+Main --[#blue]> Screens
+AbstractGameScreen --[#blue]> Screens
+MenuScreen --[#blue]> Screens
+GameScreen --[#blue]> Screens
+PauseScreen --[#blue]> Screens
+EndScreen --[#blue]> Screens
 Broker --[#blue,thickness=4]> server
-Broker --[#blue,thickness=4]> client
+BuildingFactory --[#blue]> Building
 entities --[#blue,thickness=8]> InputHandler
 entities --[#blue,thickness=8]> Renderer
 GameMap --[#blue]> Cell
 GameMap --[#blue]> Building
 GameMap --[#blue]> Obstacle
-UI --[#blue]> BuildingPlaceButton
-UI --[#blue]> PauseButton
+UI --[#blue]> Broker
+UI --[#blue]> BuildingFactory
+UI --[#blue]> Button
 server --[#blue,thickness=4]> Broker
 Server --[#blue]> Simulation
 Server --[#blue]> EventHandler
-EventHandler --[#blue]> ExampleEvent
+EventHandler --[#blue]> Event
 @enduml
