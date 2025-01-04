@@ -10,6 +10,8 @@ import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
 import io.github.GRUMv2.EngSim.entities.UI;
 
+import io.github.GRUMv2.EngSim.Server.Server;
+
 public class GameScreen extends AbstractGameScreen {
 
     private Available buildingToPlace = null;
