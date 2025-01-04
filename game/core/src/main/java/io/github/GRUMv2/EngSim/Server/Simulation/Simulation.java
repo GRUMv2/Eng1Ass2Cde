@@ -67,5 +67,7 @@ public class Simulation {
         HashMap<Class<? extends ForegroundEntity>, ArrayList<Vector2>> map = this.generateIntermediaryBuildingMappings(grid);
 
         studentWalkSimulation.tick(grid, map);
+
+        System.out.println("Walk score: " + studentWalkSimulation.getScore());
     }
 }

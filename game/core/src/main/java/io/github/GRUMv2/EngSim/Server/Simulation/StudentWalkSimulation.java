@@ -1,21 +1,14 @@
 package io.github.GRUMv2.EngSim.Server.Simulation;
 
 import com.badlogic.gdx.math.Vector2;
-
-import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
-import io.github.GRUMv2.EngSim.entities.Water;
-import io.github.GRUMv2.EngSim.entities.HallsAccommadation;
-import io.github.GRUMv2.EngSim.entities.LectureHall;
-import io.github.GRUMv2.EngSim.entities.Pub;
-import io.github.GRUMv2.EngSim.entities.Restaurant;
-import io.github.GRUMv2.EngSim.entities.Gym;
-
+import io.github.GRUMv2.EngSim.entities.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StudentWalkSimulation {
     Map<AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>>, Integer> thingsToCheck = new HashMap<>();
+    ArrayList<Double> scores = new ArrayList<>();
 
     StudentWalkSimulation() {
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, HallsAccommadation.class), 2);
@@ -86,15 +79,21 @@ public class StudentWalkSimulation {
     }
 
     void tick(ConcurrentHashMap<Vector2, ForegroundEntity> grid, HashMap<Class<? extends ForegroundEntity>, ArrayList<Vector2>> map) {
+        ArrayList<Double> totalDistances = new ArrayList<>();
+
         for (AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>> thing : thingsToCheck.keySet()) {
             Class<? extends ForegroundEntity> thingA = thing.getKey();
             Class<? extends ForegroundEntity> thingB = thing.getValue();
 
             // skip thing if either of the parts are not present
-            if (!map.containsKey(thingA)) continue;
-            if (!map.containsKey(thingB)) continue;
+            if ((!map.containsKey(thingA)) || (!map.containsKey(thingB))) {
+                totalDistances.add(
+                    (double) thingsToCheck.get(thing) * 32. // HARDCODE: 32 is the max distance
+                );
+                continue;
+            }
 
-            System.out.println("Checking " + thingA.getSimpleName() + " and " + thingB.getSimpleName());
+//            System.out.println("Checking " + thingA.getSimpleName() + " and " + thingB.getSimpleName());
 
             ArrayList<Vector2> allOfA = map.get(thingA);
             ArrayList<Vector2> allOfB = map.get(thingB);
@@ -117,18 +116,37 @@ public class StudentWalkSimulation {
                 distances.add(distance);
             }
 
-            double sum = 0;
-            for (double d : distances) {
-                if (d == -1) {
-                    continue;
-                }
+            double avg = this.getAvg(distances) * thingsToCheck.get(thing);
 
-                sum += d;
-            }
-            double avg = (sum / distances.size()) * thingsToCheck.get(thing);
+//            System.out.println("Average distance between " + thingA.getSimpleName() + " and " + thingB.getSimpleName() + " is " + avg);
 
-            System.out.println("Average distance between " + thingA.getSimpleName() + " and " + thingB.getSimpleName() + " is " + avg);
+            totalDistances.add(avg);
         }
-        // TODO average of averages you know
+        double avg = getAvg(totalDistances);
+        double res = 100 - Math.max(Math.min((avg - 40) * 2, 100), 0);  // HARDCODE: 40 and *2 based on testing to get realistic min/max of score
+
+//        System.out.println("Distance score: " + res);
+
+        this.scores.add(res / 100);
+
+        if (this.scores.size() > 20) {
+            this.scores.remove(0);
+        }
+    }
+
+    private double getAvg(ArrayList<Double> of) {
+        double sum = 0;
+        for (double d : of) {
+            if (d == -1) {
+                continue;
+            }
+
+            sum += d;
+        }
+        return sum / of.size();
+    }
+
+    public double getScore() {
+        return this.getAvg(this.scores);
     }
 }
