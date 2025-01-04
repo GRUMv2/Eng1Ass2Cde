@@ -10,59 +10,47 @@ import io.github.GRUMv2.EngSim.client.GameScreen;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.GameScreen.Modes;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 
 public class UI extends Entity {
+
+    // TODO: -> Settings
+    private final String TITLE = "University Simulator";
+
     private GameScreen game;
     private Broker broker;
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
     private TmpButton[] actionButtons;
 
-    public UI(GameScreen game, Broker broker) {
+    public UI(GameScreen game, Broker broker, BuildingFactory builder) {
         this.broker = broker;
         this.game = game;
         pauseButton = new PauseButton(game::togglePause);
-        buildingPlaceButtons = new BuildingPlaceButton[] {
-            new BuildingPlaceButton(
-                "Pub",
-                "A place to drink.",
-                0,
-            () -> game.setBuildingToPlace(BuildingFactory.Available.PUB)
-            ),
-            new BuildingPlaceButton(
-                "Halls Accommodation",
-                "A place to sleep.",
-                1,
-            () -> game.setBuildingToPlace(BuildingFactory.Available.ACCOMMODATION)
-            ),
-            new BuildingPlaceButton(
-                "Restaurant",
-                "A place to eat.",
-                2,
-            () -> game.setBuildingToPlace(BuildingFactory.Available.RESTAURANT)
-            ),
-            new BuildingPlaceButton(
-                "Lecture Hall",
-                "A place to learn.",
-                3,
-            () -> game.setBuildingToPlace(BuildingFactory.Available.LECTUREHALL)
-            ),
-            new BuildingPlaceButton(
-                "Gym",
-                "A place to get bolo.",
-                4,
-            () -> game.setBuildingToPlace(BuildingFactory.Available.GYM)
-            )
-        };
+
+        Available[] availableBuildings = Available.values();
+        this.buildingPlaceButtons = new BuildingPlaceButton[availableBuildings.length];
+        Vector2 _v = new Vector2();
+        Building building;
+        for (int i = 0; i < availableBuildings.length; i++) {
+            Available buildingType = availableBuildings[i]; // define here or lambda complains
+            building = builder.newBuilding(buildingType, _v);
+            buildingPlaceButtons[i] = new BuildingPlaceButton(
+                building.getName(),
+                building.getDescription(),
+                i,
+                () -> game.setBuildingToPlace(buildingType)
+            );
+        }
 
         this.actionButtons = new TmpButton[] {
             new TmpButton(
-                "Destroy",
+                Modes.DESTROY.toString(),
                 new Vector2(20, 500),
                 () -> game.toggleMode(Modes.DESTROY)
             ),
             new TmpButton(
-                "Move",
+                Modes.MOVE.toString(),
                 new Vector2(290, 500),
                 () -> game.toggleMode(Modes.MOVE)
             )
@@ -74,7 +62,7 @@ public class UI extends Entity {
 
         // draw the title
         Vector2 titlePos = new Vector2(20, 700);
-        renderer.drawText("University Simulator", titlePos, Color.BLACK, 2f);
+        renderer.drawText(this.TITLE, titlePos, Color.BLACK, 2f);
 
         // draw the time display
         String timeLeftString = broker.getTimeLeftString();

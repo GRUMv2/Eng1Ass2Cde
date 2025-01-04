@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Restaurant extends Building {
 
+    private final String NAME = "Restaurant";
+    private final String DESCRIPTION = "A place to eat.";
+
     public Restaurant(Vector2 mapPos) {
         // TODO: Map data
         super(
@@ -19,6 +22,8 @@ public class Restaurant extends Building {
             },
             Color.RED
         );
-        this.setText("Restaurant");
+        this.setText(this.NAME);
+        this.setName(this.NAME);
+        this.setDescription(this.DESCRIPTION);
     }
 }

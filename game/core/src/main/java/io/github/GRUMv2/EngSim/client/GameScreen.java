@@ -43,7 +43,7 @@ public class GameScreen extends AbstractGameScreen {
         broker = Broker.getInstance();
         builder = BuildingFactory.getInstance();
         map = new GameMap(this, broker);
-        ui = new UI(this, broker);
+        ui = new UI(this, broker, builder);
         this.mode = Modes.NORMAL;
     }
 
