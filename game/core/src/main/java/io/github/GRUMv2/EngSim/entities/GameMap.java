@@ -17,50 +17,10 @@ public class GameMap extends Entity {
         this.broker = broker;
         final int CELLS_PER_ROW = broker.getMapCells();
         this.cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
-        // TODO: something about this
-        broker.placeObstacle(
-            new Water(
-                new Vector2(5, 5),
-                new Vector2[] {
-                    new Vector2(1, 0),
-                    new Vector2(2, 0),
-                    new Vector2(3, 0),
 
-                    new Vector2(0, 1),
-                    new Vector2(1, 1),
-                    new Vector2(2, 1),
-                    new Vector2(3, 1),
-                    new Vector2(4, 1),
-                    new Vector2(5, 1),
-
-                    new Vector2(3, 2),
-                    new Vector2(4, 2),
-                    new Vector2(5, 2)
-                }
-            )
-        );
-        broker.placeObstacle(
-            new Water(
-                new Vector2(20, 25),
-                new Vector2[] {
-                    new Vector2(0, 0),
-                    new Vector2(1, 0),
-                    new Vector2(0, -1),
-                    new Vector2(1, -1),
-                    new Vector2(0, -2),
-                    new Vector2(1, -2),
-                    new Vector2(1, -3),
-                    new Vector2(2, -3),
-                    new Vector2(2, -4),
-                    new Vector2(3, -4),
-                    new Vector2(2, -5),
-                    new Vector2(3, -5),
-                    new Vector2(2, -6),
-                    new Vector2(3, -6),
-                    new Vector2(3, -7),
-                }
-            )
-        );
+        for (Obstacle obstacle : MapLoader.gibMap()) {
+            broker.placeObstacle(obstacle);
+        }
 
         for (int i = 0; i < CELLS_PER_ROW; i++) {
             for (int j = 0; j < CELLS_PER_ROW; j++) {
