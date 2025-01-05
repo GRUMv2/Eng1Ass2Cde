@@ -20,9 +20,6 @@ public class GameScreen extends AbstractGameScreen {
     private UI ui;
     private Broker broker;
     private BuildingFactory builder;
-
-    private final Server server;
-
     private float tmpTimer = 0f;
 
     public enum Modes {
@@ -49,9 +46,6 @@ public class GameScreen extends AbstractGameScreen {
         map = new GameMap(this, broker);
         ui = new UI(this, broker, builder);
         this.mode = Modes.NORMAL;
-
-        server = new Server(120, broker);
-        server.start();
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {

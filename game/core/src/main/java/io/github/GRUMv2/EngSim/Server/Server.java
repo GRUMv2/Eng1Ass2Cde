@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Server extends Thread {
     private boolean isRunning = true;
-    private boolean isPaused = false;
+    private boolean isPaused = true;
     private final int targetTPS;
 
     private final Simulation simulation;
@@ -21,13 +21,13 @@ public class Server extends Thread {
     public final PopupManager popupManager = new PopupManager(timeKeeper);
 
 
-    public Server(int targetTPS, Broker broker) {
+    public Server(int targetTPS) {
         super("Server");
         this.targetTPS = targetTPS;
 
         System.out.println("[ SVR ] Server created");
 
-        simulation = new Simulation(broker);
+        simulation = new Simulation();
         eventHandler = new EventHandler();
     }
 
@@ -51,10 +51,14 @@ public class Server extends Thread {
 
     // Entirely stops and disposes the server, this call cannot be undone
     public void Stop() {
+        System.out.println("[ SVR ] Stopping");
         isRunning = false;
     }
 
-    // Simulation passthroughs
+    public boolean isRunning() {
+        return isRunning;
+    }
+// Simulation passthroughs
 
     // Driven by:
     // - Location of buildings
@@ -125,7 +129,6 @@ public class Server extends Thread {
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
         System.out.println("[ SVR ] Running in thread " + Thread.currentThread().getName());
-        this.timeKeeper.start();
 
         long processTime = 0;
 
@@ -154,6 +157,8 @@ public class Server extends Thread {
                 Thread.currentThread().interrupt();
             }
         }
+
+        System.out.println(" [ SVR ] Stopped.");
     }
 
     private void updateInternalGridCache() {}

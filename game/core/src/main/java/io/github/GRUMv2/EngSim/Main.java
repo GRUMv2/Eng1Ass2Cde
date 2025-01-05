@@ -31,6 +31,8 @@ public class Main extends Game {
     private InputHandler inputHandler;
     private AbstractGameScreen gameScreen;
 
+    private Server server;
+
     private GameScreen game;
 
     public Main() {
@@ -38,6 +40,9 @@ public class Main extends Game {
         // and will not be until it calls Main.create()
         // Anything within the constructor of Client cannot attempt
         // to interact with libGDX objects until its create() function
+
+        server = new Server(60);
+        server.start();  // starts paused dont worry
     }
 
     public void create() {
@@ -58,24 +63,31 @@ public class Main extends Game {
                 this.gameScreen = new MenuScreen(renderer, inputHandler);
                 this.gameScreen.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
                 this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
+
+                if (!this.server.isPaused()) {
+                    this.server.Pause();
+                }
                 break;
             case GAME:
-                //this.server.start_or_resume();
                 this.gameScreen = this.game;
+                if (this.server.isPaused()) {
+                    this.server.Resume();
+                }
                 break;
             case PAUSE:
-                //this.server.pause();
                 this.gameScreen = new PauseScreen(renderer, inputHandler);
                 this.gameScreen.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
                 this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
+                this.server.Pause();
                 break;
             case END:
-                //this.server.stop();
                 this.gameScreen = new EndScreen(renderer, inputHandler);
                 this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
+                this.server.Stop();
                 break;
             case QUIT:
                 this.quit();
+                this.server.Stop();
                 break;
             default:
                 break;

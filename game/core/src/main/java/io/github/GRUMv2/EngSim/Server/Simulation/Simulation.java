@@ -14,10 +14,10 @@ public class Simulation {
     private final Broker broker;
     private final StudentWalkSimulation studentWalkSimulation;
 
-    public Simulation(Broker broker) {
+    public Simulation() {
         System.out.println("[ SIM ] Simulation started");
 
-        this.broker = broker;
+        this.broker = Broker.getInstance();
         studentWalkSimulation = new StudentWalkSimulation();
     }
 

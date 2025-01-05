@@ -23,12 +23,12 @@ public class StudentWalkSimulation {
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Gym.class, Pub.class), -2);
     }
 
-    double hdist(Vector2 a, Vector2 b) {
+    private double hdist(Vector2 a, Vector2 b) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
 
-    double distanceByAStar(ConcurrentHashMap<Vector2, ForegroundEntity> grid, Vector2 from, Vector2 to, double maxDistance) {
+    private double distanceByAStar(ConcurrentHashMap<Vector2, ForegroundEntity> grid, Vector2 from, Vector2 to, double maxDistance) {
         Map<Vector2, Double> current_score = new HashMap<>();
         Map<Vector2, Double> straight_line_score = new HashMap<>();
 
