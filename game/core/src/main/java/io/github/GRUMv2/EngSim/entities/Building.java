@@ -8,13 +8,20 @@ public abstract class Building extends ForegroundEntity {
     private String NAME = "";
     private String DESCRIPTION = "";
 
-    public int studentHousingCapacity = 0;
-    public int studentStudyCapacity = 0;
-    public int leisureCapacity = 0;
-    public int staffOfficeCapacity = 0;
-    public int cost = 0;
-    public int monthlyUpkeepCosts = 0;
+    public int studentHousingCapacity;
+    public int studentStudyCapacity;
+    public int leisureCapacity;
+    public int staffOfficeCapacity;
+    public int cost;
+    public int monthlyUpkeepCosts;
 
+    // Yep, but not much we can do about it stupid java
+    public abstract int getStudentHousingCapacity();
+    public abstract int getStudentStudyCapacity();
+    public abstract int getLeisureCapacity();
+    public abstract int getStaffOfficeCapacity();
+    public abstract int getCost();
+    public abstract int getMonthlyUpkeepCosts();
 
     public Building(Vector2 mapPos, Vector2[] relCellsUsed, Color color) {
         super(mapPos, relCellsUsed, color);

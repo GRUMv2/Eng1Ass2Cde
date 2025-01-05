@@ -15,6 +15,14 @@ public class Pub extends Building {
     public int cost = 50_000;
     public int monthlyUpkeepCosts = 10_000;
 
+        @Override public int getStudentHousingCapacity() {return studentHousingCapacity;}
+    @Override public int getStudentStudyCapacity() {return studentStudyCapacity;}
+    @Override public int getLeisureCapacity() {return leisureCapacity;}
+    @Override public int getStaffOfficeCapacity() {return staffOfficeCapacity;}
+    @Override public int getCost() {return cost;}
+    @Override public int getMonthlyUpkeepCosts() {return monthlyUpkeepCosts;}
+
+
     public Pub(Vector2 mapPos) {
 
 

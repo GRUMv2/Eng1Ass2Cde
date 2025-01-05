@@ -102,8 +102,12 @@ public class Server extends Thread {
     // - Events can directly add/remove
     //
     // Average cost of halls building 20_000_000
-    public int getMoney() {
+    public long getMoney() {
         return simulation.getMoney();
+    }
+
+    public void spendMoney(int spent) {
+        simulation.spendMoney(spent);
     }
 
     // Driven by

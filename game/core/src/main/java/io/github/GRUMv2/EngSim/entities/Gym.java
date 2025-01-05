@@ -14,6 +14,13 @@ public class Gym extends Building {
     public int cost = 175_000;
     public int monthlyUpkeepCosts = 50_000;
 
+        @Override public int getStudentHousingCapacity() {return studentHousingCapacity;}
+    @Override public int getStudentStudyCapacity() {return studentStudyCapacity;}
+    @Override public int getLeisureCapacity() {return leisureCapacity;}
+    @Override public int getStaffOfficeCapacity() {return staffOfficeCapacity;}
+    @Override public int getCost() {return cost;}
+    @Override public int getMonthlyUpkeepCosts() {return monthlyUpkeepCosts;}
+
     public Gym(Vector2 mapPos) {
         // TODO: Map data
         super(
