@@ -8,6 +8,13 @@ public class Pub extends Building {
     private final String NAME = "Pub";
     private final String DESCRIPTION = "A place to drink.";
 
+    public int studentHousingCapacity = 0;
+    public int studentStudyCapacity = 0;
+    public int leisureCapacity = 3000;
+    public int staffOfficeCapacity = 0;
+    public int cost = 50_000;
+    public int monthlyUpkeepCosts = 10_000;
+
     public Pub(Vector2 mapPos) {
 
 

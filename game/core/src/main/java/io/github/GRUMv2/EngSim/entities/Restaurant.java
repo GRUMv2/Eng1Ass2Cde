@@ -8,6 +8,13 @@ public class Restaurant extends Building {
     private final String NAME = "Restaurant";
     private final String DESCRIPTION = "A place to eat.";
 
+    public int studentHousingCapacity = 0;
+    public int studentStudyCapacity = 0;
+    public int leisureCapacity = 4000;
+    public int staffOfficeCapacity = 0;
+    public int cost = 75_000;
+    public int monthlyUpkeepCosts = 30_000;
+
     public Restaurant(Vector2 mapPos) {
         // TODO: Map data
         super(

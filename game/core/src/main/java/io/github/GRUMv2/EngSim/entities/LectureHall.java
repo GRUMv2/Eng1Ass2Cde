@@ -8,6 +8,13 @@ public class LectureHall extends Building {
     private final String NAME = "Lecture Hall";
     private final String DESCRIPTION = "A place to learn.";
 
+    public int studentHousingCapacity = 0;
+    public int studentStudyCapacity = 10_000;
+    public int leisureCapacity = 1_000;
+    public int staffOfficeCapacity = 10;
+    public int cost = 1_000_000;
+    public int monthlyUpkeepCosts = 250_000;
+
     public LectureHall(Vector2 mapPos) {
         // TODO: Map data
         super(

@@ -8,6 +8,14 @@ public abstract class Building extends ForegroundEntity {
     private String NAME = "";
     private String DESCRIPTION = "";
 
+    public int studentHousingCapacity = 0;
+    public int studentStudyCapacity = 0;
+    public int leisureCapacity = 0;
+    public int staffOfficeCapacity = 0;
+    public int cost = 0;
+    public int monthlyUpkeepCosts = 0;
+
+
     public Building(Vector2 mapPos, Vector2[] relCellsUsed, Color color) {
         super(mapPos, relCellsUsed, color);
     }
