@@ -22,11 +22,30 @@ public class UI extends Entity {
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
     private TmpButton[] actionButtons;
+    // XXX: placeholder
+    private TmpTextBox statsBox;
+    private TmpTextBox statsHeader;
 
     public UI(GameScreen game, Broker broker, BuildingFactory builder) {
         this.broker = broker;
         this.game = game;
-        pauseButton = new PauseButton(game::togglePause);
+        pauseButton = new PauseButton(
+            new Vector2(520, 680),
+            game::togglePause
+        );
+
+        this.actionButtons = new TmpButton[] {
+            new TmpButton(
+                Modes.DESTROY.toString(),
+                new Vector2(20, 410),
+                () -> game.toggleMode(Modes.DESTROY)
+            ),
+            new TmpButton(
+                Modes.MOVE.toString(),
+                new Vector2(290, 410),
+                () -> game.toggleMode(Modes.MOVE)
+            )
+        };
 
         Available[] availableBuildings = Available.values();
         this.buildingPlaceButtons = new BuildingPlaceButton[availableBuildings.length];
@@ -36,25 +55,27 @@ public class UI extends Entity {
             Available buildingType = availableBuildings[i]; // define here or lambda complains
             building = builder.newBuilding(buildingType, _v);
             buildingPlaceButtons[i] = new BuildingPlaceButton(
+                new Vector2(20, 330 - (i * 80)),
                 building.getName(),
                 building.getDescription(),
-                i,
                 () -> game.setBuildingToPlace(buildingType)
             );
         }
 
-        this.actionButtons = new TmpButton[] {
-            new TmpButton(
-                Modes.DESTROY.toString(),
-                new Vector2(20, 500),
-                () -> game.toggleMode(Modes.DESTROY)
-            ),
-            new TmpButton(
-                Modes.MOVE.toString(),
-                new Vector2(290, 500),
-                () -> game.toggleMode(Modes.MOVE)
-            )
-        };
+        // XXX: placeholder
+        this.statsHeader = new TmpTextBox(
+            new Vector2(20, 630),
+            new Vector2(250, 30),
+            "",
+            2f
+        );
+        this.statsHeader.setContent("Statistics");
+        this.statsBox = new TmpTextBox(
+            new Vector2(20, 480),
+            new Vector2(250, 150),
+            "",
+            2f
+        );
     }
 
     @Override
@@ -62,38 +83,42 @@ public class UI extends Entity {
 
         // draw the title
         Vector2 titlePos = new Vector2(20, 700);
-        renderer.drawText(this.TITLE, titlePos, Color.BLACK, 2f);
+        renderer.drawText(this.TITLE, titlePos, Color.BLACK, 1.5f);
 
         // draw the time display
         String timeLeftString = broker.getTimeLeftString();
-        Vector2 timePos = new Vector2(20, 650);
-        renderer.drawText(timeLeftString, timePos, Color.BLACK, 1.5f);
+        Vector2 timePos = new Vector2(20, 680);
+        renderer.drawText(timeLeftString, timePos, Color.BLACK, 1f);
 
         // update pause button
         pauseButton.update(renderer, inputHandler);
 
-        // draw the building count
         renderer.drawText(
-            broker.getTotalBuildings() + " Buildings",
-            new Vector2(20, 600),
+            "Mode: " + game.getMode(),
+            new Vector2(350, 700),
             Color.BLACK,
-            1.5f
+            1f
         );
 
         // draw the selected building
         renderer.drawText(
             "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace()),
-            new Vector2(200, 600),
+            new Vector2(350, 680),
             Color.BLACK,
-            1.5f
+            1f
         );
 
+        // draw the building count
         renderer.drawText(
-            "Mode: " + game.getMode(),
-            new Vector2(300, 650),
+            broker.getTotalBuildings() + " Buildings",
+            new Vector2(350, 660),
             Color.BLACK,
-            1.5f
+            1f
         );
+
+        // XXX: placeholder
+        this.statsHeader.update(renderer, inputHandler);
+        this.statsBox.update(renderer, inputHandler);
 
         for (TmpButton button : this.actionButtons) {
             button.update(renderer, inputHandler);

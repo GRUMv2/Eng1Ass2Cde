@@ -8,28 +8,30 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class PauseButton extends Button {
 
-    public PauseButton(Runnable handleClick) {
-        super(handleClick);
+    public PauseButton(Vector2 pos, Runnable handleClick) {
+        super(
+            pos,
+            new Vector2(30, 30),
+            handleClick
+        );
     }
 
     // TODO: Button rendering abstraction
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
-        Vector2 pos = new Vector2(180, 625);
-        Vector2 size = new Vector2(30, 30);
-        renderer.drawRect(pos, size, Color.LIGHT_GRAY);
+        renderer.drawRect(this.getPos(), this.getSize(), Color.LIGHT_GRAY);
         renderer.drawRect(
-            new Vector2(pos.x + 5, pos.y + 5),
+            new Vector2(this.getPos().x + 5, this.getPos().y + 5),
             new Vector2(7, 20),
             Color.WHITE
         );
         renderer.drawRect(
-            new Vector2(pos.x + 17, pos.y + 5),
+            new Vector2(this.getPos().x + 17, this.getPos().y + 5),
             new Vector2(7, 20),
             Color.WHITE
         );
 
-        if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(pos, size)) {
+        if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(this.getPos(), this.getSize())) {
             this.click();
         }
     }
