@@ -50,6 +50,7 @@ public final class Broker {
         return this.MAP_CELLS;
     }
 
+    // TODO: implement
     public String getTimeLeftString() {
         float progress = (timeElapsed / REALTIME_LENGTH);
         float gameTimeElapsed = progress * GAMETIME_LENGTH;
