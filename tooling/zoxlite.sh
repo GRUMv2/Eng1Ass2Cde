@@ -70,6 +70,18 @@ rungam() {
     ( command cd "${_zl_BASE}${_zl_GAM_PREFIX}" || false && ./gradlew run )
 }
 
+testgam() {
+    case "$XDG_SESSION_TYPE" in
+        x11|wayland) ;;
+        *)
+            # (X11 Forwarding)
+            # shellcheck disable=SC2317 # ./script.sh -> exit; source ./script.sh -> return
+            [ -z "$DISPLAY" ] && { echo "No display output available"; return 1 2>/dev/null; exit 1; }
+            ;;
+    esac
+    ( command cd "${_zl_BASE}${_zl_GAM_PREFIX}" || false && ./gradlew test )
+}
+
 
 alias fgrum=fgrym
 alias fgrumd=fgrymd
