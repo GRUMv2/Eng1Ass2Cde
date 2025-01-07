@@ -1,7 +1,7 @@
 package io.github.GRUMv2.EngSim.Server;
 
 public class TimeKeeper {
-    private long startTime = 0;
+    private long startTime = -1;
     private long pausedTime = 0;
     private boolean isPaused = false;
     private final long yearsPerMinute;
@@ -37,6 +37,8 @@ public class TimeKeeper {
 
     // Game time since start in milliseconds
     public long currentGameTime() {
+        if (startTime == -1) return 0;
+
         if (isPaused) return pausedTime - startTime;
 
         return System.currentTimeMillis() - startTime;
