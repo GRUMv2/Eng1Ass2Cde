@@ -4,13 +4,10 @@ import org.junit.jupiter.api.Test;
 import io.github.GRUMv2.EngSim.broker.Broker;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/*
-Testing for:
-- BuildingFactory exhibits correct singleton behaviour
-- Buildings are created by BuildingFactory
+/**
+ * Testing for:
+ *  - Broker exhibits correct singleton behaviour
  */
 
 public class BrokerTest {
