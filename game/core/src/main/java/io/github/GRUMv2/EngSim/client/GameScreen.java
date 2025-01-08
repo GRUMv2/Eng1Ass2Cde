@@ -20,7 +20,6 @@ public class GameScreen extends AbstractGameScreen {
     private UI ui;
     private Broker broker;
     private BuildingFactory builder;
-    private float tmpTimer = 0f;
 
     public enum Modes {
         NORMAL("Normal"),
@@ -49,11 +48,6 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
-
-        // XXX: PLACEHOLDER
-        tmpTimer += Gdx.graphics.getDeltaTime();
-        broker.setTime(tmpTimer);
-
         if (broker.isGameComplete()) {
             this.changeEvent(Screens.END);
             return;

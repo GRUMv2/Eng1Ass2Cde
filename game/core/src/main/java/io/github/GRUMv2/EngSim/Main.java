@@ -70,6 +70,10 @@ public class Main extends Game {
                 break;
             case GAME:
                 this.gameScreen = this.game;
+                // hcky but works
+                if (this.server.timeKeeper.currentGameTime() == 0) {
+                    this.server.timeKeeper.start();
+                }
                 if (this.server.isPaused()) {
                     this.server.Resume();
                 }

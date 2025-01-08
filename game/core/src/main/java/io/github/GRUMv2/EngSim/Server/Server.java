@@ -2,12 +2,10 @@ package io.github.GRUMv2.EngSim.Server;
 
 
 import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
-import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 import io.github.GRUMv2.EngSim.broker.Broker;
 
-import java.util.ArrayList;
 
 
 public class Server extends Thread {
@@ -19,7 +17,7 @@ public class Server extends Thread {
     private final EventHandler eventHandler;
     public final TimeKeeper timeKeeper = new TimeKeeper(1);
     public final PopupManager popupManager = new PopupManager(timeKeeper);
-
+    private final Broker broker;
 
     public Server(int targetTPS) {
         super("Server");
@@ -29,6 +27,8 @@ public class Server extends Thread {
 
         simulation = new Simulation();
         eventHandler = new EventHandler();
+
+        broker = Broker.getInstance();
     }
 
     // Pause's the server, events, and simulation
@@ -59,76 +59,76 @@ public class Server extends Thread {
         return isRunning;
     }
 // Simulation passthroughs
-
-    // Driven by:
-    // - Location of buildings
-    // - Staff Student Ratio
-    // - Student building ratio
-    // Can also be affected by events
-    public float getStudentSatisfaction() {
-        return simulation.getStudentSatisfaction();
-    }
-
-    // most of the time is the maximum possible given the number of halls,
-    // unless the student satisfaction is too low then will drop as people
-    // drop out.
-    // Can also be affected by events
-    //
-    // Average students per building: 300
-    public int getStudentNumbers() {
-        return simulation.getStudentNumbers();
-    }
-
-    // Driven by:
-    // - Location to car parks
-    // - Staff student satisfaction
-    // - Student turnout (to lectures)
-    //   - Driven by distance to halls
-    // Can also be affected by events
-    public float getStaffSatisfaction() {
-        return simulation.getStaffSatisfaction();
-    }
-
-    // Again mostly driven by the number of offices (that is itself driven by
-    // number of placed buildings) unless staff satisfaction is too low.
-    // Can also be affected by events
-    public int getStaffNumbers() {
-        return simulation.getStaffNumbers();
-    }
-
-    // Driven by
-    // - Income
-    // - User building buildings
-    // - Events can directly add/remove
-    //
-    // Average cost of halls building 20_000_000
-    public long getMoney() {
-        return simulation.getMoney();
-    }
-
-    public void spendMoney(int spent) {
-        simulation.spendMoney(spent);
-    }
-
-    // Driven by
-    // - Number students
-    // - International student ratio
-    // - Staff numbers
-    // - Staff satisfaction
-    //   - Low staff satisfaction numbers will increase their
-    //     wage to prevent them from being fired
-    public int getIncome() {
-        return simulation.getIncome();
-    }
-
-    // TimeHandler passthroughs
-    public long getGameTime() {
-        return this.timeKeeper.currentGameTime();
-    }
-
-    public String getGameTimeFormatted() {
-        return this.timeKeeper.currentGameTimeFormatted();
-    }
+//   Now redundant, broker will handle this
+//    // Driven by:
+//    // - Location of buildings
+//    // - Staff Student Ratio
+//    // - Student building ratio
+//    // Can also be affected by events
+//    public float getStudentSatisfaction() {
+//        return simulation.getStudentSatisfaction();
+//    }
+//
+//    // most of the time is the maximum possible given the number of halls,
+//    // unless the student satisfaction is too low then will drop as people
+//    // drop out.
+//    // Can also be affected by events
+//    //
+//    // Average students per building: 300
+//    public int getStudentNumbers() {
+//        return simulation.getStudentNumbers();
+//    }
+//
+//    // Driven by:
+//    // - Location to car parks
+//    // - Staff student satisfaction
+//    // - Student turnout (to lectures)
+//    //   - Driven by distance to halls
+//    // Can also be affected by events
+//    public float getStaffSatisfaction() {
+//        return simulation.getStaffSatisfaction();
+//    }
+//
+//    // Again mostly driven by the number of offices (that is itself driven by
+//    // number of placed buildings) unless staff satisfaction is too low.
+//    // Can also be affected by events
+//    public int getStaffNumbers() {
+//        return simulation.getStaffNumbers();
+//    }
+//
+//    // Driven by
+//    // - Income
+//    // - User building buildings
+//    // - Events can directly add/remove
+//    //
+//    // Average cost of halls building 20_000_000
+//    public long getMoney() {
+//        return simulation.getMoney();
+//    }
+//
+//    public void spendMoney(int spent) {
+//        simulation.spendMoney(spent);
+//    }
+//
+//    // Driven by
+//    // - Number students
+//    // - International student ratio
+//    // - Staff numbers
+//    // - Staff satisfaction
+//    //   - Low staff satisfaction numbers will increase their
+//    //     wage to prevent them from being fired
+//    public int getIncome() {
+//        return simulation.getIncome();
+//    }
+//
+//    // TimeHandler passthroughs
+//    public long getGameTime() {
+//        return this.timeKeeper.currentGameTime();
+//    }
+//
+//    public String getGameTimeFormatted() {
+//        return this.timeKeeper.currentGameTimeFormatted();
+//    }
 
     // Calls the tick function, handles isRunning and isPaused
     public void run() {
@@ -173,5 +173,23 @@ public class Server extends Thread {
         simulation.tick(delta);
         eventHandler.tick(delta);
         popupManager.serverTick(delta);
+
+        System.out.println((float) this.timeKeeper.currentGameTime());
+
+        if (broker.spendMoney > 0) {
+            simulation.spendMoney(broker.spendMoney);
+            broker.spendMoney = 0;
+        }
+
+        broker.serverPush(
+            (float) this.timeKeeper.currentGameTime() / 1000,
+            this.timeKeeper.currentGameTimeFormatted(),
+            simulation.getStudentSatisfaction(),
+            simulation.getStudentNumbers(),
+            simulation.getStaffSatisfaction(),
+            simulation.getStaffNumbers(),
+            simulation.getMoney(),
+            simulation.getIncome()
+        );
     }
 }
