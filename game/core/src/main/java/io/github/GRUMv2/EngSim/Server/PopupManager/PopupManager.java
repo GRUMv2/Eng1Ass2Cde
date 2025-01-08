@@ -39,6 +39,11 @@ public class PopupManager {
         System.out.println(" [ POP ] Popup " + popup.getName() + " removed (DISMISSED)");
     }
 
+    public void addPopup(String title, String description, int lastFor) {
+        PopupTicket p = new PopupTicket(title, description, timeKeeper, lastFor);
+        popups.add(p);
+    }
+
     public void addPopup(String title, String description) {
         PopupTicket p = new PopupTicket(title, description, timeKeeper, 60);
         popups.add(p);
