@@ -27,11 +27,11 @@ public class Simulation {
     }
 
     public float getStudentSatisfaction() {
-        return 0.5f;
+        return (float) studentWalkSimulation.getScore();
     }
 
     public int getStudentNumbers() {
-        return 1_000;
+        return rollingValuesSimulator.studentHousingCapacity();
     }
 
     public float getStaffSatisfaction() {
@@ -39,7 +39,7 @@ public class Simulation {
     }
 
     public int getStaffNumbers() {
-        return 5;
+        return rollingValuesSimulator.staffOfficeCapacity();
     }
 
     public long getMoney() {
@@ -51,7 +51,8 @@ public class Simulation {
     }
 
     public int getIncome() {
-        return 700_000;
+        // no international students here :(
+        return rollingValuesSimulator.studentHousingCapacity() * 9250;
     }
 
     // minor architecture mishaps
@@ -79,6 +80,13 @@ public class Simulation {
         studentWalkSimulation.tick(grid, map);
         rollingValuesSimulator.tick(entities);
 
-        System.out.println("Walk score: " + studentWalkSimulation.getScore());
+        this.currentMoney += (long) (((double) this.getIncome() / 60_000) * delta);
+        this.currentMoney -= (long) (((double) this.rollingValuesSimulator.monthlyUpkeepCosts() / 6) * delta);
+
+//        System.out.println("Money: " + this.currentMoney);
+//        System.out.println("Student satisfaction: " + this.getStudentSatisfaction());
+//        System.out.println("Student numbers: " + this.getStudentNumbers());
+////        System.out.println("Staff satisfaction: " + this.getStaffSatisfaction());
+//        System.out.println("Staff numbers: " + this.getStaffNumbers());
     }
 }

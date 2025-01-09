@@ -4,23 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EventHandler {
-    ArrayList<Event> activeEvents = new ArrayList<>();;
+    ArrayList<Event> activeEvents = new ArrayList<>();
 
     public EventHandler() {
         System.out.println("[ EVN ] EventHandler created");
 
-//        // All events to be added here
-//        activeEvents.add(new InitialiseTestEvent());
-//        System.out.println("[ EVN ] 'InitialiseTestEvent' events created");
-//        // TODO: look into way of automating this, gradle perhaps?
-    }
-
-    void getGrid(int x, int y) {
-        // TODO
-    }
-
-    void setGrid(int x, int y) {
-        // TODO: this, remember to update both internal cache and synchronously update the global grid
+        // achievements
+        activeEvents.add(new BrokeAcheivement());
+        activeEvents.add(new FromNothingAcheivement());
     }
 
     public void tick(double delta) {

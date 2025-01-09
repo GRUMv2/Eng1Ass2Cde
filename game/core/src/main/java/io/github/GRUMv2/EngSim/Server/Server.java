@@ -174,7 +174,7 @@ public class Server extends Thread {
         eventHandler.tick(delta);
         popupManager.serverTick(delta);
 
-        System.out.println((float) this.timeKeeper.currentGameTime());
+//        System.out.println((float) this.timeKeeper.currentGameTime());
 
         if (broker.spendMoney > 0) {
             simulation.spendMoney(broker.spendMoney);
