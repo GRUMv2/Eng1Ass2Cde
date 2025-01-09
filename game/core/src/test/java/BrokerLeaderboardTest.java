@@ -5,7 +5,7 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LeadershipBrokerTest {
+public class BrokerLeaderboardTest {
     private Broker broker;
 
     @BeforeEach
