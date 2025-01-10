@@ -176,9 +176,9 @@ public class Server extends Thread {
 
 //        System.out.println((float) this.timeKeeper.currentGameTime());
 
-        if (broker.spendMoney != 0) {
-            simulation.spendMoney(broker.spendMoney);
-            broker.spendMoney = 0;
+        if (broker.pendingSpendMoney != 0) {
+            simulation.spendMoney(broker.pendingSpendMoney);
+            broker.spendMoney(-broker.pendingSpendMoney);
         }
 
         broker.serverPush(

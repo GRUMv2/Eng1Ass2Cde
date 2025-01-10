@@ -26,7 +26,7 @@ public final class Broker {
     private volatile float staffNumbers = 0f;
     private volatile long money = 0;
     private volatile int income = 0;
-    public volatile int spendMoney = 0;
+    public volatile int pendingSpendMoney = 0;
 
     // thread-safe
     private volatile boolean gameComplete = false;
@@ -107,8 +107,8 @@ public final class Broker {
         return income;
     }
 
-    public void spendMoney(int spent) {
-        this.spendMoney -= spent;
+    public synchronized void spendMoney(int spent) {
+        this.pendingSpendMoney += spent;
     }
 
     public boolean isGameComplete() {
