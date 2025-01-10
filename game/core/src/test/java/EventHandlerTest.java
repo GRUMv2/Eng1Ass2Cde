@@ -37,7 +37,8 @@ public class EventHandlerTest {
 
     @BeforeEach
     public void setUp() {
-        eventHandler = new EventHandler();
+
+        eventHandler = new EventHandler(null);
     }
 
     @Test

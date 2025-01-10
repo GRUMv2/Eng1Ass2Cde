@@ -26,7 +26,7 @@ public class Server extends Thread {
         System.out.println("[ SVR ] Server created");
 
         simulation = new Simulation();
-        eventHandler = new EventHandler();
+        eventHandler = new EventHandler(this);
 
         broker = Broker.getInstance();
     }
@@ -191,5 +191,25 @@ public class Server extends Thread {
             simulation.getMoney(),
             simulation.getIncome()
         );
+    }
+
+    public void setStudentHousingCapacityMultiuplyer(float to) {
+        this.simulation.setStudentHousingCapacityMultiuplyer(to);
+    }
+
+    public void setStudentStudyCapacityMultiuplyer(float to) {
+        this.simulation.setStudentStudyCapacityMultiuplyer(to);
+    }
+
+    public void setLeisureCapacityMultiuplyer(float to) {
+        this.simulation.setLeisureCapacityMultiuplyer(to);
+    }
+
+    public void setStaffOfficeCapacityMultiuplyer(float to) {
+        this.simulation.setStaffOfficeCapacityMultiuplyer(to);
+    }
+
+    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
+        this.simulation.setMonthlyUpkeepCostsMultiuplyer(to);
     }
 }
