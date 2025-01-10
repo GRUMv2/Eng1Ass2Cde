@@ -17,24 +17,25 @@ public class RollingValuesSimulator {
     private final ArrayList<Integer> staffOfficeCapacityList = new ArrayList<>();
     private final ArrayList<Integer> monthlyUpkeepCostsList = new ArrayList<>();
 
+    private float studentHousingCapacityMultiuplyer = 1;
+    private float studentStudyCapacityMultiuplyer = 1;
+    private float leisureCapacityMultiuplyer = 1;
+    private float staffOfficeCapacityMultiuplyer = 1;
+    private float monthlyUpkeepCostsMultiuplyer = 1;
 
-    RollingValuesSimulator () {
-
-    }
-
-    private void addValue (ArrayList<Integer> list, int value) {
+    private void addValue(ArrayList<Integer> list, int value) {
         list.add(value);
         if (list.size() > 1000) list.remove(0);
     }
 
-    public void tick (CopyOnWriteArrayList<ForegroundEntity> entities) {
+    public void tick(CopyOnWriteArrayList<ForegroundEntity> entities) {
         int studentHousingCapacityS = 0;
         int studentStudyCapacityS = 0;
         int leisureCapacityS = 0;
         int staffOfficeCapacityS = 0;
         int monthlyUpkeepCostsS = 0;
 
-        for (ForegroundEntity  entity : entities) {
+        for (ForegroundEntity entity : entities) {
             if (!(entity instanceof Building)) continue;
 
             studentHousingCapacityS += ((Building) entity).getStudentHousingCapacity();
@@ -50,6 +51,11 @@ public class RollingValuesSimulator {
         this.addValue(staffOfficeCapacityList, staffOfficeCapacityS);
         this.addValue(monthlyUpkeepCostsList, monthlyUpkeepCostsS);
 
+        studentHousingCapacityMultiuplyer = (studentHousingCapacityMultiuplyer - 1) * 0.999f + 1;
+        studentStudyCapacityMultiuplyer = (studentStudyCapacityMultiuplyer - 1) * 0.999f + 1;
+        leisureCapacityMultiuplyer = (leisureCapacityMultiuplyer - 1) * 0.999f + 1;
+        staffOfficeCapacityMultiuplyer = (staffOfficeCapacityMultiuplyer - 1) * 0.999f + 1;
+        monthlyUpkeepCostsMultiuplyer = (monthlyUpkeepCostsMultiuplyer - 1) * 0.999f + 1;
 
 //        System.out.println("[ ROL ] studentHousingCapacity: " + this.studentHousingCapacity());
 //        System.out.println("[ ROL ] studentStudyCapacity: " + this.studentStudyCapacity());
@@ -60,27 +66,47 @@ public class RollingValuesSimulator {
 
     private int getAvg(ArrayList<Integer> of) {
         long t = 0;
-        for (int n:of) t += n;
+        for (int n : of) t += n;
         return (int) Math.floor((double) t / of.size());
     }
 
     public int studentHousingCapacity() {
-        return this.getAvg(this.studentHousingCapacityList);
+        return (int) Math.floor(this.getAvg(this.studentHousingCapacityList) * studentHousingCapacityMultiuplyer);
     }
 
     public int studentStudyCapacity() {
-        return this.getAvg(this.studentStudyCapacityList);
+        return (int) Math.floor(this.getAvg(this.studentStudyCapacityList) * studentStudyCapacityMultiuplyer);
     }
 
     public int leisureCapacity() {
-        return this.getAvg(this.leisureCapacityList);
+        return (int) Math.floor(this.getAvg(this.leisureCapacityList) * leisureCapacityMultiuplyer);
     }
 
     public int staffOfficeCapacity() {
-        return this.getAvg(this.staffOfficeCapacityList);
+        return (int) Math.floor(this.getAvg(this.staffOfficeCapacityList) * staffOfficeCapacityMultiuplyer);
     }
 
     public int monthlyUpkeepCosts() {
-        return this.getAvg(this.monthlyUpkeepCostsList);
+        return (int) Math.floor(this.getAvg(this.monthlyUpkeepCostsList) * monthlyUpkeepCostsMultiuplyer);
+    }
+
+    public void setStudentHousingCapacityMultiuplyer(float to) {
+        studentHousingCapacityMultiuplyer = to;
+    }
+
+    public void setStudentStudyCapacityMultiuplyer(float to) {
+        studentStudyCapacityMultiuplyer = to;
+    }
+
+    public void setLeisureCapacityMultiuplyer(float to) {
+        leisureCapacityMultiuplyer = to;
+    }
+
+    public void setStaffOfficeCapacityMultiuplyer(float to) {
+        staffOfficeCapacityMultiuplyer = to;
+    }
+
+    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
+        monthlyUpkeepCostsMultiuplyer = to;
     }
 }

@@ -1,18 +1,22 @@
 package io.github.GRUMv2.EngSim.Server.EventHandler;
 
+import io.github.GRUMv2.EngSim.Server.Server;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class EventHandler {
     ArrayList<Event> activeEvents = new ArrayList<>();
+    private Server server;
 
-    public EventHandler() {
+    public EventHandler(Server server) {
         System.out.println("[ EVN ] EventHandler created");
 
         // achievements
         activeEvents.add(new BrokeAchievement());
         activeEvents.add(new FromNothingAchievement());
         activeEvents.add(new LotteryAchievement());
+        activeEvents.add(new RishiSunacEvent());
     }
 
     public void tick(double delta) {
@@ -20,6 +24,11 @@ public class EventHandler {
 
         while (iterator.hasNext()) {
             Event event = iterator.next();
+
+            if (event.server == null) {
+                event.server = server;
+            }
+
             boolean resp = event.tick(delta, this);
 
             if (!resp) {

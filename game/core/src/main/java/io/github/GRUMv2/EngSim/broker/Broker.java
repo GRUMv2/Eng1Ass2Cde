@@ -27,6 +27,7 @@ public final class Broker {
     private volatile long money = 0;
     private volatile int income = 0;
     public volatile int spendMoney = 0;
+    private volatile int gamePausedNumber = 0;
 
     // thread-safe
     private volatile boolean gameComplete = false;
@@ -266,5 +267,13 @@ public final class Broker {
 
     public void achievementAwarded(String achievement) {
         achievementAwarded.add(achievement);
+    }
+
+    public int getGamePausedNumber() {
+        return gamePausedNumber;
+    }
+
+    public void incrementGamePausedCount() {
+        this.gamePausedNumber += 1;
     }
 }
