@@ -34,6 +34,7 @@ public final class Broker {
     private ConcurrentHashMap<Building, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
+    private CopyOnWriteArrayList<String> achievementAwarded = new CopyOnWriteArrayList<>();
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
@@ -261,5 +262,9 @@ public final class Broker {
     public int getHighScore() {
         // leaderboard presumed to be sorted at rest
         return this.leaderboard.get(0).getValue();
+    }
+
+    public void achievementAwarded(String achievement) {
+        achievementAwarded.add(achievement);
     }
 }

@@ -8,6 +8,7 @@ public class BrokeAchievement extends Achievement {
     BrokeAchievement() {
         super();
         broker = Broker.getInstance();
+        awardName = "Go Broke!";
     }
 
     @Override

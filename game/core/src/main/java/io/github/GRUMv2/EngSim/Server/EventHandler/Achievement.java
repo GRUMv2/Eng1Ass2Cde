@@ -1,8 +1,12 @@
 package io.github.GRUMv2.EngSim.Server.EventHandler;
 
+import io.github.GRUMv2.EngSim.broker.Broker;
+
 public class Achievement extends Event {
+    String awardName = "default award";
+
     void award() {
-        System.out.println("Achievement awarded");
+        Broker.getInstance().achievementAwarded(this.awardName);
     }
 
     @Override
