@@ -17,6 +17,7 @@ public class EventHandler {
         activeEvents.add(new FromNothingAchievement());
         activeEvents.add(new LotteryAchievement());
         activeEvents.add(new RishiSunacEvent());
+        activeEvents.add(new QuitTheGameAchievement());
     }
 
     public void tick(double delta) {
