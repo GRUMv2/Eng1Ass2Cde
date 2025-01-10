@@ -10,8 +10,8 @@ public class EventHandler {
         System.out.println("[ EVN ] EventHandler created");
 
         // achievements
-        activeEvents.add(new BrokeAcheivement());
-        activeEvents.add(new FromNothingAcheivement());
+        activeEvents.add(new BrokeAchievement());
+        activeEvents.add(new FromNothingAchievement());
     }
 
     public void tick(double delta) {
