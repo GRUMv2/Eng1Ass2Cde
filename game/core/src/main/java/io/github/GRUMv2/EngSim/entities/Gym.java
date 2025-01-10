@@ -4,9 +4,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class Gym extends Building {
-
     private final String NAME = "Gym";
     private final String DESCRIPTION = "A place to get bolo.";
+
+    public int studentHousingCapacity = 0;
+    public int studentStudyCapacity = 0;
+    public int leisureCapacity = 6000;
+    public int staffOfficeCapacity = 0;
+    public int cost = 175_000;
+    public int monthlyUpkeepCosts = 50_000;
+
+        @Override public int getStudentHousingCapacity() {return studentHousingCapacity;}
+    @Override public int getStudentStudyCapacity() {return studentStudyCapacity;}
+    @Override public int getLeisureCapacity() {return leisureCapacity;}
+    @Override public int getStaffOfficeCapacity() {return staffOfficeCapacity;}
+    @Override public int getCost() {return cost;}
+    @Override public int getMonthlyUpkeepCosts() {return monthlyUpkeepCosts;}
 
     public Gym(Vector2 mapPos) {
         // TODO: Map data

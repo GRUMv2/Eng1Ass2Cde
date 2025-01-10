@@ -1,0 +1,16 @@
+package io.github.GRUMv2.EngSim.Server.EventHandler;
+
+import io.github.GRUMv2.EngSim.broker.Broker;
+
+public class Achievement extends Event {
+    String awardName = "default award";
+
+    void award() {
+        Broker.getInstance().achievementAwarded(this.awardName);
+    }
+
+    @Override
+    public boolean tick(double delta, EventHandler handler) {
+        return false;
+    }
+}

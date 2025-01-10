@@ -18,17 +18,23 @@ public final class Broker {
 
     private final int MAP_CELLS = 30;
     private final float REALTIME_LENGTH = 300f;
-    private final float GAMETIME_LENGTH = 10f;
-    private final String GAMETIME_UNIT = "year";
 
+    private volatile String timeElapsedString = "f";
+    private volatile float studentSatisfaction = 0f;
+    private volatile float studentNumbers = 0f;
+    private volatile float staffSatisfaction = 0f;
+    private volatile float staffNumbers = 0f;
+    private volatile long money = 0;
+    private volatile int income = 0;
+    public volatile int spendMoney = 0;
 
     // thread-safe
-    private volatile float timeElapsed = 0f; // Delta time elapsed since start
     private volatile boolean gameComplete = false;
 
     private ConcurrentHashMap<Building, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
+    private CopyOnWriteArrayList<String> achievementAwarded = new CopyOnWriteArrayList<>();
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
@@ -51,32 +57,69 @@ public final class Broker {
     }
 
     public String getTimeLeftString() {
-        float progress = (timeElapsed / REALTIME_LENGTH);
-        float gameTimeElapsed = progress * GAMETIME_LENGTH;
-        float gameTimeLeft = GAMETIME_LENGTH - gameTimeElapsed;
-        return String.format("%.2f %ss left", gameTimeLeft, GAMETIME_UNIT);
+        return timeElapsedString;
     }
 
-    public boolean setTime(float time) {
-        //if (time < this.timeElapsed) {
-        //    return false;
-        //}
-        this.timeElapsed = time;
-        if (time >= REALTIME_LENGTH) {
+    public void serverPush(
+        float timeElapsed,
+        String timeElapsedString,
+        float studentSatisfaction,
+        float studentNumbers,
+        float staffSatisfaction,
+        float staffNumbers,
+        long money,
+        int income
+    ) {
+        if (timeElapsed >= REALTIME_LENGTH) {
             this.gameComplete = true;
         }
-        return true;
+
+        this.timeElapsedString = timeElapsedString;
+        this.studentSatisfaction = studentSatisfaction;
+        this.studentNumbers = studentNumbers;
+        this.staffSatisfaction = staffSatisfaction;
+        this.staffNumbers = staffNumbers;
+        this.money = money;
+        this.income = income;
+    }
+
+    public float getStudentSatisfaction() {
+        return studentSatisfaction;
+    }
+
+    public float getStudentNumbers() {
+        return studentNumbers;
+    }
+
+    public float getStaffSatisfaction() {
+        return staffSatisfaction;
+    }
+
+    public float getStaffNumbers() {
+        return staffNumbers;
+    }
+
+    public long getMoney() {
+        return money;
+    }
+
+    public int getIncome() {
+        return income;
+    }
+
+    public void spendMoney(int spent) {
+        this.spendMoney -= spent;
     }
 
     public boolean isGameComplete() {
         return gameComplete;
     }
 
-    public CopyOnWriteArrayList<ForegroundEntity> getEntities() {
+    public synchronized CopyOnWriteArrayList<ForegroundEntity> getEntities() {
         return entities;
     }
 
-    public ConcurrentHashMap<Vector2, ForegroundEntity> getGrid() {
+    public synchronized ConcurrentHashMap<Vector2, ForegroundEntity> getGrid() {
         return grid;
     }
 
@@ -219,5 +262,9 @@ public final class Broker {
     public int getHighScore() {
         // leaderboard presumed to be sorted at rest
         return this.leaderboard.get(0).getValue();
+    }
+
+    public void achievementAwarded(String achievement) {
+        achievementAwarded.add(achievement);
     }
 }
