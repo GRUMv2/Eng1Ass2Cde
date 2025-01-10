@@ -23,8 +23,7 @@ public class UI extends Entity {
     private BuildingPlaceButton[] buildingPlaceButtons;
     private TmpButton[] actionButtons;
     // XXX: placeholder
-    private TmpTextBox statsBox;
-    private TmpTextBox statsHeader;
+    private StatsBox statsBox;
 
     public UI(GameScreen game, Broker broker, BuildingFactory builder) {
         this.broker = broker;
@@ -62,19 +61,9 @@ public class UI extends Entity {
             );
         }
 
-        // XXX: placeholder
-        this.statsHeader = new TmpTextBox(
-            new Vector2(20, 630),
-            new Vector2(250, 30),
-            "",
-            2f
-        );
-        this.statsHeader.setContent("Statistics");
-        this.statsBox = new TmpTextBox(
+        this.statsBox = new StatsBox(
             new Vector2(20, 480),
-            new Vector2(250, 150),
-            "",
-            2f
+            new Vector2(250, 180)
         );
     }
 
@@ -116,8 +105,14 @@ public class UI extends Entity {
             1f
         );
 
-        // XXX: placeholder
-        this.statsHeader.update(renderer, inputHandler);
+        this.statsBox.setStats(
+            broker.getMoney(),
+            broker.getIncome(),
+            broker.getStudentNumbers(),
+            broker.getStudentSatisfaction(),
+            broker.getStaffNumbers(),
+            broker.getStaffSatisfaction()
+        );
         this.statsBox.update(renderer, inputHandler);
 
         for (TmpButton button : this.actionButtons) {
