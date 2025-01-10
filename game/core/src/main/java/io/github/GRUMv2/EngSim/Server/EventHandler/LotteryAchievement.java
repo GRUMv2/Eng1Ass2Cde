@@ -16,8 +16,8 @@ public class LotteryAchievement extends Achievement {
 
     @Override
     public boolean tick(double delta, EventHandler handler) {
-        if (random.nextInt(0, 100_000_000) < 3) {
-            broker.spendMoney(-1_000_000);
+        if (random.nextInt(0, 100_000) < 3) {
+            broker.spendMoney(-10_000_000);
             this.award();
             return false;
         }
