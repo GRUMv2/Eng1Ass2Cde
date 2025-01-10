@@ -8,6 +8,21 @@ public class HallsAccommadation extends Building {
     private final String NAME = "Halls Accommodation";
     private final String DESCRIPTION = "A place to sleep.";
 
+    public int studentHousingCapacity = 1_000;
+    public int studentStudyCapacity = 0;
+    public int leisureCapacity = 0;
+    public int staffOfficeCapacity = 0;
+    public int cost = 250_000;
+    public int monthlyUpkeepCosts = 50_000;
+
+    @Override public int getStudentHousingCapacity() {return studentHousingCapacity;}
+    @Override public int getStudentStudyCapacity() {return studentStudyCapacity;}
+    @Override public int getLeisureCapacity() {return leisureCapacity;}
+    @Override public int getStaffOfficeCapacity() {return staffOfficeCapacity;}
+    @Override public int getCost() {return cost;}
+    @Override public int getMonthlyUpkeepCosts() {return monthlyUpkeepCosts;}
+
+
     public HallsAccommadation(Vector2 mapPos) {
         // TODO: Map data
         super(
