@@ -1,6 +1,5 @@
 package io.github.GRUMv2.EngSim.client;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
@@ -9,8 +8,6 @@ import io.github.GRUMv2.EngSim.entities.BuildingFactory;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
 import io.github.GRUMv2.EngSim.entities.UI;
-
-import io.github.GRUMv2.EngSim.Server.Server;
 
 public class GameScreen extends AbstractGameScreen {
 

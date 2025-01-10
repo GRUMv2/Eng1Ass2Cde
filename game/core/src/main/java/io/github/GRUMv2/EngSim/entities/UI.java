@@ -22,7 +22,6 @@ public class UI extends Entity {
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
     private TmpButton[] actionButtons;
-    // XXX: placeholder
     private StatsBox statsBox;
 
     public UI(GameScreen game, Broker broker, BuildingFactory builder) {
