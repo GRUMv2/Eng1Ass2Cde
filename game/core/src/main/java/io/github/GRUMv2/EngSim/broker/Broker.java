@@ -201,6 +201,7 @@ public final class Broker {
         if (!placeEntity(building)) {
             return false;
         }
+        this.spendMoney(building.getCost());
         this.buildingCount.put(building, this.getBuildingCount(building) + 1);
         return true;
     }
