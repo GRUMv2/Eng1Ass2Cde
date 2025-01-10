@@ -2,18 +2,16 @@ package io.github.GRUMv2.EngSim.Server.EventHandler;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
 
-public class BrokeAcheivement extends Acheivement{
+public class BrokeAchievement extends Achievement {
     private final Broker broker;
 
-    BrokeAcheivement() {
+    BrokeAchievement() {
         super();
         broker = Broker.getInstance();
     }
 
     @Override
     public boolean tick(double delta, EventHandler handler) {
-        System.out.println("BrokeAcheivement tick " + broker.getMoney());
-
         if (broker.getMoney() < 0) {
             this.award();
             return false;
