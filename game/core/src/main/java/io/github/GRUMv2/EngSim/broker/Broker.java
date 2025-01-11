@@ -295,20 +295,20 @@ public final class Broker {
         achievementAwarded.add(achievement);
     }
 
-    public PopupTicket getPendingPopups() {
+    public synchronized PopupTicket getPendingPopups() {
         return pendingPopups.poll();
     }
 
-    public PopupTicket getResolvedPopups() {
+    public synchronized PopupTicket getResolvedPopups() {
         return resolvedPopups.poll();
     }
 
-    public boolean queuePopup(PopupTicket popup) {
+    public synchronized boolean queuePopup(PopupTicket popup) {
         this.pendingPopups.add(popup);
         return true;
     }
 
-    public boolean resolvePopup(PopupTicket popup) {
+    public synchronized boolean resolvePopup(PopupTicket popup) {
         if (popup.isTransient()) {
             return true;
         } else {
