@@ -3,6 +3,7 @@ package io.github.GRUMv2.EngSim.entities;
 import java.util.ArrayList;
 import java.util.AbstractMap.SimpleImmutableEntry;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.client.InputHandler;
@@ -14,8 +15,16 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class Leaderboard extends Entity {
 
     private final int LEADERBOARD_LENGTH = 10;
-    private float borderWidth = 3f;
+    private float borderWidth = 5f;
 
+    private float cellWidth = 0.5f;
+    private float contentHeight = 0.8f;
+    private float headerHeight = (1f - contentHeight) / 2f;
+
+    private Vector2 pos;
+    private Vector2 size;
+
+    private TmpTextBox titleHeader;
     private TmpTextBox nameHeader;
     private TmpTextBox scoreHeader;
     private TmpTextBox nameCol;
@@ -25,35 +34,45 @@ public class Leaderboard extends Entity {
 
     public Leaderboard(Vector2 pos, Vector2 size) {
 
+        this.pos = pos;
+        this.size = size;
+
         // They're titled Tmp for a reason
         this.nameCol = new TmpTextBox(
             pos,
-            new Vector2(size.x * 0.5f, size.y * 0.9f),
+            new Vector2(size.x * cellWidth, size.y * contentHeight),
             "",
-            this.borderWidth
+            this.borderWidth / 2f
         );
 
         this.scoreCol = new TmpTextBox(
-            new Vector2(pos.x + (size.x / 2), pos.y),
-            new Vector2(size.x * 0.5f, size.y * 0.9f),
+            new Vector2(pos.x + (size.x / 2f), pos.y),
+            new Vector2(size.x * cellWidth, size.y * contentHeight),
             "",
-            this.borderWidth
+            this.borderWidth / 2f
         );
 
         this.scoreHeader = new TmpTextBox(
-            new Vector2(pos.x + (size.x / 2), pos.y + (size.y * 0.9f)),
-            new Vector2(size.x * 0.5f, size.y * 0.1f),
+            new Vector2(pos.x + (size.x / 2f), pos.y + (size.y * contentHeight)),
+            new Vector2(size.x * cellWidth, size.y * headerHeight),
             "",
-            this.borderWidth
+            this.borderWidth / 2f
         );
 
         this.nameHeader = new TmpTextBox(
-            new Vector2(pos.x, pos.y + (size.y * 0.9f)),
-            new Vector2(size.x * 0.5f, size.y * 0.1f),
+            new Vector2(pos.x, pos.y + (size.y * contentHeight)),
+            new Vector2(size.x * cellWidth, size.y * headerHeight),
             "",
-            this.borderWidth
+            this.borderWidth / 2f
         );
 
+        this.titleHeader = new TmpTextBox(
+            new Vector2(pos.x, pos.y + (size.y * (contentHeight + headerHeight))),
+            new Vector2(size.x, size.y * headerHeight)
+        );
+
+        this.titleHeader.setContent("Leaderboard");
+        this.titleHeader.centreText();
         this.nameHeader.setContent("NAME");
         this.scoreHeader.setContent("SCORE");
 
@@ -91,6 +110,10 @@ public class Leaderboard extends Entity {
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
+
+        renderer.drawBorder(this.pos, this.size, Color.BLACK, this.borderWidth);
+
+        this.titleHeader.update(renderer, inputHandler);
         this.nameHeader.update(renderer, inputHandler);
         this.scoreHeader.update(renderer, inputHandler);
         this.nameCol.update(renderer, inputHandler);
