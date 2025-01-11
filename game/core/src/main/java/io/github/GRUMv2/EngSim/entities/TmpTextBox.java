@@ -68,6 +68,16 @@ public class TmpTextBox extends Entity {
         return borderWidth;
     }
 
+    public void setBorderWidth(float borderWidth) {
+        this.borderWidth = borderWidth;
+        this.textOffsetX = (this.borderWidth / 2f) + (float) Math.log(this.size.x * this.size.x);
+        this.textOffsetY = (this.borderWidth / 2f) + (float) Math.log(this.size.y * this.size.y);
+        this.fontBounds = new Vector2(
+            this.size.x - (2 * textOffsetX),
+            this.size.y - (2 * textOffsetY)
+        );
+    }
+
     public String getContent() {
         return content;
     }
