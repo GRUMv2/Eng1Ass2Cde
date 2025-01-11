@@ -1,10 +1,13 @@
 package io.github.GRUMv2.EngSim.client;
 
-import com.badlogic.gdx.Gdx;
+import java.util.ArrayList;
+import java.util.AbstractMap.SimpleImmutableEntry;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.Leaderboard;
 
 // TODO: Dedicated GameOverScreen
@@ -23,11 +26,12 @@ public class EndScreen extends AbstractGameScreen {
             new Vector2(440, 40),
             new Vector2(400, 280)
         );
+        this.leaderboard.setValues(new ArrayList<SimpleImmutableEntry<String, Integer>>(Broker.getInstance().getLeaderboard()));
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
         // placeholder
-        if (Gdx.input.justTouched()) {
+        if (inputHandler.getMouseClicked()) {
             System.out.println("aAAAaaaAAaaaAAaAA");
             this.changeEvent(Screens.QUIT);
         }
