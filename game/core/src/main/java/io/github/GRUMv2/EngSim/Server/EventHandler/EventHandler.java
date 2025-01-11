@@ -21,6 +21,7 @@ public class EventHandler {
         activeEvents.add(new BusyBeeAchievement());
         activeEvents.add(new MassivePopulationAchievement());
         activeEvents.add(new QuitTheGameAchievement());
+        activeEvents.add(new GovernmentGrantEvent());
     }
 
     public void tick(double delta) {
