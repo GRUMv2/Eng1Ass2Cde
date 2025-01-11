@@ -3,6 +3,8 @@ package io.github.GRUMv2.EngSim.client;
 import java.util.ArrayList;
 import java.util.AbstractMap.SimpleImmutableEntry;
 
+import javax.swing.text.html.parser.Entity;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -59,6 +61,12 @@ public class EndScreen extends AbstractGameScreen {
         Broker broker = Broker.getInstance();
         broker.updateLeaderboard(input, Math.round(broker.getStudentSatisfaction() * 1000));
         this.leaderboard.setValues(new ArrayList<SimpleImmutableEntry<String, Integer>>(Broker.getInstance().getLeaderboard()));
+        this.submitBox = new SubmitBox(new Vector2(), new Vector2(), () -> {}){
+            @Override
+            public void update(Renderer renderer, InputHandler inputHandler) {
+                return;
+            }
+        };
         return true;
     }
 
