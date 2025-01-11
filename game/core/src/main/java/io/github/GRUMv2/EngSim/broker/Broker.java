@@ -3,6 +3,7 @@ package io.github.GRUMv2.EngSim.broker;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -36,7 +37,9 @@ public final class Broker {
     private ConcurrentHashMap<Available, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
-    private CopyOnWriteArrayList<String> achievementAwarded = new CopyOnWriteArrayList<>();
+    private LinkedBlockingQueue<PopupTicket> pendingPopups;
+    private LinkedBlockingQueue<PopupTicket> resolvedPopups;
+    private CopyOnWriteArrayList<String> achievementAwarded;
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
@@ -45,6 +48,9 @@ public final class Broker {
         this.grid = new ConcurrentHashMap<>();
         this.leaderboard = new CopyOnWriteArrayList<>();
         this.entities = new CopyOnWriteArrayList<>();
+        this.achievementAwarded = new CopyOnWriteArrayList<>();
+        this.pendingPopups = new LinkedBlockingQueue<>();
+        this.resolvedPopups = new LinkedBlockingQueue<>();
     }
 
     public synchronized static Broker getInstance() {
@@ -288,4 +294,27 @@ public final class Broker {
     public void achievementAwarded(String achievement) {
         achievementAwarded.add(achievement);
     }
+
+    public PopupTicket getPendingPopups() {
+        return pendingPopups.poll();
+    }
+
+    public PopupTicket getResolvedPopups() {
+        return resolvedPopups.poll();
+    }
+
+    public boolean queuePopup(PopupTicket popup) {
+        this.pendingPopups.add(popup);
+        return true;
+    }
+
+    public boolean resolvePopup(PopupTicket popup) {
+        if (popup.isTransient()) {
+            return true;
+        } else {
+            this.resolvedPopups.add(popup);
+        }
+        return true;
+    }
+
 }
