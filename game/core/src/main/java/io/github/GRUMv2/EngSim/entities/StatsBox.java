@@ -61,6 +61,10 @@ public class StatsBox extends Entity {
         this.itemBoxes[4].setContent("Staff Satisfaction: " + staffSatisfaction);
     }
 
+    public void setStats(long balance, int income) {
+        this.itemBoxes[0].setContent("Balance: £" + (balance == 0 ? 0 : balance / 1000 + "K") + " ( +£" + (income == 0 ? 0 : income / 1000 + "K") + ")");
+    }
+
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         this.header.update(renderer, inputHandler);

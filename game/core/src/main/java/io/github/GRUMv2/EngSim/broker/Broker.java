@@ -58,8 +58,12 @@ public final class Broker {
         return this.MAP_CELLS;
     }
 
+    public int getTimeLeft() {
+        return (int) (REALTIME_LENGTH - timeElapsed);
+    }
+
     public String getTimeLeftString() {
-        float left = (REALTIME_LENGTH - timeElapsed);
+        int left = this.getTimeLeft();
         float minLeft = (float) Math.floor(left / 60f);
         return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f)))  + ")";
     }

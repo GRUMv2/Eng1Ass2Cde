@@ -24,6 +24,8 @@ public class UI extends Entity {
     private TmpButton[] actionButtons;
     private StatsBox statsBox;
 
+    private int updateTime;
+
     public UI(GameScreen game, Broker broker, BuildingFactory builder) {
         this.broker = broker;
         this.game = game;
@@ -101,14 +103,19 @@ public class UI extends Entity {
             1f
         );
 
-        this.statsBox.setStats(
-            broker.getMoney(),
-            broker.getIncome(),
-            broker.getStudentNumbers(),
-            broker.getStudentSatisfaction(),
-            broker.getStaffNumbers(),
-            broker.getStaffSatisfaction()
-        );
+        if (this.updateTime == broker.getTimeLeft()) {
+            this.statsBox.setStats(broker.getMoney(), broker.getIncome());
+        } else {
+            this.statsBox.setStats(
+                broker.getMoney(),
+                broker.getIncome(),
+                broker.getStudentNumbers(),
+                broker.getStudentSatisfaction(),
+                broker.getStaffNumbers(),
+                broker.getStaffSatisfaction()
+            );
+            this.updateTime = broker.getTimeLeft();
+        }
         this.statsBox.update(renderer, inputHandler);
 
         for (TmpButton button : this.actionButtons) {
