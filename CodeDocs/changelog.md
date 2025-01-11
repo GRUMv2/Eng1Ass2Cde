@@ -1,4 +1,3 @@
-# Alex 30/11
 - re-constructed LibGDX project to check for changes
 	- Minor changes to window configuration in lwjgl3Launcher
 - Refactored project to io.github.grumv2.engsim
@@ -35,3 +34,9 @@
     - Added separate building modes for building (normal), moving and destroying 
     - Replaced hardcoded building instantiation of buildings in UI logic with a dynamically generating system
     - Add ability to move buildings through the handling of Broker's entity DB
+- Server:
+    - Added server running in seperate thread calling simulator events and pushing updated stats to broker
+    - Added simultion taking into account student staff ratio building capacities and ratio's
+    - Added event system to allow for a molular increase in game functionality
+        - and basic events and achievements to accompany
+    - Moved all timekeeping code to the server
