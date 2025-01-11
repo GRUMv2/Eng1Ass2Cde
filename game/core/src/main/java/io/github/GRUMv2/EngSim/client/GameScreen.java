@@ -58,6 +58,8 @@ public class GameScreen extends AbstractGameScreen {
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
 
+        // Debug feature - Force end the game ahead of time
+        // The player can trigger it if they like but it doesn't exactly offer much help
         if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
             this.changeEvent(Screens.END);
         }
@@ -119,12 +121,6 @@ public class GameScreen extends AbstractGameScreen {
         }
     }
 
-    // TODO: remove
-    // What this is replaced by depends heavily on how we want to handle
-    // building objects
-    // Potentially a BuildingManager job but alternatively, if the tracking of objects
-    // can be decoupled from GameScreen() into a dedicated grid data type, then it may
-    // make more sense to let the buttons themselves be able to create their objects
     private boolean clickBuild(Vector2 cellPos) {
         if (buildingToPlace == null) {
             return false;
