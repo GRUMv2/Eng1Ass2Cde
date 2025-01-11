@@ -3,8 +3,6 @@ package io.github.GRUMv2.EngSim.client;
 import java.util.ArrayList;
 import java.util.AbstractMap.SimpleImmutableEntry;
 
-import javax.swing.text.html.parser.Entity;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
