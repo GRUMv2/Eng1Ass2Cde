@@ -29,8 +29,9 @@ public class Simulation {
     public float getStudentSatisfaction() {
         float studentStaffRatio = (float) rollingValuesSimulator.studentHousingCapacity() / (float) rollingValuesSimulator.staffOfficeCapacity();
         float studentStaffRatioPenalty = Math.abs(studentStaffRatio - 100f) / 1000;
+        float leisurePenalty = Math.max(0, (rollingValuesSimulator.studentHousingCapacity() - rollingValuesSimulator.leisureCapacity()) / 1000);
 
-        return (float) Math.max(0, studentWalkSimulation.getScore() - studentStaffRatioPenalty);
+        return (float) Math.max(0, studentWalkSimulation.getScore() - studentStaffRatioPenalty - leisurePenalty);
     }
 
     public int getStudentNumbers() {
