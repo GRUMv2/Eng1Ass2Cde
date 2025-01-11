@@ -21,6 +21,7 @@ public final class Broker {
     private final float REALTIME_LENGTH = 300f;
 
     private volatile String timeElapsedString = "f";
+    private volatile float timeElapsed= 0;
     private volatile float studentSatisfaction = 0f;
     private volatile float studentNumbers = 0f;
     private volatile float staffSatisfaction = 0f;
@@ -58,7 +59,9 @@ public final class Broker {
     }
 
     public String getTimeLeftString() {
-        return timeElapsedString;
+        float left = (REALTIME_LENGTH - timeElapsed);
+        float minLeft = (float) Math.floor(left / 60f);
+        return timeElapsedString + " (" + (int) minLeft + ":" + (int) Math.floor(left - (minLeft * 60f))  + ")";
     }
 
     public void serverPush(
@@ -74,7 +77,9 @@ public final class Broker {
         if (timeElapsed >= REALTIME_LENGTH) {
             this.gameComplete = true;
         }
+        this.gameComplete = true;
 
+        this.timeElapsed =  timeElapsed;
         this.timeElapsedString = timeElapsedString;
         this.studentSatisfaction = studentSatisfaction;
         this.studentNumbers = studentNumbers;
