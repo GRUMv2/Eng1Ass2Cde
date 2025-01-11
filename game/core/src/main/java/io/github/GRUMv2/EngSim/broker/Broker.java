@@ -4,6 +4,8 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.entities.Building;
@@ -19,6 +21,8 @@ public final class Broker {
 
     private final int MAP_CELLS = 30;
     private final float REALTIME_LENGTH = 300f;
+
+    public Available buildingToPlace = null;
 
     private volatile String timeElapsedString = "f";
     private volatile float timeElapsed= 0;
@@ -222,6 +226,12 @@ public final class Broker {
         }
         this.spendMoney(building.getCost());
         this.buildingCount.put(Available.get(building.getClass()), this.getBuildingCount(Available.get(building.getClass())) + 1);
+
+        // if not holding down shift select none
+        if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            this.buildingToPlace = null;
+        }
+
         return true;
     }
 
