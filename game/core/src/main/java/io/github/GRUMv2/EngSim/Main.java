@@ -95,7 +95,6 @@ public class Main extends Game {
                 break;
             case QUIT:
                 this.quit();
-                this.server.Stop();
                 break;
             default:
                 break;
@@ -132,6 +131,7 @@ public class Main extends Game {
 
     public void quit() {
         dispose();
+        System.out.println("aAAAaaaAAaaaAAaAA");
         System.exit(0);
     }
 }
