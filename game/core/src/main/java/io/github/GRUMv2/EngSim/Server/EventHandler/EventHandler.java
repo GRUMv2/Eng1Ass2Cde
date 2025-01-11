@@ -20,6 +20,7 @@ public class EventHandler {
         activeEvents.add(new CityCreatorAchievement());
         activeEvents.add(new BusyBeeAchievement());
         activeEvents.add(new MassivePopulationAchievement());
+        activeEvents.add(new QuitTheGameAchievement());
     }
 
     public void tick(double delta) {

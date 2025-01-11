@@ -9,7 +9,7 @@ public abstract class Event {
     Broker broker;
     public Server server;
 
-    Event () {
+    protected Event() {
         broker = Broker.getInstance();
     }
 
