@@ -14,7 +14,7 @@ public final class BuildingFactory {
 
     public enum Available {
         GYM(Gym.class),
-        ACCOMMODATION(HallsAccommadation.class),
+        HALLS(Halls.class),
         LECTUREHALL(LectureHall.class),
         PUB(Pub.class),
         RESTAURANT(Restaurant.class);

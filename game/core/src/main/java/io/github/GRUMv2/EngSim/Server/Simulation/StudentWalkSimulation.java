@@ -11,12 +11,12 @@ public class StudentWalkSimulation {
     ArrayList<Double> scores = new ArrayList<>();
 
     StudentWalkSimulation() {
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, HallsAccommadation.class), 2);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, Halls.class), 2);
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, Restaurant.class), 6);
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, Gym.class), 4);
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, Pub.class), 6);
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, Restaurant.class), 1);
-        thingsToCheck.put(new AbstractMap.SimpleEntry<>(HallsAccommadation.class, LectureHall.class), 8);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Halls.class, Gym.class), 4);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Halls.class, Pub.class), 6);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Halls.class, Restaurant.class), 1);
+        thingsToCheck.put(new AbstractMap.SimpleEntry<>(Halls.class, LectureHall.class), 8);
 
         // Dont put pubs next to restaurants or gyms
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Restaurant.class, Pub.class), -2);
