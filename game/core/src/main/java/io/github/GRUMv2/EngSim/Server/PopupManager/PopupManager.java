@@ -24,7 +24,7 @@ public class PopupManager {
 
             if (popup.getAutoKillAt() > cTime) {
                 iterator.remove();
-                System.out.println(" [ POP ] Popup " + popup.getName() + " expired (EOL)");
+                System.out.println("[ POP ] Popup " + popup.getName() + " expired (EOL)");
             }
         }
 
@@ -36,7 +36,7 @@ public class PopupManager {
 
     public void removePopup(PopupTicket popup) {
         popups.remove(popup);
-        System.out.println(" [ POP ] Popup " + popup.getName() + " removed (DISMISSED)");
+        System.out.println("[ POP ] Popup " + popup.getName() + " removed (DISMISSED)");
     }
 
     public void addPopup(String title, String description, int lastFor) {
