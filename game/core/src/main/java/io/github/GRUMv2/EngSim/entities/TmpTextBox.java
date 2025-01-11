@@ -19,6 +19,7 @@ public class TmpTextBox extends Entity {
     private float textOffsetY;
     private float borderWidth = 0f;
     private String content = "";
+    private Color backgroundColor;
     private Color borderColor = Color.BLACK;
     private Color textColor = Color.BLACK;
     private int textAlign = Align.left;
@@ -103,11 +104,23 @@ public class TmpTextBox extends Entity {
         this.textAlign = alignment;
     }
 
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
 
         if (this.borderWidth > 0) {
             renderer.drawBorder(this.pos, this.size, this.borderColor, this.borderWidth);
+        }
+
+        if (this.backgroundColor != null) {
+            renderer.drawRect(this.pos, this.size, this.backgroundColor);
         }
 
         Vector2 textPos;
