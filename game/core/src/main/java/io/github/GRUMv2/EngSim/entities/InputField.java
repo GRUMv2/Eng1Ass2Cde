@@ -33,7 +33,6 @@ public class InputField extends TmpTextBox {
 
             @Override
             public boolean keyDown(int keycode) {
-                System.out.println(keycode);
                 switch (keycode) {
                     case 61:
                         if (!selected) {
@@ -45,11 +44,7 @@ public class InputField extends TmpTextBox {
                     case 111:
                         if (selected) {
                             select();
-                            String content = getContent();
-                            if (content.length() > 0 && content.lastIndexOf("|") == content.length() - 1) {
-                                content = content.substring(0, content.length() - 1);
-                            }
-                            setContent(content);
+                            setContent(getContent());
                         }
                         this.handled = true;
                         return true;
@@ -68,14 +63,11 @@ public class InputField extends TmpTextBox {
             @Override
             public boolean keyTyped(char character) {
                 String content = getContent();
-                if (content.length() > 0 && content.lastIndexOf("|") == content.length() - 1) {
-                    content = content.substring(0, content.length() - 1);
-                }
                 if (!selected) {
                     setContent(content);
                     return false;
                 } else if (this.handled) {
-                    setContent(content + "|");
+                    setContent(content);
                     return true;
                 }
                 if((int)character == 8){
@@ -85,7 +77,7 @@ public class InputField extends TmpTextBox {
                 } else {
                     content += character;
                 }
-                setContent(content + "|");
+                setContent(content);
 
                 return true;
             }
@@ -96,6 +88,25 @@ public class InputField extends TmpTextBox {
 
     public void select() {
         this.selected = !selected;
+        this.setContent(this.getContent());
+    }
+
+    @Override
+    public String getContent() {
+        String content = super.getContent();
+        if (content.length() > 0 && content.lastIndexOf("|") == content.length() - 1) {
+            content = content.substring(0, content.length() - 1);
+        }
+        return content;
+    }
+
+    @Override
+    public void setContent(String content) {
+        if (!selected) {
+            super.setContent(content);
+        } else {
+            super.setContent(content + "|");
+        }
     }
 
     @Override
