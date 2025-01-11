@@ -12,6 +12,8 @@ import io.github.GRUMv2.EngSim.entities.GameMap;
 import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
+
+    private Available buildingToPlace = null;
     private Modes mode;
     private GameMap map;
     private UI ui;
@@ -64,10 +66,10 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     public void setBuildingToPlace(Available buildingType) {
-        if (buildingType == broker.buildingToPlace) {
-            broker.buildingToPlace = null;
+        if (buildingType == buildingToPlace) {
+            buildingToPlace = null;
         } else {
-            broker.buildingToPlace = buildingType;
+            buildingToPlace = buildingType;
         }
         this.toggleMode(Modes.NORMAL);
     }
@@ -82,7 +84,7 @@ public class GameScreen extends AbstractGameScreen {
                 break;
             case DESTROY:
             case MOVE:
-                broker.buildingToPlace = null;
+                this.buildingToPlace = null;
                 break;
             default:
                 break;
@@ -95,7 +97,7 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     public Available getBuildingToPlace() {
-        return broker.buildingToPlace;
+        return buildingToPlace;
     }
 
     public void handleCellClick(Vector2 cellPos) {
@@ -122,10 +124,10 @@ public class GameScreen extends AbstractGameScreen {
     // can be decoupled from GameScreen() into a dedicated grid data type, then it may
     // make more sense to let the buttons themselves be able to create their objects
     private boolean clickBuild(Vector2 cellPos) {
-        if (broker.buildingToPlace == null) {
+        if (buildingToPlace == null) {
             return false;
         }
-        Building building = builder.newBuilding(broker.buildingToPlace, cellPos);
+        Building building = builder.newBuilding(buildingToPlace, cellPos);
         if (broker.getMoney() < building.getCost()) {
             return false;
         }
@@ -137,7 +139,7 @@ public class GameScreen extends AbstractGameScreen {
     }
 
     private void clickMove(Vector2 cellPos) {
-        if (broker.buildingToPlace == null) {
+        if (this.buildingToPlace == null) {
             Building building = broker.destroyBuilding(cellPos);
             if (building == null) {
                 return;
@@ -147,7 +149,7 @@ public class GameScreen extends AbstractGameScreen {
             // In practice I don't see how this could ever be triggered, because destroyBuilding
             // implies a previous placeBuilding, triggered by user UI interaction,
             // which is generated from the values of Available
-            broker.buildingToPlace = Available.get(building.getClass());
+            this.buildingToPlace = Available.get(building.getClass());
         } else {
             if (this.clickBuild(cellPos)) {
                 this.toggleMode(Modes.MOVE);
