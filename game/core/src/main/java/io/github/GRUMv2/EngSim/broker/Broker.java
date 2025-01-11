@@ -296,7 +296,7 @@ public final class Broker {
     }
 
     public synchronized PopupTicket getPendingPopups() {
-        return pendingPopups.poll();
+        return pendingPopups.peek();
     }
 
     public synchronized PopupTicket getResolvedPopups() {
@@ -308,11 +308,16 @@ public final class Broker {
         return true;
     }
 
-    public synchronized boolean resolvePopup(PopupTicket popup) {
+    public synchronized boolean resolvePopup() {
+        PopupTicket popup = this.pendingPopups.peek();
         if (popup.isTransient()) {
+            this.pendingPopups.poll();
             return true;
         } else {
-            this.resolvedPopups.add(popup);
+            if (!popup.isDismissed()) {
+                return false;
+            }
+            this.resolvedPopups.add(this.pendingPopups.poll());
         }
         return true;
     }
