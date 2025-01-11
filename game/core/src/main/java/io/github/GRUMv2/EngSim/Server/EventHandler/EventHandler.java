@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class EventHandler {
     ArrayList<Event> activeEvents = new ArrayList<>();
-    private Server server;
+    private final Server server;
 
     public EventHandler(Server server) {
         System.out.println("[ EVN ] EventHandler created");
@@ -22,6 +22,8 @@ public class EventHandler {
         activeEvents.add(new MassivePopulationAchievement());
         activeEvents.add(new QuitTheGameAchievement());
         activeEvents.add(new GovernmentGrantEvent());
+
+        this.server = server;
     }
 
     public void tick(double delta) {
