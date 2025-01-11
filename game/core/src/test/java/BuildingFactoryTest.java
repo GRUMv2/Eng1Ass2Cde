@@ -1,6 +1,6 @@
 import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory;
-import io.github.GRUMv2.EngSim.entities.HallsAccommadation;
+import io.github.GRUMv2.EngSim.entities.Halls;
 import io.github.GRUMv2.EngSim.entities.Pub;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,8 +34,8 @@ public class BuildingFactoryTest {
 
     @Test
     public void buildingFactoryProducesValidBuilding() {
-        Building f = buildingFactory.newBuilding(Available.ACCOMMODATION, new Vector2(0,0));
-        assertTrue(() -> f instanceof HallsAccommadation);
+        Building f = buildingFactory.newBuilding(Available.HALLS, new Vector2(0,0));
+        assertTrue(() -> f instanceof Halls);
 
         Building g = buildingFactory.newBuilding(Available.PUB, new Vector2(0,0));
         assertTrue(() -> g instanceof Pub);

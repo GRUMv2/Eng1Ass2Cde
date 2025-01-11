@@ -3,9 +3,9 @@ package io.github.GRUMv2.EngSim.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-public class HallsAccommadation extends Building {
+public class Halls extends Building {
 
-    private final String NAME = "Halls Accommodation";
+    private final String NAME = "Halls";
     private final String DESCRIPTION = "A place to sleep.";
 
     public int studentHousingCapacity = 1_000;
@@ -23,7 +23,7 @@ public class HallsAccommadation extends Building {
     @Override public int getMonthlyUpkeepCosts() {return monthlyUpkeepCosts;}
 
 
-    public HallsAccommadation(Vector2 mapPos) {
+    public Halls(Vector2 mapPos) {
         // TODO: Map data
         super(
             mapPos,

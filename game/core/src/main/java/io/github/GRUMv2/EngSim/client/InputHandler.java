@@ -36,9 +36,9 @@ public class InputHandler {
     public boolean getMouseInBounds(Vector2 pos, Vector2 size) {
         Vector2 mousePos = getMousePos();
         return (
-            mousePos.x > pos.x
+            mousePos.x >= pos.x
             && mousePos.x < pos.x + size.x
-            && mousePos.y > pos.y
+            && mousePos.y >= pos.y
             && mousePos.y < pos.y + size.y
         );
     }

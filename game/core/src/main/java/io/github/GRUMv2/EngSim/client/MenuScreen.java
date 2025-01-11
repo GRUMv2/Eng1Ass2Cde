@@ -33,14 +33,7 @@ public class MenuScreen extends AbstractGameScreen {
             new Vector2(440, 40),
             new Vector2(400, 280)
         );
-        Broker broker = Broker.getInstance();
-
-        // XXX: placeholder
-        broker.updateLeaderboard("Alice", 123);
-        broker.updateLeaderboard("Mallory", 1000);
-        broker.updateLeaderboard("Eve", 0);
-        broker.updateLeaderboard("Bob", 1000);
-        this.leaderboard.setValues(new ArrayList<SimpleImmutableEntry<String, Integer>>(broker.getLeaderboard()));
+        this.leaderboard.setValues(new ArrayList<SimpleImmutableEntry<String, Integer>>(Broker.getInstance().getLeaderboard()));
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {

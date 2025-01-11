@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
 import io.github.GRUMv2.EngSim.entities.Obstacle;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 
 /**
  * Broker (Singleton)
@@ -20,19 +21,20 @@ public final class Broker {
     private final float REALTIME_LENGTH = 300f;
 
     private volatile String timeElapsedString = "f";
+    private volatile float timeElapsed= 0;
     private volatile float studentSatisfaction = 0f;
     private volatile float studentNumbers = 0f;
     private volatile float staffSatisfaction = 0f;
     private volatile float staffNumbers = 0f;
     private volatile long money = 0;
     private volatile int income = 0;
-    public volatile int spendMoney = 0;
     private volatile int gamePausedNumber = 0;
+    private volatile int pendingSpendMoney = 0;
 
     // thread-safe
     private volatile boolean gameComplete = false;
 
-    private ConcurrentHashMap<Building, Integer> buildingCount;
+    private ConcurrentHashMap<Available, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
     private CopyOnWriteArrayList<String> achievementAwarded = new CopyOnWriteArrayList<>();
@@ -57,8 +59,14 @@ public final class Broker {
         return this.MAP_CELLS;
     }
 
+    public int getTimeLeft() {
+        return (int) (REALTIME_LENGTH - timeElapsed);
+    }
+
     public String getTimeLeftString() {
-        return timeElapsedString;
+        int left = this.getTimeLeft();
+        float minLeft = (float) Math.floor(left / 60f);
+        return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f)))  + ")";
     }
 
     public void serverPush(
@@ -75,6 +83,7 @@ public final class Broker {
             this.gameComplete = true;
         }
 
+        this.timeElapsed =  timeElapsed;
         this.timeElapsedString = timeElapsedString;
         this.studentSatisfaction = studentSatisfaction;
         this.studentNumbers = studentNumbers;
@@ -108,8 +117,18 @@ public final class Broker {
         return income;
     }
 
-    public void spendMoney(int spent) {
-        this.spendMoney -= spent;
+    public synchronized void spendMoney(int spent) {
+        this.pendingSpendMoney += spent;
+    }
+
+    public int getPendingSpendMoney() {
+        return pendingSpendMoney;
+    }
+
+    public synchronized int reconcileFunds() {
+        int spent = this.pendingSpendMoney;
+        this.pendingSpendMoney = 0;
+        return spent;
     }
 
     public boolean isGameComplete() {
@@ -124,12 +143,12 @@ public final class Broker {
         return grid;
     }
 
-    public ConcurrentHashMap<Building, Integer> getBuildingCount() {
+    public ConcurrentHashMap<Available, Integer> getBuildingCount() {
         return this.buildingCount;
     }
 
-    public int getBuildingCount(Building building) {
-        return this.buildingCount.getOrDefault(building, 0);
+    public int getBuildingCount(Available buildingType) {
+        return this.buildingCount.getOrDefault(buildingType, 0);
     }
 
     public int getTotalBuildings() {
@@ -202,7 +221,8 @@ public final class Broker {
         if (!placeEntity(building)) {
             return false;
         }
-        this.buildingCount.put(building, this.getBuildingCount(building) + 1);
+        this.spendMoney(building.getCost());
+        this.buildingCount.put(Available.get(building.getClass()), this.getBuildingCount(Available.get(building.getClass())) + 1);
         return true;
     }
 
@@ -225,7 +245,7 @@ public final class Broker {
         if (building == null) {
             return null;
         }
-        this.buildingCount.put(building, this.getBuildingCount(building) - 1);
+        this.buildingCount.put(Available.get(building.getClass()), this.getBuildingCount(Available.get(building.getClass())) - 1);
         return building;
     }
 

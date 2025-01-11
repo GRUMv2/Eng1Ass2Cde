@@ -2,6 +2,7 @@ package io.github.GRUMv2.EngSim;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -28,6 +29,7 @@ public class Main extends Game {
     public final static int HEIGHT = 720;
 
     private OrthographicCamera camera;
+    private InputMultiplexer jellyfin;
     private Renderer renderer;
     private InputHandler inputHandler;
     private AbstractGameScreen gameScreen;
@@ -50,6 +52,8 @@ public class Main extends Game {
 
     public void create() {
         this.camera = createCamera();
+        this.jellyfin = new InputMultiplexer();
+        Gdx.input.setInputProcessor(jellyfin);
         this.renderer = new Renderer(this.camera);
         this.inputHandler = new InputHandler(this.camera);
         this.game = new GameScreen(renderer, inputHandler);
@@ -95,7 +99,6 @@ public class Main extends Game {
                 break;
             case QUIT:
                 this.quit();
-                this.server.Stop();
                 break;
             default:
                 break;
@@ -125,13 +128,14 @@ public class Main extends Game {
     // This must only be called on sysexit otherwise everything is kil
     @Override
     public void dispose() {
-        // server.Stop()
+        server.Stop();
         this.renderer.dispose();
         super.dispose();
     }
 
     public void quit() {
         dispose();
+        System.out.println("aAAAaaaAAaaaAAaAA");
         System.exit(0);
     }
 }
