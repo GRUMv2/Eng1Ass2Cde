@@ -28,30 +28,29 @@ public class BrokerBuildingCountTest {
 
     @Test
     public void testGetTotalBuildingWithSingleBuildingType(){
-        Building accomBuilding = buildingFactory.newBuilding(Available.ACCOMMODATION, new Vector2(0, 0));
+        Building accomBuilding = buildingFactory.newBuilding(Available.HALLS, new Vector2(0, 0));
         broker.placeBuilding(accomBuilding);
 
         int total = broker.getTotalBuildings();
-        assertEquals(1, total, "Total Building should be 2 when only 2 building has been added.");
+        assertEquals(1, total, "Total Building should be 1 when only 1 building has been added.");
     }
 
     @Test
     public void testGetTotalBuildingWithDifferentType(){
-        Building accomBuilding = buildingFactory.newBuilding(Available.ACCOMMODATION, new Vector2(0, 0));
+        Building accomBuilding = buildingFactory.newBuilding(Available.HALLS, new Vector2(0, 0));
         Building gymBuilding = buildingFactory.newBuilding(Available.GYM, new Vector2(5, 5));
-   
+
         broker.placeBuilding(accomBuilding);
         broker.placeBuilding(gymBuilding);
 
 
         int total = broker.getTotalBuildings();
-        assertEquals(2, total, "It does not match the total number of buildings");
+        assertEquals(2, total, "getTotalBuildings does not match the total number of buildings");
     }
 
     @Test
     public void testGetBuildingCount_NoBuildings() {
-    
-        Building accomBuilding = buildingFactory.newBuilding(Available.ACCOMMODATION, new Vector2(0, 0));
-        assertEquals(0, broker.getBuildingCount(accomBuilding));
+
+        assertEquals(0, broker.getBuildingCount(Available.HALLS));
     }
 }
