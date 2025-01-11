@@ -1,6 +1,7 @@
 package io.github.GRUMv2.EngSim.client;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 
@@ -130,6 +131,10 @@ public class GameScreen extends AbstractGameScreen {
         Building building = builder.newBuilding(buildingToPlace, cellPos);
         if (broker.getMoney() < building.getCost()) {
             return false;
+        }
+        // if not holding down shift select none
+        if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            this.buildingToPlace = null;
         }
         return broker.placeBuilding(building);
     }
