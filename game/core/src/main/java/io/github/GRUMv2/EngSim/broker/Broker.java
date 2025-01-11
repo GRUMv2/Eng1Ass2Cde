@@ -77,7 +77,6 @@ public final class Broker {
         if (timeElapsed >= REALTIME_LENGTH) {
             this.gameComplete = true;
         }
-        this.gameComplete = true;
 
         this.timeElapsed =  timeElapsed;
         this.timeElapsedString = timeElapsedString;
