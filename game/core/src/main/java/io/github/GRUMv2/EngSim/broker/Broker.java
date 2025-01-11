@@ -61,7 +61,7 @@ public final class Broker {
     public String getTimeLeftString() {
         float left = (REALTIME_LENGTH - timeElapsed);
         float minLeft = (float) Math.floor(left / 60f);
-        return timeElapsedString + " (" + (int) minLeft + ":" + (int) Math.floor(left - (minLeft * 60f))  + ")";
+        return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f)))  + ")";
     }
 
     public void serverPush(
