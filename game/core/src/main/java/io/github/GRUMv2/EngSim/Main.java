@@ -121,7 +121,7 @@ public class Main extends Game {
     // This must only be called on sysexit otherwise everything is kil
     @Override
     public void dispose() {
-        // server.Stop()
+        server.Stop();
         this.renderer.dispose();
         super.dispose();
     }
