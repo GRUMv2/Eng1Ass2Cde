@@ -2,6 +2,7 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
@@ -14,11 +15,13 @@ public class TmpTextBox extends Entity {
     private Vector2 pos;
     private Vector2 size;
     private Vector2 fontBounds;
-    private float textOffset;
+    private float textOffsetX;
+    private float textOffsetY;
     private float borderWidth = 0f;
     private String content = "";
     private Color borderColor = Color.BLACK;
     private Color textColor = Color.BLACK;
+    private int textAlign = Align.left;
 
     public TmpTextBox(Vector2 pos, Vector2 size) {
         this.pos = pos;
@@ -26,10 +29,11 @@ public class TmpTextBox extends Entity {
         // Text is drawn at the left wall of the bounding box, offset by both the border width
         // and then "an amount" such that the text isn't right up against the edge, modelled
         // in this case by the log function of the box area as it's relatively suitable
-        this.textOffset = (this.borderWidth / 2) + (float) Math.log(this.size.x * this.size.y);
+        this.textOffsetX = (this.borderWidth / 2f) + (float) Math.log(this.size.x * this.size.x);
+        this.textOffsetY = (this.borderWidth / 2f) + (float) Math.log(this.size.y * this.size.y);
         this.fontBounds = new Vector2(
-            this.size.x - (2 * textOffset),
-            this.size.y - (2 * textOffset)
+            this.size.x - (2 * textOffsetX),
+            this.size.y - (2 * textOffsetY)
         );
     }
 
@@ -91,6 +95,14 @@ public class TmpTextBox extends Entity {
         this.borderColor = borderColor;
     }
 
+    public void centreText() {
+        this.textAlign(Align.center);
+    }
+
+    private void textAlign(int alignment) {
+        this.textAlign = alignment;
+    }
+
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
 
@@ -98,20 +110,29 @@ public class TmpTextBox extends Entity {
             renderer.drawBorder(this.pos, this.size, this.borderColor, this.borderWidth);
         }
 
-        Vector2 textPos = new Vector2(
-            // Draw text at the left wall of the bounding box, offset by the border width and
-            // then "an amount" such that the text isn't right up against the edge, modelled
-            // in this case by the log function of the box area as it's relatively suitable
-            this.pos.x + this.textOffset,
-            // Centre text in the box
-            this.pos.y + (this.size.y / 2)
-        );
+        Vector2 textPos;
+        if (this.textAlign == Align.left) {
+            textPos = new Vector2(
+                // Draw text at the left wall of the bounding box, offset by the border width and
+                // then "an amount" such that the text isn't right up against the edge, modelled
+                // in this case by the log function of the box area as it's relatively suitable
+                this.pos.x + this.textOffsetX,
+                // Centre text in the box
+                this.pos.y + (this.size.y / 2)
+            );
+        } else {
+            textPos = new Vector2(
+                this.pos.x + (this.size.x / 2),
+                this.pos.y + (this.size.y / 2)
+            );
+        }
 
         renderer.drawText(
             this.content,
             textPos,
             this.textColor,
-            renderer.calcFontScale(this.fontBounds, this.content, 2f)
+            renderer.calcFontScale(this.fontBounds, this.content, 2f),
+            this.textAlign
         );
     }
 }
