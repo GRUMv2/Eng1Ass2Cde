@@ -10,7 +10,7 @@ public class RishiSunacEvent extends Event {
         if (random.nextInt(0, 1_000_000) < 3) {
             // 'income' is a generated property, to tank the income
             // we need to set the monthlyUpkeepCostsMultiuplyer to a high value
-            server.setMonthlyUpkeepCostsMultiuplyer(10);
+            server.setMonthlyUpkeepCostsMultiuplyer(4);
 
             return false;
         }
