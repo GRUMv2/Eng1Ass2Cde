@@ -16,7 +16,7 @@ public class Simulation {
     private final StudentWalkSimulation studentWalkSimulation;
     private final RollingValuesSimulator rollingValuesSimulator;
 
-    private long currentMoney = 50_000_000; // You'd have to be pretty good to go over 2bil but just in case
+    private long currentMoney = 250_000; // You'd have to be pretty good to go over 2bil but just in case
 
     public Simulation() {
         System.out.println("[ SIM ] Simulation started");
@@ -27,15 +27,21 @@ public class Simulation {
     }
 
     public float getStudentSatisfaction() {
-        return (float) studentWalkSimulation.getScore();
+        float studentStaffRatio = (float) rollingValuesSimulator.studentHousingCapacity() / (float) rollingValuesSimulator.staffOfficeCapacity();
+        float studentStaffRatioPenalty = Math.abs(studentStaffRatio - 100f) / 1000;
+
+        return (float) Math.max(0, studentWalkSimulation.getScore() - studentStaffRatioPenalty);
     }
 
     public int getStudentNumbers() {
-        return rollingValuesSimulator.studentHousingCapacity();
+        return (int) Math.floor(rollingValuesSimulator.studentHousingCapacity() * Math.max(0.5f, getStudentSatisfaction()));
     }
 
     public float getStaffSatisfaction() {
-        return 0.5f;
+        float studentStaffRatio = (float) rollingValuesSimulator.studentHousingCapacity() / (float) rollingValuesSimulator.staffOfficeCapacity();
+        float studentStaffRatioPenalty = Math.abs(studentStaffRatio - 100f) / 1000;
+
+        return 1 - Math.max(0f, Math.min(1f, studentStaffRatioPenalty));
     }
 
     public int getStaffNumbers() {
@@ -50,9 +56,23 @@ public class Simulation {
         this.currentMoney -= spent;
     }
 
-    public int getIncome() {
+    private int getIncomeI() {
         // no international students here :(
-        return rollingValuesSimulator.studentHousingCapacity() * 9250;
+        // /12 /300
+
+        long studentIncome = (long) getStudentNumbers() * 9250;
+        long staffWages = (long) getStaffNumbers() * 44_000;
+        long buildingUpkeep = (long) this.rollingValuesSimulator.monthlyUpkeepCosts() * 12;
+
+        long totalIncome = studentIncome - staffWages - buildingUpkeep;
+        long totalIncomePerMonth = totalIncome / 12;
+        long totalIncomePerTick = totalIncomePerMonth / 300;
+
+        return (int) totalIncomePerTick;
+    }
+
+    public int getIncome() {
+        return this.getIncomeI() * 300;
     }
 
     // minor architecture mishaps
@@ -80,13 +100,6 @@ public class Simulation {
         studentWalkSimulation.tick(grid, map);
         rollingValuesSimulator.tick(entities);
 
-        this.currentMoney += (long) (((double) this.getIncome() / 60_000) * delta);
-        this.currentMoney -= (long) (((double) this.rollingValuesSimulator.monthlyUpkeepCosts() / 6) * delta);
-
-//        System.out.println("Money: " + this.currentMoney);
-//        System.out.println("Student satisfaction: " + this.getStudentSatisfaction());
-//        System.out.println("Student numbers: " + this.getStudentNumbers());
-////        System.out.println("Staff satisfaction: " + this.getStaffSatisfaction());
-//        System.out.println("Staff numbers: " + this.getStaffNumbers());
+        this.currentMoney += this.getIncomeI();
     }
 }
