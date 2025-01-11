@@ -1,5 +1,6 @@
 package io.github.GRUMv2.EngSim.lwjgl3;
 
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import io.github.GRUMv2.EngSim.Main;
@@ -16,14 +17,15 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
+        DisplayMode primaryMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
 
         configuration.setTitle("EngSim - University Simulator");
 
         configuration.useVsync(true);
+        configuration.setFullscreenMode(primaryMode);
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-        configuration.setWindowedMode(Main.WIDTH, Main.HEIGHT);
-        configuration.setResizable(false);
+        configuration.setResizable(true);
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
 
         return configuration;
