@@ -121,6 +121,9 @@ public class GameScreen extends AbstractGameScreen {
             return false;
         }
         Building building = builder.newBuilding(buildingToPlace, cellPos);
+        if (broker.getMoney() < building.getCost()) {
+            return false;
+        }
         return broker.placeBuilding(building);
     }
 

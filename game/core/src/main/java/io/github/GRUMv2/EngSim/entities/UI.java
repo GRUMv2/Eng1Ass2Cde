@@ -47,15 +47,12 @@ public class UI extends Entity {
 
         Available[] availableBuildings = Available.values();
         this.buildingPlaceButtons = new BuildingPlaceButton[availableBuildings.length];
-        Vector2 _v = new Vector2();
-        Building building;
         for (int i = 0; i < availableBuildings.length; i++) {
             Available buildingType = availableBuildings[i]; // define here or lambda complains
-            building = builder.newBuilding(buildingType, _v);
             buildingPlaceButtons[i] = new BuildingPlaceButton(
                 new Vector2(20, 330 - (i * 80)),
-                building.getName(),
-                building.getDescription(),
+                new Vector2(520, 60),
+                buildingType,
                 () -> game.setBuildingToPlace(buildingType)
             );
         }
@@ -120,6 +117,7 @@ public class UI extends Entity {
 
         // update the building place buttons
         for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
+            buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
             buildingPlaceButton.update(renderer, inputHandler);
         }
     }
