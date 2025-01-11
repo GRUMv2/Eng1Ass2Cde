@@ -222,6 +222,7 @@ public final class Broker {
         }
         this.spendMoney(building.getCost());
         this.buildingCount.put(Available.get(building.getClass()), this.getBuildingCount(Available.get(building.getClass())) + 1);
+
         return true;
     }
 
