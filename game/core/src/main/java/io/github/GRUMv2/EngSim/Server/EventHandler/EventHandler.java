@@ -12,6 +12,7 @@ public class EventHandler {
         // achievements
         activeEvents.add(new BrokeAchievement());
         activeEvents.add(new FromNothingAchievement());
+        activeEvents.add(new LotteryAchievement());
     }
 
     public void tick(double delta) {

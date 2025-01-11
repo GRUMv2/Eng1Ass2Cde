@@ -22,39 +22,51 @@ public class UI extends Entity {
     private PauseButton pauseButton;
     private BuildingPlaceButton[] buildingPlaceButtons;
     private TmpButton[] actionButtons;
+    private StatsBox statsBox;
+
+    private int updateTime;
 
     public UI(GameScreen game, Broker broker, BuildingFactory builder) {
         this.broker = broker;
         this.game = game;
-        pauseButton = new PauseButton(game::togglePause);
-
-        Available[] availableBuildings = Available.values();
-        this.buildingPlaceButtons = new BuildingPlaceButton[availableBuildings.length];
-        Vector2 _v = new Vector2();
-        Building building;
-        for (int i = 0; i < availableBuildings.length; i++) {
-            Available buildingType = availableBuildings[i]; // define here or lambda complains
-            building = builder.newBuilding(buildingType, _v);
-            buildingPlaceButtons[i] = new BuildingPlaceButton(
-                building.getName(),
-                building.getDescription(),
-                i,
-                () -> game.setBuildingToPlace(buildingType)
-            );
-        }
+        pauseButton = new PauseButton(
+            new Vector2(520, 680),
+            game::togglePause
+        );
 
         this.actionButtons = new TmpButton[] {
             new TmpButton(
                 Modes.DESTROY.toString(),
-                new Vector2(20, 500),
-                () -> game.toggleMode(Modes.DESTROY)
+                new Vector2(20, 410),
+                new Vector2(250, 60),
+                () -> game.toggleMode(Modes.DESTROY),
+                Color.GRAY
             ),
             new TmpButton(
                 Modes.MOVE.toString(),
-                new Vector2(290, 500),
-                () -> game.toggleMode(Modes.MOVE)
+                new Vector2(290, 410),
+                new Vector2(250, 60),
+                () -> game.toggleMode(Modes.MOVE),
+                Color.GRAY
             )
         };
+
+        Available[] availableBuildings = Available.values();
+        this.buildingPlaceButtons = new BuildingPlaceButton[availableBuildings.length];
+        for (int i = 0; i < availableBuildings.length; i++) {
+            Available buildingType = availableBuildings[i]; // define here or lambda complains
+            buildingPlaceButtons[i] = new BuildingPlaceButton(
+                new Vector2(20, 330 - (i * 80)),
+                new Vector2(520, 60),
+                buildingType,
+                () -> game.setBuildingToPlace(buildingType)
+            );
+        }
+
+        this.statsBox = new StatsBox(
+            new Vector2(20, 480),
+            new Vector2(250, 180)
+        );
     }
 
     @Override
@@ -62,38 +74,53 @@ public class UI extends Entity {
 
         // draw the title
         Vector2 titlePos = new Vector2(20, 700);
-        renderer.drawText(this.TITLE, titlePos, Color.BLACK, 2f);
+        renderer.drawText(this.TITLE, titlePos, Color.BLACK, 1.5f);
 
         // draw the time display
         String timeLeftString = broker.getTimeLeftString();
-        Vector2 timePos = new Vector2(20, 650);
-        renderer.drawText(timeLeftString, timePos, Color.BLACK, 1.5f);
+        Vector2 timePos = new Vector2(20, 680);
+        renderer.drawText(timeLeftString, timePos, Color.BLACK, 1f);
 
         // update pause button
         pauseButton.update(renderer, inputHandler);
 
-        // draw the building count
         renderer.drawText(
-            broker.getTotalBuildings() + " Buildings",
-            new Vector2(20, 600),
+            "Mode: " + game.getMode(),
+            new Vector2(350, 700),
             Color.BLACK,
-            1.5f
+            1f
         );
 
         // draw the selected building
         renderer.drawText(
             "Selected: " + (game.getBuildingToPlace() == null ? "None" : game.getBuildingToPlace()),
-            new Vector2(200, 600),
+            new Vector2(350, 680),
             Color.BLACK,
-            1.5f
+            1f
         );
 
+        // draw the building count
         renderer.drawText(
-            "Mode: " + game.getMode(),
-            new Vector2(300, 650),
+            broker.getTotalBuildings() + " Buildings",
+            new Vector2(350, 660),
             Color.BLACK,
-            1.5f
+            1f
         );
+
+        if (this.updateTime == broker.getTimeLeft()) {
+            this.statsBox.setStats(broker.getMoney(), broker.getIncome());
+        } else {
+            this.statsBox.setStats(
+                broker.getMoney(),
+                broker.getIncome(),
+                broker.getStudentNumbers(),
+                broker.getStudentSatisfaction(),
+                broker.getStaffNumbers(),
+                broker.getStaffSatisfaction()
+            );
+            this.updateTime = broker.getTimeLeft();
+        }
+        this.statsBox.update(renderer, inputHandler);
 
         for (TmpButton button : this.actionButtons) {
             button.update(renderer, inputHandler);
@@ -101,6 +128,7 @@ public class UI extends Entity {
 
         // update the building place buttons
         for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
+            buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
             buildingPlaceButton.update(renderer, inputHandler);
         }
     }

@@ -5,25 +5,24 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
-public class TmpButton extends Button {
-    private String text;
-    private Vector2 pos;
+public class TmpButton extends TmpTextBox {
 
-    public TmpButton(String text, Vector2 pos, Runnable handleClick) {
-        super(handleClick);
-        this.pos = pos;
-        this.text = text;
+    public TmpButton(String text, Vector2 pos, Vector2 size, Runnable handleClick) {
+        super(pos, size);
+        this.setContent(text);
+        this.setHandleClick(handleClick);
+    }
+
+    public TmpButton(String text, Vector2 pos, Vector2 size, Runnable handleClick, Color backgroundColor) {
+        this(text, pos, size, handleClick);
+        this.setBackgroundColor(backgroundColor);
     }
 
     // TODO: Button rendering abstraction
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
-        // TODO: burn with fire
-        Vector2 size = new Vector2(250, 60);
-        renderer.drawRect(pos, size, Color.GRAY);
-        renderer.drawText("Action: " + this.text, new Vector2(pos.x + 10, pos.y + size.y / 2), Color.BLACK, 1.5f);
-
-        if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(pos, size)) {
+        super.update(renderer, inputHandler);
+        if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(this.getPos(), this.getSize())) {
             this.click();
         }
     }
