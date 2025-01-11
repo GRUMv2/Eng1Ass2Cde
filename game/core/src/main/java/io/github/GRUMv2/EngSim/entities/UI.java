@@ -38,12 +38,16 @@ public class UI extends Entity {
             new TmpButton(
                 Modes.DESTROY.toString(),
                 new Vector2(20, 410),
-                () -> game.toggleMode(Modes.DESTROY)
+                new Vector2(250, 60),
+                () -> game.toggleMode(Modes.DESTROY),
+                Color.GRAY
             ),
             new TmpButton(
                 Modes.MOVE.toString(),
                 new Vector2(290, 410),
-                () -> game.toggleMode(Modes.MOVE)
+                new Vector2(250, 60),
+                () -> game.toggleMode(Modes.MOVE),
+                Color.GRAY
             )
         };
 

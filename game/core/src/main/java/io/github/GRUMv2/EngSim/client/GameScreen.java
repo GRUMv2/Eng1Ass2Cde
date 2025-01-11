@@ -1,5 +1,7 @@
 package io.github.GRUMv2.EngSim.client;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
@@ -52,6 +54,11 @@ public class GameScreen extends AbstractGameScreen {
 
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
+
+        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
+            this.changeEvent(Screens.END);
+        }
+
     }
 
     public void togglePause() {
