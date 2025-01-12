@@ -23,6 +23,12 @@ public abstract class Building extends ForegroundEntity {
     public abstract int getCost();
     public abstract int getMonthlyUpkeepCosts();
 
+    /**
+     * Constructor for a building
+     * @param mapPos The position of the building on the map (map rel)
+     * @param relCellsUsed The cells that the building occupies (mapPos rel)
+     * @param color The color of the building, duh, i hate javadoc
+     */
     public Building(Vector2 mapPos, Vector2[] relCellsUsed, Color color) {
         super(mapPos, relCellsUsed, color);
     }

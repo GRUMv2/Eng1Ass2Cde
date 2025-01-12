@@ -11,6 +11,21 @@ import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
 import io.github.GRUMv2.EngSim.entities.UI;
 
+/**
+ * The GameScreen class represents the primary visual interface through which the
+ * interactive digital entertainment experience is rendered and perceived by the end-user.
+ * This interface serves as the principal conduit for the graphical and interactive
+ * elements of the game, encapsulating the entirety of the visual and interactive components
+ * that constitute the user's engagement with the game screen.
+ *
+ * Not that anyone really wants to look at the gamescreen anyway lets be honnest
+ *
+ * hope that's enough to satisfy the javadoc gods and their stupid thirst for obvious documentation
+ *
+ * to be fair they probably know that nobody likes java and would prefer to read the code in english
+ *
+ * only doubles the file size tho no stress
+ */
 public class GameScreen extends AbstractGameScreen {
 
     private Available buildingToPlace = null;
