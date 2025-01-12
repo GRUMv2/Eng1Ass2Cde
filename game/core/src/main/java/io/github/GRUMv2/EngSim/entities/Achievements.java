@@ -11,10 +11,10 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class Achievements extends Entity {
 
     private final int SCALE_THRESHOLD = 8;
+    private final float borderWidth = 5f;
 
     private Vector2 pos;
     private Vector2 size;
-    private Vector2 contentPos;
     private Vector2 contentSize;
 
 
@@ -22,23 +22,29 @@ public class Achievements extends Entity {
     private TmpTextBox borderBox;
     private TmpTextBox[] achievementBoxes;
 
-    public Achievements(Vector2 posTopL, Vector2 size) {
+    public Achievements(Vector2 pos, Vector2 size) {
 
-        this.pos = posTopL;
+        this.pos = pos;
         this.size = size;
 
         float titleRatio = 0.1f;
-        float boxWidthRatio = 0.95f;
 
         this.titleBox = new TmpTextBox(
-            new Vector2(pos.x, pos.y - (size.y * titleRatio)),
+            new Vector2(pos.x, pos.y + (size.y * (1 - titleRatio))),
             new Vector2(size.x, size.y * titleRatio),
             "Achievements",
-            3f
+            borderWidth
+        );
+        this.titleBox.centreText();
+
+        this.borderBox = new TmpTextBox(
+            pos,
+            size,
+            "",
+            borderWidth
         );
 
-        this.contentPos = pos.cpy().add((size.x * (1 - boxWidthRatio)) / 2, -(size.y * titleRatio));
-        this.contentSize = new Vector2(size.x * boxWidthRatio, size.y * (1 - titleRatio));
+        this.contentSize = new Vector2(size.x, size.y * (1 - titleRatio));
     }
 
     public Vector2 getPos() {
@@ -53,7 +59,7 @@ public class Achievements extends Entity {
 
         float height = Math.min(this.contentSize.y / this.SCALE_THRESHOLD, this.contentSize.y / achievements.length);
         Vector2 boxSize = new Vector2(this.contentSize.x, height);
-        Vector2 startPos = new Vector2(this.contentPos.x, this.contentPos.y);
+        Vector2 startPos = new Vector2(this.pos.x, this.pos.y + (Math.max(this.SCALE_THRESHOLD, achievements.length) * height));
         this.achievementBoxes = new TmpTextBox[achievements.length];
         for (int i = 0; i < achievements.length; i++) {
             startPos.sub(0, height);
@@ -61,23 +67,19 @@ public class Achievements extends Entity {
                 startPos.cpy(),
                 boxSize,
                 achievements[i],
-                0f
+                borderWidth / 2
             );
         }
-        this.borderBox = new TmpTextBox(
-            new Vector2(this.pos.x, startPos.y),
-            new Vector2(this.size.x, this.pos.y - startPos.y),
-            "",
-            3f
-        );
+
+        this.titleBox.setContent("Achievements (" + achievements.length + ")");
     }
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
-        this.titleBox.update(renderer, inputHandler);
         for (TmpTextBox box : achievementBoxes) {
             box.update(renderer, inputHandler);
         }
+        this.titleBox.update(renderer, inputHandler);
         this.borderBox.update(renderer, inputHandler);
     }
 
