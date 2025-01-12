@@ -15,6 +15,9 @@ import io.github.GRUMv2.EngSim.entities.TmpPopup;
 import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
 import io.github.GRUMv2.EngSim.entities.UI;
 
+import io.github.GRUMv2.EngSim.entities.Ghost;
+import io.github.GRUMv2.EngSim.entities.Gym;
+
 public class GameScreen extends AbstractGameScreen {
 
     private Available buildingToPlace = null;
@@ -61,7 +64,7 @@ public class GameScreen extends AbstractGameScreen {
                 }
             }
         }
-      
+
         if (this.isInDialog()) {
             this.activePopup.update(renderer, inputHandler);
         } else {
@@ -100,14 +103,14 @@ public class GameScreen extends AbstractGameScreen {
         this.changeEvent(Screens.GAME);
     }
 
-    public void setBuildingToPlace(Available buildingType) {
-        if (buildingType == buildingToPlace) {
-            buildingToPlace = null;
-        } else {
-            buildingToPlace = buildingType;
-        }
-        this.toggleMode(Modes.NORMAL);
-    }
+//    public void setBuildingToPlace(Available buildingType) {
+//        if (buildingType == buildingToPlace) {
+//            buildingToPlace = null;
+//        } else {
+//            buildingToPlace = buildingType;
+//        }
+//        this.toggleMode(Modes.NORMAL);
+//    }
 
     public Modes getMode() {
         return mode;
