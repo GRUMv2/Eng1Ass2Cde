@@ -18,6 +18,7 @@ public final class Broker {
     private static Broker instance;
 
     private final int MAP_CELLS = 30;
+    private final int MAP_SIZE = 720;
     private final float REALTIME_LENGTH = 300f;
 
     private volatile String timeElapsedString = "f";
@@ -57,6 +58,10 @@ public final class Broker {
 
     public int getMapCells() {
         return this.MAP_CELLS;
+    }
+
+    public int getMapSize() {
+        return this.MAP_SIZE;
     }
 
     public int getTimeLeft() {

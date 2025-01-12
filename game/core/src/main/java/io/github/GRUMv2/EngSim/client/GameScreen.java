@@ -4,13 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.broker.Broker;
-import io.github.GRUMv2.EngSim.entities.Building;
-import io.github.GRUMv2.EngSim.entities.BuildingFactory;
+import io.github.GRUMv2.EngSim.entities.*;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
-import io.github.GRUMv2.EngSim.entities.GameMap;
-import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
 
@@ -21,22 +17,7 @@ public class GameScreen extends AbstractGameScreen {
     private Broker broker;
     private BuildingFactory builder;
 
-    public enum Modes {
-        NORMAL("Normal"),
-        DESTROY("Destroy"),
-        MOVE("Move");
-
-        private String text;
-
-        private Modes(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-    }
+    private Ghost ghost;
 
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
@@ -56,6 +37,10 @@ public class GameScreen extends AbstractGameScreen {
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
 
+        if (this.ghost != null && inputHandler.getMouseInBounds(new Vector2(560, 0), new Vector2(720, 720))) {
+            this.ghost.update(renderer, inputHandler);
+        }
+
         if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
             this.changeEvent(Screens.END);
         }
@@ -64,15 +49,6 @@ public class GameScreen extends AbstractGameScreen {
 
     public void togglePause() {
         this.changeEvent(Screens.PAUSE);
-    }
-
-    public void setBuildingToPlace(Available buildingType) {
-        if (buildingType == buildingToPlace) {
-            buildingToPlace = null;
-        } else {
-            buildingToPlace = buildingType;
-        }
-        this.toggleMode(Modes.NORMAL);
     }
 
     public Modes getMode() {
@@ -99,6 +75,25 @@ public class GameScreen extends AbstractGameScreen {
 
     public Available getBuildingToPlace() {
         return buildingToPlace;
+    }
+
+    public void setBuildingToPlace(Available buildingType) {
+        if (buildingType == buildingToPlace) {
+            buildingToPlace = null;
+            this.ghost = null;
+        } else {
+            buildingToPlace = buildingType;
+
+            try {
+                Building temp = builder.newBuilding(buildingType, new Vector2(0, 0));
+                this.ghost = new Ghost(temp);
+
+            } catch (Exception e) {
+                Building temp = new Gym(new Vector2(0, 0));
+                this.ghost = new Ghost(temp);
+            }
+        }
+        this.toggleMode(Modes.NORMAL);
     }
 
     public void handleCellClick(Vector2 cellPos) {
@@ -159,6 +154,23 @@ public class GameScreen extends AbstractGameScreen {
             if (this.clickBuild(cellPos)) {
                 this.toggleMode(Modes.MOVE);
             }
+        }
+    }
+
+    public enum Modes {
+        NORMAL("Normal"),
+        DESTROY("Destroy"),
+        MOVE("Move");
+
+        private String text;
+
+        private Modes(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
         }
     }
 }
