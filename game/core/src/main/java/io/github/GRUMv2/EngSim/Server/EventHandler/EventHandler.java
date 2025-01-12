@@ -23,6 +23,7 @@ public class EventHandler {
         activeEvents.add(new MassivePopulationAchievement());
         activeEvents.add(new QuitTheGameAchievement());
         activeEvents.add(new StartTheGameAchievement());
+        activeEvents.add(new ConquerorAchievement());
 
         // events
         activeEvents.add(new LotteryEvent());
@@ -39,6 +40,7 @@ public class EventHandler {
 
     /**
      * Tick all active events
+     * 
      * @param delta time since last tick
      */
     public void tick(double delta) {
@@ -56,7 +58,8 @@ public class EventHandler {
             if (!resp) {
                 iterator.remove();
                 System.out.println("[ EVN ] '" + event.getClass().getSimpleName() + "' events removed");
-                // avoids 'io.github.GRUMv2.EngSim.Server.EventHandler.InitialiseTestEvent@7d492h2'
+                // avoids
+                // 'io.github.GRUMv2.EngSim.Server.EventHandler.InitialiseTestEvent@7d492h2'
                 // for 'EventHandler'
             }
         }
