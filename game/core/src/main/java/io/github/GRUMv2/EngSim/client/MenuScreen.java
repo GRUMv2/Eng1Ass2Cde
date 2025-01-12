@@ -21,11 +21,6 @@ public class MenuScreen extends AbstractGameScreen {
 
     private Leaderboard leaderboard;
 
-    private Vector2[] anywhere = new Vector2[] { // TODO: remove
-        new Vector2(30, 20),
-        new Vector2(60, 20)
-    };
-
     public MenuScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
         // TODO: unhardcode
@@ -38,12 +33,11 @@ public class MenuScreen extends AbstractGameScreen {
 
     public void update(Renderer renderer, InputHandler inputHandler) {
         // placeholder
-        if (Gdx.input.justTouched() /* TODO: remove */ && inputHandler.getMouseInBounds(anywhere[0], anywhere[1])) {
+        if (Gdx.input.justTouched()) {
             this.changeEvent(Screens.GAME);
         }
 
         renderer.drawText("Click anywhere to start", new Vector2(640, 540), Color.BLACK, 2f, Align.center);
-        renderer.drawText("anywhere", new Vector2(60, 30), Color.ORANGE, 1f, Align.center); // TODO: remove
         this.leaderboard.update(renderer, inputHandler);
     }
 }
