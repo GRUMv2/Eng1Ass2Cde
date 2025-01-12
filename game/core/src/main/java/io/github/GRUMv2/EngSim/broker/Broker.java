@@ -89,6 +89,16 @@ public final class Broker {
         return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f))) + ")";
     }
 
+    /**
+     * @param timeElapsed         the elapsed time in the game
+     * @param timeElapsedString   the string representation of the elapsed time
+     * @param studentSatisfaction the satisfaction level of students
+     * @param studentNumbers      the number of students
+     * @param staffSatisfaction   the satisfaction level of staff
+     * @param staffNumbers        the number of staff
+     * @param money               the amount of money available
+     * @param income              the income generated
+     */
     public void serverPush(
         float timeElapsed,
         String timeElapsedString,
