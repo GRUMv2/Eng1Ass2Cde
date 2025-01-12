@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
+import io.github.GRUMv2.EngSim.entities.Achievements;
 import io.github.GRUMv2.EngSim.entities.Leaderboard;
 import io.github.GRUMv2.EngSim.entities.StatsBox;
 import io.github.GRUMv2.EngSim.entities.SubmitBox;
@@ -23,6 +24,7 @@ public class EndScreen extends AbstractGameScreen {
     private Broker broker;
 
     private Leaderboard leaderboard;
+    private Achievements achievements;
     private StatsBox statsBox;
     private SubmitBox submitBox;
     private TmpButton quitButton;
@@ -69,6 +71,12 @@ public class EndScreen extends AbstractGameScreen {
 
         this.quitButton.centreText();
 
+        this.achievements = new Achievements(
+            new Vector2(810, 500),
+            new Vector2(400, 500)
+        );
+        this.achievements.setValues(broker.getAchievements().toArray(new String[broker.getAchievements().size()]));
+
     }
 
     public boolean submitScore() {
@@ -96,5 +104,6 @@ public class EndScreen extends AbstractGameScreen {
         renderer.drawText("Score: " + Math.round(broker.getStudentSatisfaction() * 1000),
             new Vector2(270, 500), Color.BLACK, 2f, Align.center);
         this.quitButton.update(renderer, inputHandler);
+        this.achievements.update(renderer, inputHandler);
     }
 }

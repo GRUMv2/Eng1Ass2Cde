@@ -308,6 +308,10 @@ public final class Broker {
         achievementAwarded.add(achievement);
     }
 
+    public CopyOnWriteArrayList<String> getAchievements() {
+        return achievementAwarded;
+    }
+
     public synchronized PopupTicket getPendingPopups() {
         return pendingPopups.peek();
     }

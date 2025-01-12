@@ -11,6 +11,7 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class Achievements extends Entity {
 
     private final int SCALE_THRESHOLD = 8;
+    private final float borderWidth = 5f;
 
     private Vector2 pos;
     private Vector2 size;
@@ -34,8 +35,9 @@ public class Achievements extends Entity {
             new Vector2(pos.x, pos.y - (size.y * titleRatio)),
             new Vector2(size.x, size.y * titleRatio),
             "Achievements",
-            3f
+            borderWidth
         );
+        this.titleBox.centreText();
 
         this.contentPos = pos.cpy().add((size.x * (1 - boxWidthRatio)) / 2, -(size.y * titleRatio));
         this.contentSize = new Vector2(size.x * boxWidthRatio, size.y * (1 - titleRatio));
@@ -60,7 +62,7 @@ public class Achievements extends Entity {
             this.achievementBoxes[i] = new TmpTextBox(
                 startPos.cpy(),
                 boxSize,
-                achievements[i],
+                "- " + achievements[i],
                 0f
             );
         }
@@ -68,7 +70,7 @@ public class Achievements extends Entity {
             new Vector2(this.pos.x, startPos.y),
             new Vector2(this.size.x, this.pos.y - startPos.y),
             "",
-            3f
+            borderWidth
         );
     }
 
