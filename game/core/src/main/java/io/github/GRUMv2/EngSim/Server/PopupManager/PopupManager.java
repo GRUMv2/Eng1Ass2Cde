@@ -1,51 +1,66 @@
 package io.github.GRUMv2.EngSim.Server.PopupManager;
 
-import io.github.GRUMv2.EngSim.Server.TimeKeeper;
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.broker.PopupTicket;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class PopupManager {
     private final ArrayList<PopupTicket> popups;
-    private final TimeKeeper timeKeeper;
+    private final Broker broker;
 
-    public PopupManager(TimeKeeper timeKeeper) {
+    public PopupManager() {
+        this.broker = Broker.getInstance();
         popups = new ArrayList<>();
-        this.timeKeeper = timeKeeper;
     }
 
     public void serverTick(double delta) {
-        Iterator<PopupTicket> iterator = popups.iterator();
-        long cTime = timeKeeper.currentGameTime();
+        // Technically possible to leave popups in the queue.
+        // Given that server is paused while the user is reacting and
+        // server ticks far faster than client renders, let alone the user's
+        // reaction time, this should never occur. Even it somehow does, all
+        // that happens is server takes an extra tick to retrieve each leftover
 
-        while (iterator.hasNext()) {
-            PopupTicket popup = iterator.next();
-
-            if (popup.getAutoKillAt() > cTime) {
-                iterator.remove();
-                System.out.println("[ POP ] Popup " + popup.getName() + " expired (EOL)");
-            }
+        PopupTicket p = broker.getResolvedPopups();
+        if (p != null) {
+            this.popups.remove(p);
         }
-
     }
 
     public ArrayList<PopupTicket> getPopups() {
         return popups;
     }
 
-    public void removePopup(PopupTicket popup) {
-        popups.remove(popup);
-        System.out.println("[ POP ] Popup " + popup.getName() + " removed (DISMISSED)");
-    }
+    // random example, replace as you will
+    // Note:
+    // - p1 = new PopupTicket(...)
+    // -> broker.queuePopup(p1)
+    // -> ticket = broker.getPendingPopups()
+    // -> ticket.dismiss(int)
+    // -> broker.resolvePopup()
+    // -> p2 = broker.getResolvedPopups()
+    // p1 == p2 => true
+    //
+    //public void addPopup(String title, String description, String[] options, int receipt) {
+    //    // Interactive popup with options for return values
+    //    PopupTicket p = new PopupTicket(title, description, options);
+    //    this.popups.add(p);
+    //    this.responses.put(receipt, p)
+    //    broker.queuePopup(p);
+    //}
 
-    public void addPopup(String title, String description, int lastFor) {
-        PopupTicket p = new PopupTicket(title, description, timeKeeper, lastFor);
-        popups.add(p);
-    }
 
     public void addPopup(String title, String description) {
-        PopupTicket p = new PopupTicket(title, description, timeKeeper, 60);
-        popups.add(p);
+        // Basic interactive info popup
+        PopupTicket p = new PopupTicket(title, description, new String[]{});
+        this.popups.add(p);
+        broker.queuePopup(p);
     }
+
+    public void addPopup(String content) {
+        // Transient popup (notice)
+        PopupTicket p = new PopupTicket(content);
+        broker.queuePopup(p);
+    }
+
 }

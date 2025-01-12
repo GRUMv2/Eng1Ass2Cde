@@ -59,6 +59,7 @@ public class Main extends Game {
         this.game = new GameScreen(renderer, inputHandler);
         this.game.setChangeEvent(Screens.PAUSE, () -> changeScreen(Screens.PAUSE));
         this.game.setChangeEvent(Screens.END, () -> changeScreen(Screens.END));
+        this.game.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
         this.gameScreen = this.game;
         this.changeScreen(Screens.MENU);
     }
@@ -81,8 +82,10 @@ public class Main extends Game {
                 if (this.server.timeKeeper.currentGameTime() == 0) {
                     this.server.timeKeeper.start();
                 }
-                if (this.server.isPaused()) {
+                if (!this.game.isInDialog() && this.server.isPaused()) {
                     this.server.Resume();
+                } else if (this.game.isInDialog()) {
+                    this.server.Pause();
                 }
                 break;
             case PAUSE:
