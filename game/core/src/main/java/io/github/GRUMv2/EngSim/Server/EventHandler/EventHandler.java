@@ -15,7 +15,6 @@ public class EventHandler {
         // achievements
         activeEvents.add(new BrokeAchievement());
         activeEvents.add(new FromNothingAchievement());
-        activeEvents.add(new LotteryAchievement());
         activeEvents.add(new CityCreatorAchievement());
         activeEvents.add(new BusyBeeAchievement());
         activeEvents.add(new MassivePopulationAchievement());
@@ -23,8 +22,10 @@ public class EventHandler {
         activeEvents.add(new StartTheGameAchievement());
 
         // events
+        activeEvents.add(new LotteryEvent());
         activeEvents.add(new RishiSunacEvent());
         activeEvents.add(new GovernmentGrantEvent());
+        activeEvents.add(new PubRiotEvent());
 
         this.server = server;
     }
