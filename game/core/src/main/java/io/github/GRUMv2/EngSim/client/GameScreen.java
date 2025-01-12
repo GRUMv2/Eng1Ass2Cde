@@ -37,14 +37,23 @@ public class GameScreen extends AbstractGameScreen {
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
 
-        if (this.ghost != null && inputHandler.getMouseInBounds(new Vector2(560, 0), new Vector2(720, 720))) {
-            this.ghost.update(renderer, inputHandler);
+        if (this.ghost != null) {
+            // This kind of does the same calculation twice in a slightly different way.
+            // If the draw position was pulled out of Ghost.update() and made obtainable, it could be used
+            // to then calculate the grid tile too for minor efficiency gain
+            if (inputHandler.getMouseInBounds(new Vector2(560, 0), new Vector2(720, 720))) {
+                if (broker.isPlaceable(this.ghost.getBuilding(), this.map.getCellAtPos(inputHandler.getMousePos()))) {
+                    this.ghost.update(renderer, inputHandler);
+
+                } else if (broker.getTimeElapsed() % 1 > 0.6) {
+                    this.ghost.update(renderer, inputHandler);
+                }
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
             this.changeEvent(Screens.END);
         }
-
     }
 
     public void togglePause() {
