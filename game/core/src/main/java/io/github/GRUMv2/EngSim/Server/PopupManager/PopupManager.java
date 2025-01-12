@@ -1,6 +1,5 @@
 package io.github.GRUMv2.EngSim.Server.PopupManager;
 
-import io.github.GRUMv2.EngSim.Server.TimeKeeper;
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.broker.PopupTicket;
 
@@ -10,7 +9,7 @@ public class PopupManager {
     private final ArrayList<PopupTicket> popups;
     private final Broker broker;
 
-    public PopupManager(TimeKeeper timeKeeper) {
+    public PopupManager() {
         this.broker = Broker.getInstance();
         popups = new ArrayList<>();
     }

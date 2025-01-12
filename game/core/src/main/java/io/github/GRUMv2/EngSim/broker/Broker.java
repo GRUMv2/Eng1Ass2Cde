@@ -310,6 +310,9 @@ public final class Broker {
     }
 
     public synchronized boolean resolvePopup() {
+        if (this.pendingPopups.size() == 0) {
+            return false;
+        }
         PopupTicket popup = this.pendingPopups.peek();
         if (popup.isTransient()) {
             this.pendingPopups.poll();
