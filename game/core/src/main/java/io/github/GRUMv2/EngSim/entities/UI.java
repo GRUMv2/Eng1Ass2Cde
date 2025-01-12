@@ -130,14 +130,14 @@ public class UI extends Entity {
             );
             this.updateTime = broker.getTimeLeft();
         }
-      
+
         this.statsBox.update(renderer, inputHandler);
 
         this.noticeBox.update(renderer, inputHandler);
 
         if (!this.game.isInDialog()) {
             for (TmpButton button : this.actionButtons) {
-                button.update(renderer, inputHandler, game.getMode() == button.mode ? Color.GRAY : Color.LIGHT_GRAY);
+                button.update(renderer, inputHandler, game.getMode() == button.getMode() ? Color.GRAY : Color.LIGHT_GRAY);
             }
 
             // update the building place buttons

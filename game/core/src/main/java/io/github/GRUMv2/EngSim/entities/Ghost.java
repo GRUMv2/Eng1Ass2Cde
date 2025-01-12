@@ -20,23 +20,21 @@ public class Ghost extends DynamicEntity {
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
         Vector2 mousePos = inputHandler.getMousePos().sub(
-            (1280 - 720) % CELL_WIDTH,
-            0
+                (1280 - 720) % CELL_WIDTH,
+                0
         );
-        ;
-
 
         Vector2 pos = mousePos.sub(
-            mousePos.x % CELL_WIDTH,
-            mousePos.y % CELL_WIDTH
+                mousePos.x % CELL_WIDTH,
+                mousePos.y % CELL_WIDTH
         );
 
         Vector2 cellSize = new Vector2(CELL_WIDTH, CELL_WIDTH);
 
         for (Vector2 relCellOffset : this.getRelCellsUsed()) {
             Vector2 cellPos = new Vector2(
-                pos.x + (relCellOffset.x * CELL_WIDTH) + 8,  // why 8? no idea.
-                pos.y + (relCellOffset.y * CELL_WIDTH)
+                    pos.x + (relCellOffset.x * CELL_WIDTH) + 8,  // why 8? no idea.
+                    pos.y + (relCellOffset.y * CELL_WIDTH)
             );
             renderer.drawRect(cellPos, cellSize, this.getColor(), this.ALPHA);
         }

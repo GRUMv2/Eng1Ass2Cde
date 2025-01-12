@@ -7,7 +7,7 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 import static io.github.GRUMv2.EngSim.client.GameScreen.Modes;
 
 public class TmpButton extends TmpTextBox {
-    public Modes mode = null;
+    private Modes mode = null;
 
     public TmpButton(String text, Vector2 pos, Vector2 size, Runnable handleClick) {
         super(pos, size);
@@ -37,5 +37,13 @@ public class TmpButton extends TmpTextBox {
         if (inputHandler.getMouseClicked() && inputHandler.getMouseInBounds(this.getPos(), this.getSize())) {
             this.click();
         }
+    }
+
+    public Modes getMode() {
+        return mode;
+    }
+
+    public void setMode(Modes mode) {
+        this.mode = mode;
     }
 }
