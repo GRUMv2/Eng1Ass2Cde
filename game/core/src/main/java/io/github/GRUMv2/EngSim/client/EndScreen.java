@@ -14,6 +14,13 @@ import io.github.GRUMv2.EngSim.entities.StatsBox;
 import io.github.GRUMv2.EngSim.entities.SubmitBox;
 import io.github.GRUMv2.EngSim.entities.TmpButton;
 
+/**
+ * EndScreen - Screen at end
+ * Shows final statistics, score,
+ * leaderboard with prompt for user to add their score,
+ * achievements unlocked during the game,
+ * quit button
+ */
 public class EndScreen extends AbstractGameScreen {
 
     private Broker broker;
@@ -74,6 +81,9 @@ public class EndScreen extends AbstractGameScreen {
 
     }
 
+    /**
+     * Validate and push the user's score to the leaderboard
+     */
     public boolean submitScore() {
         String input = this.submitBox.getValue();
         if (input.length() < 1) {
@@ -82,6 +92,7 @@ public class EndScreen extends AbstractGameScreen {
         Broker broker = Broker.getInstance();
         broker.updateLeaderboard(input, Math.round(broker.getStudentSatisfaction() * 1000));
         this.leaderboard.setValues(new ArrayList<SimpleImmutableEntry<String, Integer>>(Broker.getInstance().getLeaderboard()));
+        // Trick to make submit box disappear after the user submits
         this.submitBox = new SubmitBox(new Vector2(), new Vector2(), () -> {}){
             @Override
             public void update(Renderer renderer, InputHandler inputHandler) {

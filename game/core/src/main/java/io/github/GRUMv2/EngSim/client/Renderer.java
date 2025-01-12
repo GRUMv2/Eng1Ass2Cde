@@ -13,6 +13,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+/**
+ * Renderer - master libGDX renderer class,
+ * passed to all classes that render to the screen
+ */
 public class Renderer {
 
     final private ShapeRenderer shapeRenderer;
@@ -29,10 +33,14 @@ public class Renderer {
         spriteBatch.setProjectionMatrix(camera.combined);
     }
 
+    // Arguably pointless and screen clear could just be thrown in AGS
     public void update() {
         drawScreen();
     }
 
+    /**
+     * Dispose of libGDX assets
+     */
     public void dispose() {
         shapeRenderer.dispose();
         font.dispose();
@@ -105,23 +113,11 @@ public class Renderer {
         spriteBatch.end();
     }
 
-    // TODO: text wrapping for stats maybe
-
     public void drawText(String text, Vector2 position, Color color, float fontSize) {
         this.drawText(text, position, color, fontSize, Align.left);
     }
 
     private void drawScreen() {
         ScreenUtils.clear(1, 1, 1, 1);
-        // TODO_: figure out why any line below is necessary
-        // Current verdict: No idea
-
-        //Gdx.gl.glClearColor(0, 0, 0, 1);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //
-        //shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        //shapeRenderer.setColor(1, 1, 1, 1);
-        //shapeRenderer.rect(0, 0, camera.viewportWidth, camera.viewportHeight);
-        //shapeRenderer.end();
     }
 }

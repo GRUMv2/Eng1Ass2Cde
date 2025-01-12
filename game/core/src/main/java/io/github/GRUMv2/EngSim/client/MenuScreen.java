@@ -15,7 +15,8 @@ import io.github.GRUMv2.EngSim.entities.Leaderboard;
 // >No menu
 
 /**
- * MenuScreen
+ * MenuScreen - Does not, in fact, contain a menu
+ * Initial screen of the game, shows a leaderboard
  */
 public class MenuScreen extends AbstractGameScreen {
 
