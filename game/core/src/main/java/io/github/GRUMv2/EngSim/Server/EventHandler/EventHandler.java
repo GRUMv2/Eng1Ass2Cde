@@ -25,8 +25,8 @@ public class EventHandler {
         activeEvents.add(new LotteryEvent());
         activeEvents.add(new RishiSunacEvent());
         activeEvents.add(new GovernmentGrantEvent());
-        activeEvents.add(new PubRiotEvent());
-        activeEvents.add(new RosesEvent());
+        activeEvents.add(new PubRiotEvent()); // Pubs
+        activeEvents.add(new RosesEvent()); // Gyms
         activeEvents.add(new PoliticalMovementEvent());
         activeEvents.add(new CovidEvent());
         activeEvents.add(new InactivityEvent());

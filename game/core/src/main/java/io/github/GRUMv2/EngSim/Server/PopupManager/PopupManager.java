@@ -31,24 +31,6 @@ public class PopupManager {
         return popups;
     }
 
-    // random example, replace as you will
-    // Note:
-    // - p1 = new PopupTicket(...)
-    // -> broker.queuePopup(p1)
-    // -> ticket = broker.getPendingPopups()
-    // -> ticket.dismiss(int)
-    // -> broker.resolvePopup()
-    // -> p2 = broker.getResolvedPopups()
-    // p1 == p2 => true
-    //
-    //public void addPopup(String title, String description, String[] options, int receipt) {
-    //    // Interactive popup with options for return values
-    //    PopupTicket p = new PopupTicket(title, description, options);
-    //    this.popups.add(p);
-    //    this.responses.put(receipt, p)
-    //    broker.queuePopup(p);
-    //}
-
 
     public void addPopup(String title, String description) {
         // Basic interactive info popup
