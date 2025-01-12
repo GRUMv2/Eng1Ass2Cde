@@ -15,6 +15,9 @@ import io.github.GRUMv2.EngSim.entities.TmpPopup;
 import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
 import io.github.GRUMv2.EngSim.entities.UI;
 
+import io.github.GRUMv2.EngSim.entities.Ghost;
+import io.github.GRUMv2.EngSim.entities.Gym;
+
 public class GameScreen extends AbstractGameScreen {
 
     private Available buildingToPlace = null;
@@ -27,22 +30,7 @@ public class GameScreen extends AbstractGameScreen {
 
     private TmpPopup activePopup;
 
-    public enum Modes {
-        NORMAL("Normal"),
-        DESTROY("Destroy"),
-        MOVE("Move");
-
-        private String text;
-
-        private Modes(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-    }
+    private Ghost ghost;
 
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
@@ -62,6 +50,20 @@ public class GameScreen extends AbstractGameScreen {
 
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
+
+        if (this.ghost != null) {
+            // This kind of does the same calculation twice in a slightly different way.
+            // If the draw position was pulled out of Ghost.update() and made obtainable, it could be used
+            // to then calculate the grid tile too for minor efficiency gain
+            if (inputHandler.getMouseInBounds(new Vector2(560, 0), new Vector2(720, 720))) {
+                if (broker.isPlaceable(this.ghost.getBuilding(), this.map.getCellAtPos(inputHandler.getMousePos()))) {
+                    this.ghost.update(renderer, inputHandler);
+
+                } else if (broker.getTimeElapsed() % 1 > 0.6) {
+                    this.ghost.update(renderer, inputHandler);
+                }
+            }
+        }
 
         if (this.isInDialog()) {
             this.activePopup.update(renderer, inputHandler);
@@ -101,14 +103,14 @@ public class GameScreen extends AbstractGameScreen {
         this.changeEvent(Screens.GAME);
     }
 
-    public void setBuildingToPlace(Available buildingType) {
-        if (buildingType == buildingToPlace) {
-            buildingToPlace = null;
-        } else {
-            buildingToPlace = buildingType;
-        }
-        this.toggleMode(Modes.NORMAL);
-    }
+//    public void setBuildingToPlace(Available buildingType) {
+//        if (buildingType == buildingToPlace) {
+//            buildingToPlace = null;
+//        } else {
+//            buildingToPlace = buildingType;
+//        }
+//        this.toggleMode(Modes.NORMAL);
+//    }
 
     public Modes getMode() {
         return mode;
@@ -140,6 +142,17 @@ public class GameScreen extends AbstractGameScreen {
         return buildingToPlace;
     }
 
+    public void setBuildingToPlace(Available buildingType) {
+        if (buildingType == buildingToPlace) {
+            buildingToPlace = null;
+            this.ghost = null;
+        } else {
+            buildingToPlace = buildingType;
+            this.ghost = new Ghost(buildingType);
+        }
+        this.toggleMode(Modes.NORMAL);
+    }
+
     public void handleCellClick(Vector2 cellPos) {
         switch (this.mode) {
             case NORMAL:
@@ -168,6 +181,7 @@ public class GameScreen extends AbstractGameScreen {
         // if not holding down shift select none
         if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             this.buildingToPlace = null;
+            this.ghost = null;
         }
         return broker.placeBuilding(building);
     }
@@ -192,6 +206,23 @@ public class GameScreen extends AbstractGameScreen {
             if (this.clickBuild(cellPos)) {
                 this.toggleMode(Modes.MOVE);
             }
+        }
+    }
+
+    public enum Modes {
+        NORMAL("Normal"),
+        DESTROY("Destroy"),
+        MOVE("Move");
+
+        private String text;
+
+        private Modes(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
         }
     }
 }

@@ -1,16 +1,15 @@
 package io.github.GRUMv2.EngSim.broker;
 
+import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.entities.Building;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
+import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
+import io.github.GRUMv2.EngSim.entities.Obstacle;
+
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import com.badlogic.gdx.math.Vector2;
-
-import io.github.GRUMv2.EngSim.entities.Building;
-import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
-import io.github.GRUMv2.EngSim.entities.Obstacle;
-import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 
 /**
  * Broker (Singleton)
@@ -19,10 +18,11 @@ public final class Broker {
     private static Broker instance;
 
     private final int MAP_CELLS = 30;
+    private final int MAP_SIZE = 720;
     private final float REALTIME_LENGTH = 300f;
 
     private volatile String timeElapsedString = "f";
-    private volatile float timeElapsed= 0;
+    private volatile float timeElapsed = 0;
     private volatile float studentSatisfaction = 0f;
     private volatile float studentNumbers = 0f;
     private volatile float staffSatisfaction = 0f;
@@ -65,6 +65,14 @@ public final class Broker {
         return this.MAP_CELLS;
     }
 
+    public int getMapSize() {
+        return this.MAP_SIZE;
+    }
+
+    public float getTimeElapsed() {
+        return timeElapsed;
+    }
+
     public int getTimeLeft() {
         return (int) (REALTIME_LENGTH - timeElapsed);
     }
@@ -72,7 +80,7 @@ public final class Broker {
     public String getTimeLeftString() {
         int left = this.getTimeLeft();
         float minLeft = (float) Math.floor(left / 60f);
-        return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f)))  + ")";
+        return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f))) + ")";
     }
 
     public void serverPush(
@@ -89,7 +97,7 @@ public final class Broker {
             this.gameComplete = true;
         }
 
-        this.timeElapsed =  timeElapsed;
+        this.timeElapsed = timeElapsed;
         this.timeElapsedString = timeElapsedString;
         this.studentSatisfaction = studentSatisfaction;
         this.studentNumbers = studentNumbers;
@@ -170,7 +178,7 @@ public final class Broker {
         int i;
         for (i = 0; i < relCells.length; i++) {
             cells[i] = new Vector2(mapPos.x + relCells[i].x,
-                                    mapPos.y + relCells[i].y);
+                mapPos.y + relCells[i].y);
         }
         return cells;
     }
@@ -184,9 +192,9 @@ public final class Broker {
 
     private boolean cellInBounds(Vector2 cell) {
         return cell.x < this.MAP_CELLS &&
-                cell.y < this.MAP_CELLS &&
-                cell.x >= 0 &&
-                cell.y >= 0;
+            cell.y < this.MAP_CELLS &&
+            cell.x >= 0 &&
+            cell.y >= 0;
     }
 
     private boolean checkCoordsFree(Vector2[] interlinked, ForegroundEntity self) {
@@ -205,6 +213,10 @@ public final class Broker {
 
     private boolean checkCoordsFree(Vector2[] interlinked) {
         return this.checkCoordsFree(interlinked, null);
+    }
+
+    public boolean isPlaceable(ForegroundEntity entity, Vector2 position) {
+        return this.checkCoordsFree(this.relativeCellsToAbsolute(position, entity.getRelCellsUsed()), entity);
     }
 
     private boolean placeEntity(ForegroundEntity entity) {

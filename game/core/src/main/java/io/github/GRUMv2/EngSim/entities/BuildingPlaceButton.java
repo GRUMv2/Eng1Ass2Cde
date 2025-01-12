@@ -1,6 +1,7 @@
 package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
@@ -47,7 +48,12 @@ public class BuildingPlaceButton extends Button {
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
-        renderer.drawRect(this.getPos(), this.getSize(), Color.LIGHT_GRAY);
+        this.update(renderer, inputHandler, false);
+    }
+
+    public void update(Renderer renderer, InputHandler inputHandler, boolean selected) {
+        renderer.drawRect(this.getPos(), this.getSize(), selected ? Color.GRAY : Color.LIGHT_GRAY, 1f);
+
         this.nameBox.update(renderer, inputHandler);
         this.descBox.update(renderer, inputHandler);
         this.costBox.update(renderer, inputHandler);

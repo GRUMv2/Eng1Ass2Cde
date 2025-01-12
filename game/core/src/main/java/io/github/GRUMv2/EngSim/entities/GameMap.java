@@ -2,13 +2,13 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.GameScreen;
-import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
+import io.github.GRUMv2.EngSim.client.Renderer;
 
 public class GameMap extends Entity {
+    private final int CELLS_PER_ROW;
 
     private Broker broker;
     private GameScreen game;
@@ -16,14 +16,16 @@ public class GameMap extends Entity {
 
     public GameMap(GameScreen game, Broker broker) {
         this.broker = broker;
+        this.CELLS_PER_ROW = broker.getMapCells();
+      
         this.game = game;
-        final int CELLS_PER_ROW = broker.getMapCells();
+
         this.cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
         // TODO: something about this
         broker.placeObstacle(
             new Water(
                 new Vector2(5, 5),
-                new Vector2[] {
+                new Vector2[]{
                     new Vector2(1, 0),
                     new Vector2(2, 0),
                     new Vector2(3, 0),
@@ -44,7 +46,7 @@ public class GameMap extends Entity {
         broker.placeObstacle(
             new Water(
                 new Vector2(20, 25),
-                new Vector2[] {
+                new Vector2[]{
                     new Vector2(0, 0),
                     new Vector2(1, 0),
                     new Vector2(0, -1),
@@ -64,17 +66,19 @@ public class GameMap extends Entity {
             )
         );
 
-        for (int i = 0; i < CELLS_PER_ROW; i++) {
-            for (int j = 0; j < CELLS_PER_ROW; j++) {
+        for (int i = 0; i < this.CELLS_PER_ROW; i++) {
+            for (int j = 0; j < this.CELLS_PER_ROW; j++) {
                 Vector2 cellPos = new Vector2(i, j);
-                cells[i * CELLS_PER_ROW + j] = new Cell(
+                cells[i * this.CELLS_PER_ROW + j] = new Cell(
                     cellPos,
-                // TODO: see note in Game()
-                () -> game.handleCellClick(cellPos)
+                    // TODO: see note in Game()
+                    () -> game.handleCellClick(cellPos)
                 );
             }
         }
-    };
+    }
+
+    ;
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
@@ -96,5 +100,12 @@ public class GameMap extends Entity {
         for (ForegroundEntity entity : this.broker.getEntities()) {
             entity.update(renderer, inputHandler);
         }
+    }
+
+    public Vector2 getCellAtPos(Vector2 pos) {
+        return new Vector2(
+            (float) Math.floor((pos.x - 560f) / (720f / this.CELLS_PER_ROW)),
+            (float) Math.floor(pos.y / (720f / this.CELLS_PER_ROW))
+        );
     }
 }
