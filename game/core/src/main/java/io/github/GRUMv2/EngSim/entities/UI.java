@@ -75,6 +75,10 @@ public class UI extends Entity {
         );
     }
 
+    public void pushNotice(String notice) {
+        this.noticeBox.put(notice);
+    }
+
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
 
@@ -130,14 +134,16 @@ public class UI extends Entity {
 
         this.noticeBox.update(renderer, inputHandler);
 
-        for (TmpButton button : this.actionButtons) {
-            button.update(renderer, inputHandler);
-        }
+        if (!this.game.isInDialog()) {
+            for (TmpButton button : this.actionButtons) {
+                button.update(renderer, inputHandler);
+            }
 
-        // update the building place buttons
-        for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
-            buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
-            buildingPlaceButton.update(renderer, inputHandler);
+            // update the building place buttons
+            for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
+                buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
+                buildingPlaceButton.update(renderer, inputHandler);
+            }
         }
     }
 }

@@ -11,10 +11,12 @@ import io.github.GRUMv2.EngSim.client.InputHandler;
 public class GameMap extends Entity {
 
     private Broker broker;
+    private GameScreen game;
     private Cell[] cells;
 
     public GameMap(GameScreen game, Broker broker) {
         this.broker = broker;
+        this.game = game;
         final int CELLS_PER_ROW = broker.getMapCells();
         this.cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
         // TODO: something about this
@@ -83,8 +85,12 @@ public class GameMap extends Entity {
         Color color = Color.valueOf("c2c2c2");
         renderer.drawRect(pos, size, color);
 
-        for (Cell cell : cells) {
-            cell.update(renderer, inputHandler);
+        if (this.game.isInDialog()) {
+            renderer.drawRect(pos, size, Color.GREEN);
+        } else {
+            for (Cell cell : cells) {
+                cell.update(renderer, inputHandler);
+            }
         }
 
         for (ForegroundEntity entity : this.broker.getEntities()) {
