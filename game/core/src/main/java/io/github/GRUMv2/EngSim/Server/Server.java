@@ -1,23 +1,22 @@
 package io.github.GRUMv2.EngSim.Server;
 
 
+import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
-import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 import io.github.GRUMv2.EngSim.broker.Broker;
 
 
-
 public class Server extends Thread {
-    private boolean isRunning = true;
-    private boolean isPaused = true;
+    public final TimeKeeper timeKeeper = new TimeKeeper(1);
+    public final PopupManager popupManager = new PopupManager();
     private final int targetTPS;
 
     private final Simulation simulation;
     private final EventHandler eventHandler;
-    public final TimeKeeper timeKeeper = new TimeKeeper(1);
-    public final PopupManager popupManager = new PopupManager();
     private final Broker broker;
+    private boolean isRunning = true;
+    private boolean isPaused = true;
 
     public Server(int targetTPS) {
         super("Server");
@@ -137,6 +136,15 @@ public class Server extends Thread {
         long processTime = 0;
 
         while (isRunning) {
+            // kill the client if the server is dead
+            broker.setServerHeartbeat(System.currentTimeMillis());
+
+            // kill the server if the client is dead
+            if (broker.serverSuicide()) {
+                System.out.println("[ HTM ] The hitman has been called- dun dun duuuun (server)");
+                isRunning = false;
+            }
+
             // Time how long the tick takes ...
             long lastTime = System.nanoTime();
 
@@ -162,10 +170,11 @@ public class Server extends Thread {
             }
         }
 
-        System.out.println(" [ SVR ] Stopped.");
+        System.out.println("[ SVR ] Stopped.");
     }
 
-    private void updateInternalGridCache() {}
+    private void updateInternalGridCache() {
+    }
 
     private void tick(double delta) {
         updateInternalGridCache();

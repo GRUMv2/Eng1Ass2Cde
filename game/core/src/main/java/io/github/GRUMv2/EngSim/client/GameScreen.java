@@ -16,7 +16,6 @@ import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
 import io.github.GRUMv2.EngSim.entities.UI;
 
 import io.github.GRUMv2.EngSim.entities.Ghost;
-import io.github.GRUMv2.EngSim.entities.Gym;
 
 public class GameScreen extends AbstractGameScreen {
 
@@ -40,6 +39,10 @@ public class GameScreen extends AbstractGameScreen {
         map = new GameMap(this, broker);
         ui = new UI(this, broker, builder);
         this.mode = Modes.NORMAL;
+    }
+
+    private void deathByDevZero() {
+        int a = 1 / 0;
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
@@ -82,13 +85,15 @@ public class GameScreen extends AbstractGameScreen {
 
         // Debug features
         // The player can trigger it if they like but it doesn't exactly offer much help
-        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT)) {
-            if (Gdx.input.isKeyJustPressed(Keys.F7)) {
+        if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
+            if (Gdx.input.isKeyPressed(Keys.F7)) {
                 this.changeEvent(Screens.END);
-            } else if (Gdx.input.isKeyJustPressed(Keys.F5)) {
+            } else if (Gdx.input.isKeyPressed(Keys.F5)) {
                 broker.queuePopup(new PopupTicket("Debug", "Debug popup", new String[] { "OPTION" }));
                 broker.queuePopup(new PopupTicket("This is a lot of information in a notice box"));
                 this.changeEvent(Screens.GAME);
+            } else if (Gdx.input.isKeyPressed(Keys.F6)) {
+                deathByDevZero();
             }
         }
     }

@@ -136,6 +136,13 @@ public class Main extends Game {
 
     @Override
     public void render() {
+        broker.setClientHeartbeat(System.currentTimeMillis());
+
+        if (broker.clientSuicide()) {
+            System.out.println("[ HTM ] THE HITMAN IS ACTIVE AND HAS BEEN DISPATCHED (client)");
+            this.quit();
+        }
+
         super.render();
     }
 
