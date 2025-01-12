@@ -31,8 +31,11 @@ import io.github.GRUMv2.EngSim.client.EndScreen;
 import io.github.GRUMv2.EngSim.Server.Server;
 
 /**
- * Main
+ * Main - Init class
+ * Init LibGDX, server and general setup; handle screen changes
+ *
  */
+
 public class Main extends Game {
 
     public final static int WIDTH = 1280;
@@ -54,12 +57,15 @@ public class Main extends Game {
         // Anything within the constructor of Client cannot attempt
         // to interact with libGDX objects until its create() function
 
-        server = new Server(60);
+        server = new Server(60); // Tick 60 times a second
         server.start();  // starts paused dont worry
 
         broker = Broker.getInstance();
     }
 
+    /**
+     * Initialise master libGDX classes used throughout client
+     */
     public void create() {
         this.loadLeaderboard();
         this.camera = createCamera();
@@ -72,9 +78,17 @@ public class Main extends Game {
         this.game.setChangeEvent(Screens.END, () -> changeScreen(Screens.END));
         this.game.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
         this.gameScreen = this.game;
+        // Start with switching to main menu
         this.changeScreen(Screens.MENU);
     }
 
+    /**
+     * Switchbox to swap between different game screens, signalling the server accordingly
+     * Assigns ability to switch to other screens selectively
+     *
+     * @param screen screen to change to
+     *
+     */
     public void changeScreen(Screens screen) {
         this.gameScreen.dispose();
         switch (screen) {
@@ -138,6 +152,7 @@ public class Main extends Game {
     public void render() {
         broker.setClientHeartbeat(System.currentTimeMillis());
 
+        // If server is kil, quit client
         if (broker.clientSuicide()) {
             System.out.println("[ HTM ] THE HITMAN IS ACTIVE AND HAS BEEN DISPATCHED (client)");
             this.quit();
@@ -146,6 +161,7 @@ public class Main extends Game {
         super.render();
     }
 
+    // kill everything
     // This must only be called on sysexit otherwise everything is kil
     @Override
     public void dispose() {
@@ -166,10 +182,14 @@ public class Main extends Game {
         return leaderboardFile;
     }
 
+    /**
+     * Parse saved leaderboard, if it exists, and push to Broker as SimpleImmutableEntry
+     * @return bool value depending on success
+     */
     private boolean loadLeaderboard() {
         FileHandle leaderboardFile = this.getLeaderboardFile();
         if (!leaderboardFile.exists() || leaderboardFile.isDirectory()) {
-            System.out.println("[ MAIN ] Could not load leaderboard file");
+            System.out.println("[ MAN ] Could not load leaderboard file");
             return false;
         }
 
@@ -177,7 +197,7 @@ public class Main extends Game {
         try {
             leaderboard = leaderboardFile.readString();
         } catch (GdxRuntimeException e) {
-            System.out.println("[ MAIN ] Could not load leaderboard file");
+            System.out.println("[ MAN ] Could not load leaderboard file");
             // Continue because we'll just use a blank one
         }
 
@@ -188,14 +208,14 @@ public class Main extends Game {
             // Leaderboard is written anew on each exit
             String[] splitLine = line.split(",");
             if (splitLine.length < 2) {
-                System.out.println("[ MAIN ] Invalid line in leaderboard. Skipping.");
+                System.out.println("[ MAN ] Invalid line in leaderboard. Skipping.");
                 continue;
             }
             String scoreS = splitLine[splitLine.length - 1];
             String name = String.join(",", Arrays.copyOfRange(splitLine, 0, splitLine.length - 1));
 
             if (name.length() == 0 || scoreS.length() == 0) {
-                System.out.println("[ MAIN ] Invalid line in leaderboard. Skipping.");
+                System.out.println("[ MAN ] Invalid line in leaderboard. Skipping.");
                 continue;
             }
 
@@ -203,7 +223,7 @@ public class Main extends Game {
                 int score = Integer.parseInt(scoreS);
                 broker.updateLeaderboard(name, score);
             } catch (NumberFormatException e) {
-                System.out.println("[ MAIN ] Invalid line in leaderboard. Skipping.");
+                System.out.println("[ MAN ] Invalid line in leaderboard. Skipping.");
                 continue;
             }
 
@@ -211,11 +231,15 @@ public class Main extends Game {
         return true;
     }
 
+    /**
+     * Save leaderboard to disk
+     * @return success status
+     */
     private boolean writeLeaderboard() {
         FileHandle leaderboardFile = this.getLeaderboardFile();
         if (leaderboardFile.isDirectory()) {
             // TODO: Check file permissions?
-            System.out.println("[ MAIN ] Could not open leaderboard file for writing");
+            System.out.println("[ MAN ] Could not open leaderboard file for writing");
             return false;
         }
 
@@ -223,8 +247,8 @@ public class Main extends Game {
         try {
             writer = leaderboardFile.writer(false);
         } catch (GdxRuntimeException e) {
-            System.out.println("[ MAIN ] Could not open leaderboard file for writing");
-            System.out.println("[ MAIN ] " + e);
+            System.out.println("[ MAN ] Could not open leaderboard file for writing");
+            System.out.println("[ MAN ] " + e);
             return false;
         }
 
@@ -234,19 +258,17 @@ public class Main extends Game {
             try {
                 writer.write(String.format(String.join(",", leaderboard.get(i).getKey(), String.valueOf(leaderboard.get(i).getValue())) + "%n"));
             } catch (IOException e) {
-                System.out.println("[ MAIN ] Could not open leaderboard file for writing");
-                System.out.println("[ MAIN ] " + e);
+                System.out.println("[ MAN ] Could not open leaderboard file for writing");
+                System.out.println("[ MAN ] " + e);
                 return false;
             }
         }
         try {
             writer.close();
         } catch (IOException e) {
-            System.out.println("[ MAIN ] Could not open leaderboard file for writing");
-            System.out.println("[ MAIN ] " + e);
+            System.out.println("[ MAN ] Could not open leaderboard file for writing");
+            System.out.println("[ MAN ] " + e);
         }
         return true;
     }
-
-
 }
