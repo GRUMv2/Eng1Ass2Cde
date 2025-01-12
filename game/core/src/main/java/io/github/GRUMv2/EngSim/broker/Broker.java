@@ -9,6 +9,7 @@ import io.github.GRUMv2.EngSim.entities.Obstacle;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Broker (Singleton)
@@ -37,7 +38,9 @@ public final class Broker {
     private ConcurrentHashMap<Available, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
-    private CopyOnWriteArrayList<String> achievementAwarded = new CopyOnWriteArrayList<>();
+    private LinkedBlockingQueue<PopupTicket> pendingPopups;
+    private LinkedBlockingQueue<PopupTicket> resolvedPopups;
+    private CopyOnWriteArrayList<String> achievementAwarded;
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
@@ -46,6 +49,9 @@ public final class Broker {
         this.grid = new ConcurrentHashMap<>();
         this.leaderboard = new CopyOnWriteArrayList<>();
         this.entities = new CopyOnWriteArrayList<>();
+        this.achievementAwarded = new CopyOnWriteArrayList<>();
+        this.pendingPopups = new LinkedBlockingQueue<>();
+        this.resolvedPopups = new LinkedBlockingQueue<>();
     }
 
     public synchronized static Broker getInstance() {
@@ -300,6 +306,36 @@ public final class Broker {
 
     public void achievementAwarded(String achievement) {
         achievementAwarded.add(achievement);
+    }
+
+    public synchronized PopupTicket getPendingPopups() {
+        return pendingPopups.peek();
+    }
+
+    public synchronized PopupTicket getResolvedPopups() {
+        return resolvedPopups.poll();
+    }
+
+    public synchronized boolean queuePopup(PopupTicket popup) {
+        this.pendingPopups.add(popup);
+        return true;
+    }
+
+    public synchronized boolean resolvePopup() {
+        if (this.pendingPopups.size() == 0) {
+            return false;
+        }
+        PopupTicket popup = this.pendingPopups.peek();
+        if (popup.isTransient()) {
+            this.pendingPopups.poll();
+            return true;
+        } else {
+            if (!popup.isDismissed()) {
+                return false;
+            }
+            this.resolvedPopups.add(this.pendingPopups.poll());
+        }
+        return true;
     }
 
     public int getGamePausedNumber() {

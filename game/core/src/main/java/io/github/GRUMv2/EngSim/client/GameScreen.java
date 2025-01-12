@@ -4,9 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
+
 import io.github.GRUMv2.EngSim.broker.Broker;
-import io.github.GRUMv2.EngSim.entities.*;
+import io.github.GRUMv2.EngSim.broker.PopupTicket;
+import io.github.GRUMv2.EngSim.entities.Building;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
+import io.github.GRUMv2.EngSim.entities.GameMap;
+import io.github.GRUMv2.EngSim.entities.TmpPopup;
+import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
+import io.github.GRUMv2.EngSim.entities.UI;
 
 public class GameScreen extends AbstractGameScreen {
 
@@ -16,6 +23,9 @@ public class GameScreen extends AbstractGameScreen {
     private UI ui;
     private Broker broker;
     private BuildingFactory builder;
+    private TmpPopupFactory popupFactory;
+
+    private TmpPopup activePopup;
 
     private Ghost ghost;
 
@@ -23,6 +33,7 @@ public class GameScreen extends AbstractGameScreen {
         super(renderer, inputHandler);
         broker = Broker.getInstance();
         builder = BuildingFactory.getInstance();
+        popupFactory = TmpPopupFactory.getInstance(() -> this.dismissActivePopup());
         map = new GameMap(this, broker);
         ui = new UI(this, broker, builder);
         this.mode = Modes.NORMAL;
@@ -50,9 +61,32 @@ public class GameScreen extends AbstractGameScreen {
                 }
             }
         }
+      
+        if (this.isInDialog()) {
+            this.activePopup.update(renderer, inputHandler);
+        } else {
+            PopupTicket p = broker.getPendingPopups();
+            if (p != null) {
+                if (p.isTransient()) {
+                    this.ui.pushNotice(p.getDescription());
+                    broker.resolvePopup();
+                } else {
+                    this.activePopup = popupFactory.newInfobox(p);
+                    this.changeEvent(Screens.GAME);
+                }
+            }
+        }
 
-        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
-            this.changeEvent(Screens.END);
+        // Debug features
+        // The player can trigger it if they like but it doesn't exactly offer much help
+        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT)) {
+            if (Gdx.input.isKeyJustPressed(Keys.F7)) {
+                this.changeEvent(Screens.END);
+            } else if (Gdx.input.isKeyJustPressed(Keys.F5)) {
+                broker.queuePopup(new PopupTicket("Debug", "Debug popup", new String[] { "OPTION" }));
+                broker.queuePopup(new PopupTicket("This is a lot of information in a notice box"));
+                this.changeEvent(Screens.GAME);
+            }
         }
     }
 
@@ -60,8 +94,27 @@ public class GameScreen extends AbstractGameScreen {
         this.changeEvent(Screens.PAUSE);
     }
 
+    public void dismissActivePopup() {
+        this.activePopup = null;
+        broker.resolvePopup();
+        this.changeEvent(Screens.GAME);
+    }
+
+    public void setBuildingToPlace(Available buildingType) {
+        if (buildingType == buildingToPlace) {
+            buildingToPlace = null;
+        } else {
+            buildingToPlace = buildingType;
+        }
+        this.toggleMode(Modes.NORMAL);
+    }
+
     public Modes getMode() {
         return mode;
+    }
+
+    public boolean isInDialog() {
+        return this.activePopup != null;
     }
 
     public void toggleMode(Modes mode) {
@@ -122,12 +175,6 @@ public class GameScreen extends AbstractGameScreen {
         }
     }
 
-    // TODO: remove
-    // What this is replaced by depends heavily on how we want to handle
-    // building objects
-    // Potentially a BuildingManager job but alternatively, if the tracking of objects
-    // can be decoupled from GameScreen() into a dedicated grid data type, then it may
-    // make more sense to let the buttons themselves be able to create their objects
     private boolean clickBuild(Vector2 cellPos) {
         if (buildingToPlace == null) {
             return false;

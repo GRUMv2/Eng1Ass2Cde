@@ -16,7 +16,7 @@ public class Server extends Thread {
     private final Simulation simulation;
     private final EventHandler eventHandler;
     public final TimeKeeper timeKeeper = new TimeKeeper(1);
-    public final PopupManager popupManager = new PopupManager(timeKeeper);
+    public final PopupManager popupManager = new PopupManager();
     private final Broker broker;
 
     public Server(int targetTPS) {
