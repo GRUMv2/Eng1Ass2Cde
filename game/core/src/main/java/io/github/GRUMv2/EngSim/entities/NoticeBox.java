@@ -52,8 +52,7 @@ public class NoticeBox extends Entity {
     public void put(String text) {
         items.add(text);
         for (int i = 0; i < Math.min(items.size(), this.MAX_ITEMS); i++) {
-            System.out.println(this.MAX_ITEMS - 1 - i);
-            itemBoxes[this.MAX_ITEMS - 1 - i].setContent(items.get(Math.max(items.size() - MAX_ITEMS + i, 0)));
+            itemBoxes[this.MAX_ITEMS - 1 - i].setContent(items.get(Math.max(items.size() - 1 - i, 0)));
         }
     }
 
