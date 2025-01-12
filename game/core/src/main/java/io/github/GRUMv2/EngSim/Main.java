@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.Game;
 
+import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Screens;
@@ -34,7 +35,7 @@ public class Main extends Game {
     private AbstractGameScreen gameScreen;
 
     private Server server;
-
+    private Broker broker;
     private GameScreen game;
 
     public Main() {
@@ -45,6 +46,8 @@ public class Main extends Game {
 
         server = new Server(60);
         server.start();  // starts paused dont worry
+
+        broker = Broker.getInstance();
     }
 
     public void create() {
@@ -90,6 +93,7 @@ public class Main extends Game {
                 this.gameScreen.setChangeEvent(Screens.GAME, () -> this.changeScreen(Screens.GAME));
                 this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
                 this.server.Pause();
+                broker.incrementGamePausedCount();
                 break;
             case END:
                 this.gameScreen = new EndScreen(renderer, inputHandler);

@@ -50,6 +50,7 @@ public class PopupManager {
     //    broker.queuePopup(p);
     //}
 
+
     public void addPopup(String title, String description) {
         // Basic interactive info popup
         PopupTicket p = new PopupTicket(title, description, new String[]{});

@@ -29,6 +29,7 @@ public final class Broker {
     private volatile float staffNumbers = 0f;
     private volatile long money = 0;
     private volatile int income = 0;
+    private volatile int gamePausedNumber = 0;
     private volatile int pendingSpendMoney = 0;
 
     // thread-safe
@@ -322,4 +323,11 @@ public final class Broker {
         return true;
     }
 
+    public int getGamePausedNumber() {
+        return gamePausedNumber;
+    }
+
+    public void incrementGamePausedCount() {
+        this.gamePausedNumber += 1;
+    }
 }
