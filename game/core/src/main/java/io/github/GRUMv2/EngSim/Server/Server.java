@@ -7,6 +7,10 @@ import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
 import io.github.GRUMv2.EngSim.broker.Broker;
 
 
+/**
+ * The server class is the main class that runs the simulation. It is responsible for
+ * running the simulation, handling events, and managing the popup system.
+ */
 public class Server extends Thread {
     public final TimeKeeper timeKeeper = new TimeKeeper(1);
     public final PopupManager popupManager = new PopupManager();
@@ -18,6 +22,11 @@ public class Server extends Thread {
     private boolean isRunning = true;
     private boolean isPaused = true;
 
+
+    /**
+     * Creates a new server with the given target ticks per second.
+     * @param targetTPS The target ticks per second.
+     */
     public Server(int targetTPS) {
         super("Server");
         this.targetTPS = targetTPS;
@@ -30,14 +39,18 @@ public class Server extends Thread {
         broker = Broker.getInstance();
     }
 
-    // Pause's the server, events, and simulation
+    /**
+     * Pauses the server, events, and simulation.
+     */
     public void Pause() {
         isPaused = true;
 
         this.timeKeeper.pause();
     }
 
-    // Unpauses the above
+    /**
+     * Resumes the server, events, and simulation.
+     */
     public void Resume() {
         isPaused = false;
 
@@ -48,7 +61,9 @@ public class Server extends Thread {
         return isPaused;
     }
 
-    // Entirely stops and disposes the server, this call cannot be undone
+    /**
+     * Stops the server, events, and simulation.
+     */
     public void Stop() {
         System.out.println("[ SVR ] Stopping");
         isRunning = false;
@@ -57,79 +72,8 @@ public class Server extends Thread {
     public boolean isRunning() {
         return isRunning;
     }
-// Simulation passthroughs
-//   Now redundant, broker will handle this
-//    // Driven by:
-//    // - Location of buildings
-//    // - Staff Student Ratio
-//    // - Student building ratio
-//    // Can also be affected by events
-//    public float getStudentSatisfaction() {
-//        return simulation.getStudentSatisfaction();
-//    }
-//
-//    // most of the time is the maximum possible given the number of halls,
-//    // unless the student satisfaction is too low then will drop as people
-//    // drop out.
-//    // Can also be affected by events
-//    //
-//    // Average students per building: 300
-//    public int getStudentNumbers() {
-//        return simulation.getStudentNumbers();
-//    }
-//
-//    // Driven by:
-//    // - Location to car parks
-//    // - Staff student satisfaction
-//    // - Student turnout (to lectures)
-//    //   - Driven by distance to halls
-//    // Can also be affected by events
-//    public float getStaffSatisfaction() {
-//        return simulation.getStaffSatisfaction();
-//    }
-//
-//    // Again mostly driven by the number of offices (that is itself driven by
-//    // number of placed buildings) unless staff satisfaction is too low.
-//    // Can also be affected by events
-//    public int getStaffNumbers() {
-//        return simulation.getStaffNumbers();
-//    }
-//
-//    // Driven by
-//    // - Income
-//    // - User building buildings
-//    // - Events can directly add/remove
-//    //
-//    // Average cost of halls building 20_000_000
-//    public long getMoney() {
-//        return simulation.getMoney();
-//    }
-//
-//    public void spendMoney(int spent) {
-//        simulation.spendMoney(spent);
-//    }
-//
-//    // Driven by
-//    // - Number students
-//    // - International student ratio
-//    // - Staff numbers
-//    // - Staff satisfaction
-//    //   - Low staff satisfaction numbers will increase their
-//    //     wage to prevent them from being fired
-//    public int getIncome() {
-//        return simulation.getIncome();
-//    }
-//
-//    // TimeHandler passthroughs
-//    public long getGameTime() {
-//        return this.timeKeeper.currentGameTime();
-//    }
-//
-//    public String getGameTimeFormatted() {
-//        return this.timeKeeper.currentGameTimeFormatted();
-//    }
 
-    // Calls the tick function, handles isRunning and isPaused
+    // called by threads
     public void run() {
         System.out.println("[ SVR ] Running in thread " + Thread.currentThread().getName());
 
@@ -173,17 +117,14 @@ public class Server extends Thread {
         System.out.println("[ SVR ] Stopped.");
     }
 
-    private void updateInternalGridCache() {
-    }
-
+    /**
+     * Ticks the simulation, events, and popup system.
+     * @param delta The time since the last tick in milliseconds.
+     */
     private void tick(double delta) {
-        updateInternalGridCache();
-
         simulation.tick(delta);
         eventHandler.tick(delta);
         popupManager.serverTick(delta);
-
-//        System.out.println((float) this.timeKeeper.currentGameTime());
 
         if (broker.getPendingSpendMoney() != 0) {
             simulation.spendMoney(broker.reconcileFunds());

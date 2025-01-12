@@ -6,6 +6,9 @@ import io.github.GRUMv2.EngSim.entities.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * This class is responsible for simulating the student walking around campus
+ */
 public class StudentWalkSimulation {
     Map<AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>>, Integer> thingsToCheck = new HashMap<>();
     ArrayList<Double> scores = new ArrayList<>();
@@ -23,11 +26,21 @@ public class StudentWalkSimulation {
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Gym.class, Pub.class), -2);
     }
 
+    /**
+     * Manhattan distance- could be improved but oh well lol
+     */
     private double hdist(Vector2 a, Vector2 b) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
-
+    /**
+     * A* algorithm to calculate the distance between two points
+     * @param grid the grid of the campus
+     * @param from the starting point
+     * @param to the ending point
+     * @param maxDistance distance the algorithm will timeout (prevents slowwwwwwwwwwwwwwwwwww servree)
+     * @return the distance between the two points
+     */
     private double distanceByAStar(ConcurrentHashMap<Vector2, ForegroundEntity> grid, Vector2 from, Vector2 to, double maxDistance) {
         Map<Vector2, Double> current_score = new HashMap<>();
         Map<Vector2, Double> straight_line_score = new HashMap<>();
@@ -78,6 +91,11 @@ public class StudentWalkSimulation {
         return -1;
     }
 
+    /**
+     * Calculate the score of the simulation
+     * @param grid the grid of the campus
+     * @param map basically the grid, read {@link io.github.GRUMv2.EngSim.Server.Server}
+     */
     void tick(ConcurrentHashMap<Vector2, ForegroundEntity> grid, HashMap<Class<? extends ForegroundEntity>, ArrayList<Vector2>> map) {
         ArrayList<Double> totalDistances = new ArrayList<>();
 

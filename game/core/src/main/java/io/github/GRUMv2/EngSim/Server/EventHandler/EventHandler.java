@@ -5,6 +5,9 @@ import io.github.GRUMv2.EngSim.Server.Server;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Manages the events that are active
+ */
 public class EventHandler {
     ArrayList<Event> activeEvents = new ArrayList<>();
     private final Server server;
@@ -34,6 +37,10 @@ public class EventHandler {
         this.server = server;
     }
 
+    /**
+     * Tick all active events
+     * @param delta time since last tick
+     */
     public void tick(double delta) {
         Iterator<Event> iterator = activeEvents.iterator();
 
