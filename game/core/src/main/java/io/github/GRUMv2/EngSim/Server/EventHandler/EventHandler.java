@@ -29,6 +29,7 @@ public class EventHandler {
         activeEvents.add(new RosesEvent());
         activeEvents.add(new PoliticalMovementEvent());
         activeEvents.add(new CovidEvent());
+        activeEvents.add(new InactivityEvent());
 
         this.server = server;
     }
