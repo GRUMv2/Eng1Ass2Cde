@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
+import io.github.GRUMv2.EngSim.broker.PopupTicket;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
@@ -14,7 +15,7 @@ public abstract class TmpPopup extends Entity {
 
     // TODO: not this
     // See note in Cell()
-    private final Vector2 POS = new Vector2(580, 20);
+    private final Vector2 POS = new Vector2(300, 20);
     private final Vector2 SIZE = new Vector2(680, 680);
 
     private Color bg = Color.valueOf("cccccc");
@@ -22,14 +23,14 @@ public abstract class TmpPopup extends Entity {
     private Color fg = Color.valueOf("333333");
 
     private TmpButton[] buttons;
-    private boolean dismissed;
     private Runnable popupHook;
-    private String text;
+    private PopupTicket ticket;
+    private String content;
     private String headerText;
 
-    public TmpPopup(Runnable popupHook, String text) {
-        this.dismissed = false;
-        this.text = text;
+    public TmpPopup(Runnable popupHook, PopupTicket popup) {
+        this.ticket = popup;
+        this.content = popup.getDescription();
         this.popupHook = popupHook;
     }
 
@@ -49,28 +50,25 @@ public abstract class TmpPopup extends Entity {
         return SIZE.cpy();
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
+    }
+
+    public PopupTicket getTicket() {
+        return ticket;
     }
 
     public void setHeaderText(String headerText) {
         this.headerText = headerText;
     }
 
-    protected void dismiss() {
-        this.dismissed = true;
-    }
-
-    public boolean isDismissed() {
-        return dismissed;
+    protected void dismiss(int index) {
+        this.ticket.dismiss(index);
+        this.popupHook.run();
     }
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
-
-        if (this.dismissed) {
-            return;
-        }
 
         Vector2 floatingPos = this.getPos();
         Vector2 floatingSize = this.getSize();
@@ -108,7 +106,7 @@ public abstract class TmpPopup extends Entity {
 
          //Central text
         renderer.drawText(
-            this.text,
+            this.content,
             this.getPos().add(this.getSize().scl(0.5f)),
             fg,
             1.5f,
@@ -117,7 +115,7 @@ public abstract class TmpPopup extends Entity {
 
          //Footer
         renderer.drawRect(
-            this.POS.add(20f, this.getSize().y * 0.2f),
+            this.getPos().add(20f, this.getSize().y * 0.2f),
             new Vector2(this.getSize().x - 40f, 10f),
             bd
         );

@@ -1,5 +1,7 @@
 package io.github.GRUMv2.EngSim.entities;
 
+import io.github.GRUMv2.EngSim.broker.PopupTicket;
+
 /**
  * TmpPopupFactory
  */
@@ -20,8 +22,8 @@ public final class TmpPopupFactory {
         return instance;
     }
 
-    public TmpInfoPopup newInfobox(String text) {
-        TmpInfoPopup infobox = new TmpInfoPopup(this.popupHook, text);
+    public TmpInfoPopup newInfobox(PopupTicket ticket) {
+        TmpInfoPopup infobox = new TmpInfoPopup(this.popupHook, ticket);
         return infobox;
     }
 
