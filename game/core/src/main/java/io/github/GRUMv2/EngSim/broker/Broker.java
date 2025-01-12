@@ -35,6 +35,9 @@ public final class Broker {
     // thread-safe
     private volatile boolean gameComplete = false;
 
+    private volatile long clientHeartbeat;
+    private volatile long serverHeartbeat;
+
     private ConcurrentHashMap<Available, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
@@ -52,6 +55,9 @@ public final class Broker {
         this.achievementAwarded = new CopyOnWriteArrayList<>();
         this.pendingPopups = new LinkedBlockingQueue<>();
         this.resolvedPopups = new LinkedBlockingQueue<>();
+
+        this.clientHeartbeat = System.currentTimeMillis();
+        this.serverHeartbeat = System.currentTimeMillis();
     }
 
     public synchronized static Broker getInstance() {
@@ -348,5 +354,21 @@ public final class Broker {
 
     public void incrementGamePausedCount() {
         this.gamePausedNumber += 1;
+    }
+
+    public void setClientHeartbeat(long clientHeartbeat) {
+        this.clientHeartbeat = clientHeartbeat;
+    }
+
+    public void setServerHeartbeat(long serverHeartbeat) {
+        this.serverHeartbeat = serverHeartbeat;
+    }
+
+    public boolean clientSuicide() {
+        return System.currentTimeMillis() - this.serverHeartbeat > 3000;
+    }
+
+    public boolean serverSuicide() {
+        return System.currentTimeMillis() - this.clientHeartbeat > 3000;
     }
 }
