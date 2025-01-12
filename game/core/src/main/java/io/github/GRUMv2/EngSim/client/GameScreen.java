@@ -130,6 +130,7 @@ public class GameScreen extends AbstractGameScreen {
         // if not holding down shift select none
         if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             this.buildingToPlace = null;
+            this.ghost = null;
         }
         return broker.placeBuilding(building);
     }
