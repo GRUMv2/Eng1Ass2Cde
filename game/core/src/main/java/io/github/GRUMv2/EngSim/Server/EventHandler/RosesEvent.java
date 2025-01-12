@@ -23,7 +23,7 @@ public class RosesEvent extends Event {
             "things are a little more expensive but the students are loving it!");
 
         server.setStudentHousingCapacityMultiuplyer(2f);
-        server.setMonthlyUpkeepCostsMultiuplyer(2f);
+        server.setMonthlyUpkeepCostsMultiuplyer(4f);
 
         return false;
     }
