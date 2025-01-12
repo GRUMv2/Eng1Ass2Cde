@@ -26,6 +26,7 @@ public class EventHandler {
         activeEvents.add(new RishiSunacEvent());
         activeEvents.add(new GovernmentGrantEvent());
         activeEvents.add(new PubRiotEvent());
+        activeEvents.add(new RosesEvent());
 
         this.server = server;
     }
