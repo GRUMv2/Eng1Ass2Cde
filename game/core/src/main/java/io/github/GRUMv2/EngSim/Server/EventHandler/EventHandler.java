@@ -1,5 +1,7 @@
 package io.github.GRUMv2.EngSim.Server.EventHandler;
 
+import io.github.GRUMv2.EngSim.Server.Server;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -8,14 +10,31 @@ import java.util.Iterator;
  */
 public class EventHandler {
     ArrayList<Event> activeEvents = new ArrayList<>();
+    private final Server server;
 
-    public EventHandler() {
+    public EventHandler(Server server) {
         System.out.println("[ EVN ] EventHandler created");
 
         // achievements
         activeEvents.add(new BrokeAchievement());
         activeEvents.add(new FromNothingAchievement());
-        activeEvents.add(new LotteryAchievement());
+        activeEvents.add(new CityCreatorAchievement());
+        activeEvents.add(new BusyBeeAchievement());
+        activeEvents.add(new MassivePopulationAchievement());
+        activeEvents.add(new QuitTheGameAchievement());
+        activeEvents.add(new StartTheGameAchievement());
+
+        // events
+        activeEvents.add(new LotteryEvent());
+        activeEvents.add(new RishiSunacEvent());
+        activeEvents.add(new GovernmentGrantEvent());
+        activeEvents.add(new PubRiotEvent()); // Pubs
+        activeEvents.add(new RosesEvent()); // Gyms
+        activeEvents.add(new PoliticalMovementEvent());
+        activeEvents.add(new CovidEvent());
+        activeEvents.add(new InactivityEvent());
+
+        this.server = server;
     }
 
     /**
@@ -27,6 +46,11 @@ public class EventHandler {
 
         while (iterator.hasNext()) {
             Event event = iterator.next();
+
+            if (event.server == null) {
+                event.server = server;
+            }
+
             boolean resp = event.tick(delta, this);
 
             if (!resp) {

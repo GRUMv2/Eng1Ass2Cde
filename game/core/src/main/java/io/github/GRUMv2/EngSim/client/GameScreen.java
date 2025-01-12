@@ -1,15 +1,23 @@
 package io.github.GRUMv2.EngSim.client;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
+import io.github.GRUMv2.EngSim.broker.PopupTicket;
 import io.github.GRUMv2.EngSim.entities.Building;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 import io.github.GRUMv2.EngSim.entities.GameMap;
+import io.github.GRUMv2.EngSim.entities.TmpPopup;
+import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
 import io.github.GRUMv2.EngSim.entities.UI;
+
+
+import io.github.GRUMv2.EngSim.entities.Ghost;
+
 
 /**
  * The GameScreen class represents the primary visual interface through which the
@@ -34,31 +42,24 @@ public class GameScreen extends AbstractGameScreen {
     private UI ui;
     private Broker broker;
     private BuildingFactory builder;
+    private TmpPopupFactory popupFactory;
 
-    public enum Modes {
-        NORMAL("Normal"),
-        DESTROY("Destroy"),
-        MOVE("Move");
+    private TmpPopup activePopup;
 
-        private String text;
-
-        private Modes(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-    }
+    private Ghost ghost;
 
     public GameScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);
         broker = Broker.getInstance();
         builder = BuildingFactory.getInstance();
+        popupFactory = TmpPopupFactory.getInstance(() -> this.dismissActivePopup());
         map = new GameMap(this, broker);
         ui = new UI(this, broker, builder);
         this.mode = Modes.NORMAL;
+    }
+
+    private void deathByDevZero() {
+        int a = 1 / 0;
     }
 
     public void update(Renderer renderer, InputHandler inputHandler) {
@@ -70,27 +71,75 @@ public class GameScreen extends AbstractGameScreen {
         map.update(renderer, inputHandler);
         ui.update(renderer, inputHandler);
 
-        if (Gdx.input.isKeyJustPressed(Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Keys.F7)) {
-            this.changeEvent(Screens.END);
+        if (this.ghost != null) {
+            // This kind of does the same calculation twice in a slightly different way.
+            // If the draw position was pulled out of Ghost.update() and made obtainable, it could be used
+            // to then calculate the grid tile too for minor efficiency gain
+            if (inputHandler.getMouseInBounds(new Vector2(560, 0), new Vector2(720, 720))) {
+                if (broker.isPlaceable(this.ghost.getBuilding(), this.map.getCellAtPos(inputHandler.getMousePos()))) {
+                    this.ghost.update(renderer, inputHandler);
+
+                } else if (broker.getTimeElapsed() % 1 > 0.6) {
+                    this.ghost.update(renderer, inputHandler);
+                }
+            }
         }
 
+        if (this.isInDialog()) {
+            this.activePopup.update(renderer, inputHandler);
+        } else {
+            PopupTicket p = broker.getPendingPopups();
+            if (p != null) {
+                if (p.isTransient()) {
+                    this.ui.pushNotice(p.getDescription());
+                    broker.resolvePopup();
+                } else {
+                    this.activePopup = popupFactory.newInfobox(p);
+                    this.changeEvent(Screens.GAME);
+                }
+            }
+        }
+
+        // Debug features
+        // The player can trigger it if they like but it doesn't exactly offer much help
+        if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
+            if (Gdx.input.isKeyPressed(Keys.F7)) {
+                this.changeEvent(Screens.END);
+            } else if (Gdx.input.isKeyPressed(Keys.F5)) {
+                broker.queuePopup(new PopupTicket("Debug", "Debug popup", new String[] { "OPTION" }));
+                broker.queuePopup(new PopupTicket("This is a lot of information in a notice box"));
+                this.changeEvent(Screens.GAME);
+            } else if (Gdx.input.isKeyPressed(Keys.F6)) {
+                deathByDevZero();
+            }
+        }
     }
 
     public void togglePause() {
         this.changeEvent(Screens.PAUSE);
     }
 
-    public void setBuildingToPlace(Available buildingType) {
-        if (buildingType == buildingToPlace) {
-            buildingToPlace = null;
-        } else {
-            buildingToPlace = buildingType;
-        }
-        this.toggleMode(Modes.NORMAL);
+    public void dismissActivePopup() {
+        this.activePopup = null;
+        broker.resolvePopup();
+        this.changeEvent(Screens.GAME);
     }
+
+//    public void setBuildingToPlace(Available buildingType) {
+//        if (buildingType == buildingToPlace) {
+//            buildingToPlace = null;
+//        } else {
+//            buildingToPlace = buildingType;
+//        }
+//        this.toggleMode(Modes.NORMAL);
+//    }
 
     public Modes getMode() {
         return mode;
+    }
+
+    public boolean isInDialog() {
+        return this.activePopup != null;
     }
 
     public void toggleMode(Modes mode) {
@@ -115,6 +164,17 @@ public class GameScreen extends AbstractGameScreen {
         return buildingToPlace;
     }
 
+    public void setBuildingToPlace(Available buildingType) {
+        if (buildingType == buildingToPlace) {
+            buildingToPlace = null;
+            this.ghost = null;
+        } else {
+            buildingToPlace = buildingType;
+            this.ghost = new Ghost(buildingType);
+        }
+        this.toggleMode(Modes.NORMAL);
+    }
+
     public void handleCellClick(Vector2 cellPos) {
         switch (this.mode) {
             case NORMAL:
@@ -132,12 +192,6 @@ public class GameScreen extends AbstractGameScreen {
         }
     }
 
-    // TODO: remove
-    // What this is replaced by depends heavily on how we want to handle
-    // building objects
-    // Potentially a BuildingManager job but alternatively, if the tracking of objects
-    // can be decoupled from GameScreen() into a dedicated grid data type, then it may
-    // make more sense to let the buttons themselves be able to create their objects
     private boolean clickBuild(Vector2 cellPos) {
         if (buildingToPlace == null) {
             return false;
@@ -145,6 +199,11 @@ public class GameScreen extends AbstractGameScreen {
         Building building = builder.newBuilding(buildingToPlace, cellPos);
         if (broker.getMoney() < building.getCost()) {
             return false;
+        }
+        // if not holding down shift select none
+        if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            this.buildingToPlace = null;
+            this.ghost = null;
         }
         return broker.placeBuilding(building);
     }
@@ -169,6 +228,23 @@ public class GameScreen extends AbstractGameScreen {
             if (this.clickBuild(cellPos)) {
                 this.toggleMode(Modes.MOVE);
             }
+        }
+    }
+
+    public enum Modes {
+        NORMAL("Normal"),
+        DESTROY("Destroy"),
+        MOVE("Move");
+
+        private String text;
+
+        private Modes(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return this.text;
         }
     }
 }

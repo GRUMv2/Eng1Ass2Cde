@@ -1,14 +1,11 @@
 package io.github.GRUMv2.EngSim.broker;
 
-import io.github.GRUMv2.EngSim.Server.TimeKeeper;
-
 public class PopupTicket {
     private boolean dismissed = false;
 
     private String name;
     private String description;
     private boolean transience;
-    private long autoKillAt;
 
     private String[] options;
     private int response;
@@ -21,12 +18,11 @@ public class PopupTicket {
         this.options = options;
     }
 
-    public PopupTicket(String name, String description, TimeKeeper timeKeeper, int lastsFor) {
+    public PopupTicket(String content) {
         // Transient popup
         this.transience = true;
-        this.name = name;
-        this.description = description;
-        this.autoKillAt = (timeKeeper.currentGameTime() + (lastsFor * 1000));
+        this.name = "Notice";
+        this.description = content;
     }
 
     public boolean isTransient() {
@@ -39,14 +35,6 @@ public class PopupTicket {
 
     public String getDescription() {
         return description;
-    }
-
-    public long getAutoKillAt() {
-        return autoKillAt;
-    }
-
-    public void dismiss() {
-        this.dismissed = true;
     }
 
     public void dismiss(int response) {

@@ -10,6 +10,8 @@ public class Achievement extends Event {
      */
     void award() {
         Broker.getInstance().achievementAwarded(this.awardName);
+        server.popupManager.addPopup("Achievement Unlocked: " + this.awardName);
+        System.out.println("[ ACH ] '" + this.awardName + "' awarded");
     }
 
     /**
