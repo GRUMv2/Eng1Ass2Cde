@@ -22,7 +22,7 @@ public class TmpInfoPopup extends TmpPopup {
                     // TODO: not this
                     // arbitrarily centre button based on arbitrary hardcoded coordinates for
                     // popup window in superclass and arbitrary hardcoded size of button in button class
-                    this.getPos().add((this.getSize().x / 2) - 125f, 20f),
+                    new Vector2(this.getPos().x + (this.getSize().x / 2) - 125f, this.getPos().y + 20f),
                     new Vector2(250, 60),
                     () -> this.dismiss(0),
                     Color.WHITE
