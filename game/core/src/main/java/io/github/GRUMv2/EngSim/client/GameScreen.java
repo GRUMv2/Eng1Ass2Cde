@@ -148,15 +148,7 @@ public class GameScreen extends AbstractGameScreen {
             this.ghost = null;
         } else {
             buildingToPlace = buildingType;
-
-            try {
-                Building temp = builder.newBuilding(buildingType, new Vector2(0, 0));
-                this.ghost = new Ghost(temp);
-
-            } catch (Exception e) {
-                Building temp = new Gym(new Vector2(0, 0));
-                this.ghost = new Ghost(temp);
-            }
+            this.ghost = new Ghost(buildingType);
         }
         this.toggleMode(Modes.NORMAL);
     }

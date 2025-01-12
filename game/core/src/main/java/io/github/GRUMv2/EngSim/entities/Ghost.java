@@ -5,6 +5,8 @@ import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
+import java.util.Objects;
+
 public class Ghost extends DynamicEntity {
     private final float CELL_WIDTH;
     private final float ALPHA = 0.7f;
@@ -15,6 +17,10 @@ public class Ghost extends DynamicEntity {
         this.building = building;
         Broker broker = Broker.getInstance();
         this.CELL_WIDTH = (float) broker.getMapSize() / broker.getMapCells();
+    }
+
+    public Ghost(BuildingFactory.Available buildingType) {
+        this(Objects.requireNonNull(BuildingFactory.getInstance().newBuilding(buildingType, new Vector2())));
     }
 
     @Override
