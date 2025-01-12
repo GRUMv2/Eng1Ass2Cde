@@ -3,9 +3,19 @@ package io.github.GRUMv2.EngSim;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import com.badlogic.gdx.Game;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
@@ -51,6 +61,7 @@ public class Main extends Game {
     }
 
     public void create() {
+        this.loadLeaderboard();
         this.camera = createCamera();
         this.jellyfin = new InputMultiplexer();
         Gdx.input.setInputProcessor(jellyfin);
@@ -131,14 +142,104 @@ public class Main extends Game {
     // This must only be called on sysexit otherwise everything is kil
     @Override
     public void dispose() {
+        this.writeLeaderboard();
         server.Stop();
         this.renderer.dispose();
         super.dispose();
+        System.out.println("aAAAaaaAAaaaAAaAA");
     }
 
     public void quit() {
         dispose();
-        System.out.println("aAAAaaaAAaaaAAaAA");
         System.exit(0);
     }
+
+    private FileHandle getLeaderboardFile() {
+        FileHandle leaderboardFile = Gdx.files.local("leaderboard.csv");
+        return leaderboardFile;
+    }
+
+    private boolean loadLeaderboard() {
+        FileHandle leaderboardFile = this.getLeaderboardFile();
+        if (!leaderboardFile.exists() || leaderboardFile.isDirectory()) {
+            System.out.println("[ MAIN ] Could not load leaderboard file");
+            return false;
+        }
+
+        String leaderboard = "";
+        try {
+            leaderboard = leaderboardFile.readString();
+        } catch (GdxRuntimeException e) {
+            System.out.println("[ MAIN ] Could not load leaderboard file");
+            // Continue because we'll just use a blank one
+        }
+
+        Broker broker = Broker.getInstance();
+
+        for (String line : leaderboard.split("\\r?\\n")) {
+            // Ignore invalid lines and continue
+            // Leaderboard is written anew on each exit
+            String[] splitLine = line.split(",");
+            if (splitLine.length < 2) {
+                System.out.println("[ MAIN ] Invalid line in leaderboard. Skipping.");
+                continue;
+            }
+            String scoreS = splitLine[splitLine.length - 1];
+            String name = String.join(",", Arrays.copyOfRange(splitLine, 0, splitLine.length - 1));
+
+            if (name.length() == 0 || scoreS.length() == 0) {
+                System.out.println("[ MAIN ] Invalid line in leaderboard. Skipping.");
+                continue;
+            }
+
+            try {
+                int score = Integer.parseInt(scoreS);
+                broker.updateLeaderboard(name, score);
+            } catch (NumberFormatException e) {
+                System.out.println("[ MAIN ] Invalid line in leaderboard. Skipping.");
+                continue;
+            }
+
+        }
+        return true;
+    }
+
+    private boolean writeLeaderboard() {
+        FileHandle leaderboardFile = this.getLeaderboardFile();
+        if (leaderboardFile.isDirectory()) {
+            // TODO: Check file permissions?
+            System.out.println("[ MAIN ] Could not open leaderboard file for writing");
+            return false;
+        }
+
+        Writer writer;
+        try {
+            writer = leaderboardFile.writer(false);
+        } catch (GdxRuntimeException e) {
+            System.out.println("[ MAIN ] Could not open leaderboard file for writing");
+            System.out.println("[ MAIN ] " + e);
+            return false;
+        }
+
+        ArrayList<SimpleImmutableEntry<String, Integer>> leaderboard = new ArrayList<SimpleImmutableEntry<String, Integer>>(Broker.getInstance().getLeaderboard());
+        String[] splitLine = new String[leaderboard.size()];
+        for (int i = 0; i < splitLine.length; i++) {
+            try {
+                writer.write(String.format(String.join(",", leaderboard.get(i).getKey(), String.valueOf(leaderboard.get(i).getValue())) + "%n"));
+            } catch (IOException e) {
+                System.out.println("[ MAIN ] Could not open leaderboard file for writing");
+                System.out.println("[ MAIN ] " + e);
+                return false;
+            }
+        }
+        try {
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("[ MAIN ] Could not open leaderboard file for writing");
+            System.out.println("[ MAIN ] " + e);
+        }
+        return true;
+    }
+
+
 }
