@@ -6,6 +6,11 @@ import io.github.GRUMv2.EngSim.broker.PopupTicket;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Manages the popups that are displayed to the user
+ *
+ * is basically a local list from the broker, not really sure if its used
+ */
 public class PopupManager {
     private final ArrayList<PopupTicket> popups;
     private final TimeKeeper timeKeeper;

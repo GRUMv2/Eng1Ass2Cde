@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * The simulation class is the main class that controls the simulation of the game. It is responsible for
+ * calculating the student and staff satisfaction te number of students staff money and the income.
+ * It also contains the student walk simulation and the rolling values simulator sometimes
+ */
 public class Simulation {
     private final Broker broker;
     private final StudentWalkSimulation studentWalkSimulation;
