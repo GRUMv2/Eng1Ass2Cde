@@ -1,14 +1,11 @@
 package io.github.GRUMv2.EngSim.Server.EventHandler;
 
-import io.github.GRUMv2.EngSim.broker.Broker;
 
 public class FromNothingAchievement extends Achievement {
-    private final Broker broker;
     private boolean beenNegative = false;
 
     FromNothingAchievement() {
         super();
-        broker = Broker.getInstance();
         awardName = "Build a fortune from nothing!";
     }
 

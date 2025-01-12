@@ -5,23 +5,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-//import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Renderer {
 
-    //final private OrthographicCamera camera;
     final private ShapeRenderer shapeRenderer;
     final private BitmapFont font;
     final private SpriteBatch spriteBatch;
     final private GlyphLayout glyphLayout;
 
     public Renderer(OrthographicCamera camera) {
-        //this.camera = camera;
         shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
         spriteBatch = new SpriteBatch();
@@ -45,6 +44,18 @@ public class Renderer {
         shapeRenderer.setColor(color);
         shapeRenderer.rect(position.x, position.y, size.x, size.y);
         shapeRenderer.end();
+    }
+
+    public void drawRect(Vector2 position, Vector2 size, Color color, float alpha) {
+        Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Color alphaColor = new Color(color);
+        alphaColor.sub(0, 0, 0, 1 - alpha);
+        shapeRenderer.setColor(alphaColor);
+        shapeRenderer.rect(position.x, position.y, size.x, size.y);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
 
@@ -79,6 +90,7 @@ public class Renderer {
 
     public void drawText(String text, Vector2 position, Color color, float fontSize, int alignment) {
         spriteBatch.begin();
+        font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
         font.getData().setScale(fontSize);
         glyphLayout.setText(font, text, color,
             3.0f,           // targetWidth; ignored if no wrapping/truncation, I think

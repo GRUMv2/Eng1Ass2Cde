@@ -1,9 +1,9 @@
 package io.github.GRUMv2.EngSim.Server;
 
 
+import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
 import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
-import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
 import io.github.GRUMv2.EngSim.broker.Broker;
 
 
@@ -12,15 +12,15 @@ import io.github.GRUMv2.EngSim.broker.Broker;
  * running the simulation, handling events, and managing the popup system.
  */
 public class Server extends Thread {
-    private boolean isRunning = true;
-    private boolean isPaused = true;
+    public final TimeKeeper timeKeeper = new TimeKeeper(1);
+    public final PopupManager popupManager = new PopupManager();
     private final int targetTPS;
 
     private final Simulation simulation;
     private final EventHandler eventHandler;
-    public final TimeKeeper timeKeeper = new TimeKeeper(1);
-    public final PopupManager popupManager = new PopupManager(timeKeeper);
     private final Broker broker;
+    private boolean isRunning = true;
+    private boolean isPaused = true;
 
 
     /**
@@ -34,7 +34,7 @@ public class Server extends Thread {
         System.out.println("[ SVR ] Server created");
 
         simulation = new Simulation();
-        eventHandler = new EventHandler();
+        eventHandler = new EventHandler(this);
 
         broker = Broker.getInstance();
     }
@@ -80,6 +80,15 @@ public class Server extends Thread {
         long processTime = 0;
 
         while (isRunning) {
+            // kill the client if the server is dead
+            broker.setServerHeartbeat(System.currentTimeMillis());
+
+            // kill the server if the client is dead
+            if (broker.serverSuicide()) {
+                System.out.println("[ HTM ] The hitman has been called- dun dun duuuun (server)");
+                isRunning = false;
+            }
+
             // Time how long the tick takes ...
             long lastTime = System.nanoTime();
 
@@ -105,7 +114,7 @@ public class Server extends Thread {
             }
         }
 
-        System.out.println(" [ SVR ] Stopped.");
+        System.out.println("[ SVR ] Stopped.");
     }
 
     /**
@@ -131,5 +140,25 @@ public class Server extends Thread {
             simulation.getMoney(),
             simulation.getIncome()
         );
+    }
+
+    public void setStudentHousingCapacityMultiuplyer(float to) {
+        this.simulation.setStudentHousingCapacityMultiuplyer(to);
+    }
+
+    public void setStudentStudyCapacityMultiuplyer(float to) {
+        this.simulation.setStudentStudyCapacityMultiuplyer(to);
+    }
+
+    public void setLeisureCapacityMultiuplyer(float to) {
+        this.simulation.setLeisureCapacityMultiuplyer(to);
+    }
+
+    public void setStaffOfficeCapacityMultiuplyer(float to) {
+        this.simulation.setStaffOfficeCapacityMultiuplyer(to);
+    }
+
+    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
+        this.simulation.setMonthlyUpkeepCostsMultiuplyer(to);
     }
 }

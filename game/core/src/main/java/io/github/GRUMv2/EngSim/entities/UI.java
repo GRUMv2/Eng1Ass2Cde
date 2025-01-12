@@ -23,6 +23,7 @@ public class UI extends Entity {
     private BuildingPlaceButton[] buildingPlaceButtons;
     private TmpButton[] actionButtons;
     private StatsBox statsBox;
+    private NoticeBox noticeBox;
 
     private int updateTime;
 
@@ -40,14 +41,14 @@ public class UI extends Entity {
                 new Vector2(20, 410),
                 new Vector2(250, 60),
                 () -> game.toggleMode(Modes.DESTROY),
-                Color.GRAY
+                Modes.DESTROY
             ),
             new TmpButton(
                 Modes.MOVE.toString(),
                 new Vector2(290, 410),
                 new Vector2(250, 60),
                 () -> game.toggleMode(Modes.MOVE),
-                Color.GRAY
+                Modes.MOVE
             )
         };
 
@@ -67,6 +68,15 @@ public class UI extends Entity {
             new Vector2(20, 480),
             new Vector2(250, 180)
         );
+
+        this.noticeBox = new NoticeBox(
+            new Vector2(290, 480),
+            new Vector2(250, 180)
+        );
+    }
+
+    public void pushNotice(String notice) {
+        this.noticeBox.put(notice);
     }
 
     @Override
@@ -100,12 +110,12 @@ public class UI extends Entity {
         );
 
         // draw the building count
-        renderer.drawText(
-            broker.getTotalBuildings() + " Buildings",
-            new Vector2(350, 660),
-            Color.BLACK,
-            1f
-        );
+        //renderer.drawText(
+        //    broker.getTotalBuildings() + " Buildings",
+        //    new Vector2(350, 660),
+        //    Color.BLACK,
+        //    1f
+        //);
 
         if (this.updateTime == broker.getTimeLeft()) {
             this.statsBox.setStats(broker.getMoney(), broker.getIncome());
@@ -120,16 +130,21 @@ public class UI extends Entity {
             );
             this.updateTime = broker.getTimeLeft();
         }
+
         this.statsBox.update(renderer, inputHandler);
 
-        for (TmpButton button : this.actionButtons) {
-            button.update(renderer, inputHandler);
-        }
+        this.noticeBox.update(renderer, inputHandler);
 
-        // update the building place buttons
-        for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
-            buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
-            buildingPlaceButton.update(renderer, inputHandler);
+        if (!this.game.isInDialog()) {
+            for (TmpButton button : this.actionButtons) {
+                button.update(renderer, inputHandler, game.getMode() == button.getMode() ? Color.GRAY : Color.LIGHT_GRAY);
+            }
+
+            // update the building place buttons
+            for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
+                buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
+                buildingPlaceButton.update(renderer, inputHandler, game.getBuildingToPlace() == buildingPlaceButton.getBuildingType());
+            }
         }
     }
 }

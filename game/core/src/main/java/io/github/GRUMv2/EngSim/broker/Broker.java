@@ -1,15 +1,15 @@
 package io.github.GRUMv2.EngSim.broker;
 
+import com.badlogic.gdx.math.Vector2;
+import io.github.GRUMv2.EngSim.entities.Building;
+import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
+import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
+import io.github.GRUMv2.EngSim.entities.Obstacle;
+
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.badlogic.gdx.math.Vector2;
-
-import io.github.GRUMv2.EngSim.entities.Building;
-import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
-import io.github.GRUMv2.EngSim.entities.Obstacle;
-import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Broker (Singleton)
@@ -18,25 +18,32 @@ public final class Broker {
     private static Broker instance;
 
     private final int MAP_CELLS = 30;
+    private final int MAP_SIZE = 720;
     private final float REALTIME_LENGTH = 300f;
 
     private volatile String timeElapsedString = "f";
-    private volatile float timeElapsed= 0;
+    private volatile float timeElapsed = 0;
     private volatile float studentSatisfaction = 0f;
     private volatile float studentNumbers = 0f;
     private volatile float staffSatisfaction = 0f;
     private volatile float staffNumbers = 0f;
     private volatile long money = 0;
     private volatile int income = 0;
+    private volatile int gamePausedNumber = 0;
     private volatile int pendingSpendMoney = 0;
 
     // thread-safe
     private volatile boolean gameComplete = false;
 
+    private volatile long clientHeartbeat;
+    private volatile long serverHeartbeat;
+
     private ConcurrentHashMap<Available, Integer> buildingCount;
     private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
     private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
-    private CopyOnWriteArrayList<String> achievementAwarded = new CopyOnWriteArrayList<>();
+    private LinkedBlockingQueue<PopupTicket> pendingPopups;
+    private LinkedBlockingQueue<PopupTicket> resolvedPopups;
+    private CopyOnWriteArrayList<String> achievementAwarded;
 
     private CopyOnWriteArrayList<ForegroundEntity> entities;
 
@@ -45,6 +52,12 @@ public final class Broker {
         this.grid = new ConcurrentHashMap<>();
         this.leaderboard = new CopyOnWriteArrayList<>();
         this.entities = new CopyOnWriteArrayList<>();
+        this.achievementAwarded = new CopyOnWriteArrayList<>();
+        this.pendingPopups = new LinkedBlockingQueue<>();
+        this.resolvedPopups = new LinkedBlockingQueue<>();
+
+        this.clientHeartbeat = System.currentTimeMillis();
+        this.serverHeartbeat = System.currentTimeMillis();
     }
 
     public synchronized static Broker getInstance() {
@@ -58,6 +71,14 @@ public final class Broker {
         return this.MAP_CELLS;
     }
 
+    public int getMapSize() {
+        return this.MAP_SIZE;
+    }
+
+    public float getTimeElapsed() {
+        return timeElapsed;
+    }
+
     public int getTimeLeft() {
         return (int) (REALTIME_LENGTH - timeElapsed);
     }
@@ -65,9 +86,19 @@ public final class Broker {
     public String getTimeLeftString() {
         int left = this.getTimeLeft();
         float minLeft = (float) Math.floor(left / 60f);
-        return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f)))  + ")";
+        return timeElapsedString + " (" + (int) minLeft + ":" + String.format("%02d", (int) Math.floor(left - (minLeft * 60f))) + ")";
     }
 
+    /**
+     * @param timeElapsed         the elapsed time in the game
+     * @param timeElapsedString   the string representation of the elapsed time
+     * @param studentSatisfaction the satisfaction level of students
+     * @param studentNumbers      the number of students
+     * @param staffSatisfaction   the satisfaction level of staff
+     * @param staffNumbers        the number of staff
+     * @param money               the amount of money available
+     * @param income              the income generated
+     */
     public void serverPush(
         float timeElapsed,
         String timeElapsedString,
@@ -82,7 +113,7 @@ public final class Broker {
             this.gameComplete = true;
         }
 
-        this.timeElapsed =  timeElapsed;
+        this.timeElapsed = timeElapsed;
         this.timeElapsedString = timeElapsedString;
         this.studentSatisfaction = studentSatisfaction;
         this.studentNumbers = studentNumbers;
@@ -163,7 +194,7 @@ public final class Broker {
         int i;
         for (i = 0; i < relCells.length; i++) {
             cells[i] = new Vector2(mapPos.x + relCells[i].x,
-                                    mapPos.y + relCells[i].y);
+                mapPos.y + relCells[i].y);
         }
         return cells;
     }
@@ -177,9 +208,9 @@ public final class Broker {
 
     private boolean cellInBounds(Vector2 cell) {
         return cell.x < this.MAP_CELLS &&
-                cell.y < this.MAP_CELLS &&
-                cell.x >= 0 &&
-                cell.y >= 0;
+            cell.y < this.MAP_CELLS &&
+            cell.x >= 0 &&
+            cell.y >= 0;
     }
 
     private boolean checkCoordsFree(Vector2[] interlinked, ForegroundEntity self) {
@@ -198,6 +229,10 @@ public final class Broker {
 
     private boolean checkCoordsFree(Vector2[] interlinked) {
         return this.checkCoordsFree(interlinked, null);
+    }
+
+    public boolean isPlaceable(ForegroundEntity entity, Vector2 position) {
+        return this.checkCoordsFree(this.relativeCellsToAbsolute(position, entity.getRelCellsUsed()), entity);
     }
 
     private boolean placeEntity(ForegroundEntity entity) {
@@ -222,6 +257,7 @@ public final class Broker {
         }
         this.spendMoney(building.getCost());
         this.buildingCount.put(Available.get(building.getClass()), this.getBuildingCount(Available.get(building.getClass())) + 1);
+
         return true;
     }
 
@@ -286,5 +322,63 @@ public final class Broker {
 
     public void achievementAwarded(String achievement) {
         achievementAwarded.add(achievement);
+    }
+
+    public CopyOnWriteArrayList<String> getAchievements() {
+        return achievementAwarded;
+    }
+
+    public synchronized PopupTicket getPendingPopups() {
+        return pendingPopups.peek();
+    }
+
+    public synchronized PopupTicket getResolvedPopups() {
+        return resolvedPopups.poll();
+    }
+
+    public synchronized boolean queuePopup(PopupTicket popup) {
+        this.pendingPopups.add(popup);
+        return true;
+    }
+
+    public synchronized boolean resolvePopup() {
+        if (this.pendingPopups.size() == 0) {
+            return false;
+        }
+        PopupTicket popup = this.pendingPopups.peek();
+        if (popup.isTransient()) {
+            this.pendingPopups.poll();
+            return true;
+        } else {
+            if (!popup.isDismissed()) {
+                return false;
+            }
+            this.resolvedPopups.add(this.pendingPopups.poll());
+        }
+        return true;
+    }
+
+    public int getGamePausedNumber() {
+        return gamePausedNumber;
+    }
+
+    public void incrementGamePausedCount() {
+        this.gamePausedNumber += 1;
+    }
+
+    public void setClientHeartbeat(long clientHeartbeat) {
+        this.clientHeartbeat = clientHeartbeat;
+    }
+
+    public void setServerHeartbeat(long serverHeartbeat) {
+        this.serverHeartbeat = serverHeartbeat;
+    }
+
+    public boolean clientSuicide() {
+        return System.currentTimeMillis() - this.serverHeartbeat > 3000;
+    }
+
+    public boolean serverSuicide() {
+        return System.currentTimeMillis() - this.clientHeartbeat > 3000;
     }
 }

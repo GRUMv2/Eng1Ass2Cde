@@ -1,7 +1,6 @@
 package io.github.GRUMv2.EngSim.Server.Simulation;
 
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.entities.ForegroundEntity;
 
@@ -108,4 +107,25 @@ public class Simulation {
 
         this.currentMoney += this.getIncomeI();
     }
+
+    public void setStudentHousingCapacityMultiuplyer(float to) {
+        this.rollingValuesSimulator.setStudentHousingCapacityMultiuplyer(to);
+    }
+
+    public void setStudentStudyCapacityMultiuplyer(float to) {
+        this.rollingValuesSimulator.setStudentStudyCapacityMultiuplyer(to);
+    }
+
+    public void setLeisureCapacityMultiuplyer(float to) {
+        this.rollingValuesSimulator.setLeisureCapacityMultiuplyer(to);
+    }
+
+    public void setStaffOfficeCapacityMultiuplyer(float to) {
+        this.rollingValuesSimulator.setStaffOfficeCapacityMultiuplyer(to);
+    }
+
+    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
+        this.rollingValuesSimulator.setMonthlyUpkeepCostsMultiuplyer(to);
+    }
+
 }
