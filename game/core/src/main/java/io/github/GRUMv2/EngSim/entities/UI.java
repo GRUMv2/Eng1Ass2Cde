@@ -40,14 +40,14 @@ public class UI extends Entity {
                 new Vector2(20, 410),
                 new Vector2(250, 60),
                 () -> game.toggleMode(Modes.DESTROY),
-                Color.GRAY
+                Modes.DESTROY
             ),
             new TmpButton(
                 Modes.MOVE.toString(),
                 new Vector2(290, 410),
                 new Vector2(250, 60),
                 () -> game.toggleMode(Modes.MOVE),
-                Color.GRAY
+                Modes.MOVE
             )
         };
 
@@ -123,13 +123,13 @@ public class UI extends Entity {
         this.statsBox.update(renderer, inputHandler);
 
         for (TmpButton button : this.actionButtons) {
-            button.update(renderer, inputHandler);
+            button.update(renderer, inputHandler, game.getMode() == button.mode ? Color.GRAY : Color.LIGHT_GRAY);
         }
 
         // update the building place buttons
         for (BuildingPlaceButton buildingPlaceButton : buildingPlaceButtons) {
             buildingPlaceButton.setCount(broker.getBuildingCount(buildingPlaceButton.getBuildingType()));
-            buildingPlaceButton.update(renderer, inputHandler);
+            buildingPlaceButton.update(renderer, inputHandler, game.getBuildingToPlace() == buildingPlaceButton.getBuildingType());
         }
     }
 }
