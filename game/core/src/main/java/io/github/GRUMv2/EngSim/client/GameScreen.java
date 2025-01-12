@@ -41,6 +41,7 @@ public class GameScreen extends AbstractGameScreen {
         this.mode = Modes.NORMAL;
     }
 
+    @SuppressWarnings({"NumericOverflow", "divzero"})
     private void deathByDevZero() {
         int a = 1 / 0;
     }

@@ -33,6 +33,7 @@ public class EventHandler {
         activeEvents.add(new PoliticalMovementEvent());
         activeEvents.add(new CovidEvent());
         activeEvents.add(new InactivityEvent());
+        activeEvents.add(new ChristmasJokeEvent());
 
         this.server = server;
     }
