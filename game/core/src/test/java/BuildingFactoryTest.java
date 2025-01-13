@@ -42,4 +42,9 @@ public class BuildingFactoryTest {
 
         assertNotEquals(f, g);
     }
+
+    @Test
+    public void buildingVariety() {
+        assertTrue(Available.values().length > 1);
+    }
 }

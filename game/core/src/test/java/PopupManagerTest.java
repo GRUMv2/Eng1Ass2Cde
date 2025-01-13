@@ -1,12 +1,9 @@
-import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
+import io.github.GRUMv2.EngSim.server.popupManager.PopupManager;
 import io.github.GRUMv2.EngSim.broker.Broker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 public class PopupManagerTest {

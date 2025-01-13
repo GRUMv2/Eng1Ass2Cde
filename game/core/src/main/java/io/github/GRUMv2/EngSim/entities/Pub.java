@@ -5,23 +5,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Pub extends Building {
 
-    private final String NAME = "Pub";
-    private final String DESCRIPTION = "A place to drink.";
-
-    public int studentHousingCapacity = 0;
-    public int studentStudyCapacity = 0;
-    public int leisureCapacity = 3000;
-    public int staffOfficeCapacity = 0;
-    public int cost = 50_000;
-    public int monthlyUpkeepCosts = 10_000;
-
-        @Override public int getStudentHousingCapacity() {return studentHousingCapacity;}
-    @Override public int getStudentStudyCapacity() {return studentStudyCapacity;}
-    @Override public int getLeisureCapacity() {return leisureCapacity;}
-    @Override public int getStaffOfficeCapacity() {return staffOfficeCapacity;}
-    @Override public int getCost() {return cost;}
-    @Override public int getMonthlyUpkeepCosts() {return monthlyUpkeepCosts;}
-
+    public final int studentHousingCapacity = 0;
+    public final int studentStudyCapacity = 0;
+    public final int leisureCapacity = 3000;
+    public final int staffOfficeCapacity = 0;
+    public final int cost = 50_000;
+    public final int monthlyUpkeepCosts = 10_000;
 
     public Pub(Vector2 mapPos) {
 
@@ -29,7 +18,7 @@ public class Pub extends Building {
         // TODO: Map data
         super(
             mapPos,
-            new Vector2[] {
+            new Vector2[]{
                 new Vector2(0, 0),
                 new Vector2(1, 0),
                 new Vector2(0, 1),
@@ -38,8 +27,40 @@ public class Pub extends Building {
             // TODO: -> Settings
             Color.PINK
         );
-        this.setText(this.NAME);
-        this.setName(this.NAME);
-        this.setDescription(this.DESCRIPTION);
+        String NAME = "Pub";
+        this.setText(NAME);
+        this.setName(NAME);
+        String DESCRIPTION = "A place to drink.";
+        this.setDescription(DESCRIPTION);
+    }
+
+    @Override
+    public int getStudentHousingCapacity() {
+        return studentHousingCapacity;
+    }
+
+    @Override
+    public int getStudentStudyCapacity() {
+        return studentStudyCapacity;
+    }
+
+    @Override
+    public int getLeisureCapacity() {
+        return leisureCapacity;
+    }
+
+    @Override
+    public int getStaffOfficeCapacity() {
+        return staffOfficeCapacity;
+    }
+
+    @Override
+    public int getCost() {
+        return cost;
+    }
+
+    @Override
+    public int getMonthlyUpkeepCosts() {
+        return monthlyUpkeepCosts;
     }
 }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
@@ -13,10 +12,10 @@ import io.github.GRUMv2.EngSim.client.Renderer;
  */
 public class InputField extends TmpTextBox {
 
-    private Vector2 pos;
-    private Vector2 size;
+    private final Vector2 pos;
+    private final Vector2 size;
 
-    private InputAdapter keyboardProcessor;
+    private final InputAdapter keyboardProcessor;
 
     private boolean selected = false;
 
@@ -70,8 +69,8 @@ public class InputField extends TmpTextBox {
                     setContent(content);
                     return true;
                 }
-                if((int)character == 8){
-                    if(content.length() > 0 ){
+                if ((int) character == 8) {
+                    if (!content.isEmpty()) {
                         content = content.substring(0, content.length() - 1);
                     }
                 } else {
@@ -94,7 +93,7 @@ public class InputField extends TmpTextBox {
     @Override
     public String getContent() {
         String content = super.getContent();
-        if (content.length() > 0 && content.lastIndexOf("|") == content.length() - 1) {
+        if (!content.isEmpty() && content.lastIndexOf("|") == content.length() - 1) {
             content = content.substring(0, content.length() - 1);
         }
         return content;

@@ -1,23 +1,22 @@
 package io.github.GRUMv2.EngSim.entities;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
+
+import java.util.ArrayList;
 
 /**
  * NoticeBox
  */
 public class NoticeBox extends Entity {
     private final int MAX_ITEMS = 5;
-    private float borderWidth = 4f;
+    private final float borderWidth = 4f;
 
-    private TmpTextBox header;
-    private TmpTextBox content;
-    private TmpTextBox[] itemBoxes;
-    private ArrayList<String> items;
+    private final TmpTextBox header;
+    private final TmpTextBox content;
+    private final TmpTextBox[] itemBoxes;
+    private final ArrayList<String> items;
 
     public NoticeBox(Vector2 pos, Vector2 size) {
         this.header = new TmpTextBox(
@@ -44,7 +43,7 @@ public class NoticeBox extends Entity {
                 new Vector2(pos.x, pos.y + (spacing * i)),
                 new Vector2(size.x, spacing),
                 "",
-                borderWidth/2
+                borderWidth / 2
             );
         }
     }

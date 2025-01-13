@@ -1,7 +1,6 @@
 package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
@@ -9,13 +8,13 @@ import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 
 public class BuildingPlaceButton extends Button {
 
-    private Available buildingType;
+    private final Available buildingType;
 
-    private TmpTextBox nameBox;
-    private TmpTextBox descBox;
-    private TmpTextBox costBox;
-    private TmpTextBox keepBox;
-    private TmpTextBox manyBox;
+    private final TmpTextBox nameBox;
+    private final TmpTextBox descBox;
+    private final TmpTextBox costBox;
+    private final TmpTextBox keepBox;
+    private final TmpTextBox manyBox;
 
     public BuildingPlaceButton(Vector2 pos, Vector2 size, Available buildingType, Runnable handleClick) {
         super(pos, size, handleClick);
@@ -24,12 +23,13 @@ public class BuildingPlaceButton extends Button {
 
         Building building = BuildingFactory.getInstance().newBuilding(buildingType, new Vector2());
 
-        this.nameBox = new TmpTextBox(new Vector2(pos.x, pos.y - (size.y / 8) + (size.y / 2f)), new Vector2((size.x/2f) /* + (size.y / 8) */, (size.y/2f) + (size.y / 8)));
-        this.descBox = new TmpTextBox(new Vector2(pos.x, pos.y), new Vector2((size.x/2f) - (size.x/12f), size.y/2f));
-        this.costBox = new TmpTextBox(new Vector2(pos.x + size.x / 2f - (size.x/12f), pos.y + size.y / 2f), new Vector2(size.x/2f - (size.x/12f), size.y/2f));
-        this.keepBox = new TmpTextBox(new Vector2(pos.x + size.x / 2f - (size.x/12f), pos.y), new Vector2(size.x/2f - (size.x/12f), size.y/2f));
+        this.nameBox = new TmpTextBox(new Vector2(pos.x, pos.y - (size.y / 8) + (size.y / 2f)), new Vector2((size.x / 2f) /* + (size.y / 8) */, (size.y / 2f) + (size.y / 8)));
+        this.descBox = new TmpTextBox(new Vector2(pos.x, pos.y), new Vector2((size.x / 2f) - (size.x / 12f), size.y / 2f));
+        this.costBox = new TmpTextBox(new Vector2(pos.x + size.x / 2f - (size.x / 12f), pos.y + size.y / 2f), new Vector2(size.x / 2f - (size.x / 12f), size.y / 2f));
+        this.keepBox = new TmpTextBox(new Vector2(pos.x + size.x / 2f - (size.x / 12f), pos.y), new Vector2(size.x / 2f - (size.x / 12f), size.y / 2f));
         this.manyBox = new TmpTextBox(new Vector2(pos.x + (size.x / 3f) + (size.x / 2f), pos.y), new Vector2(size.x - (size.x / 3f) - (size.x / 2f), size.y));
 
+        assert building != null;  // again CI wants me to do this?
         this.nameBox.setContent(building.getName());
         this.descBox.setContent(building.getDescription());
         this.costBox.setContent("Cost: £" + (building.getCost() / 1000) + "K");

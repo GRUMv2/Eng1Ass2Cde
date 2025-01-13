@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 import com.badlogic.gdx.math.Vector2;
 

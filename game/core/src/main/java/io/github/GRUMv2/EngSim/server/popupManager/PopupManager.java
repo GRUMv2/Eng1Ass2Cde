@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.PopupManager;
+package io.github.GRUMv2.EngSim.server.popupManager;
 
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.broker.PopupTicket;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  * Manages the popups that are displayed to the user
- *
+ * <p>
  * is basically a local list from the broker, not really sure if its used
  */
 public class PopupManager {

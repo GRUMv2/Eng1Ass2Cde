@@ -34,20 +34,20 @@ public class BrokerBuildingTest {
         Building accomBuilding = buildingFactory.newBuilding(Available.HALLS, new Vector2(0, 0));
         Building gymBuilding = buildingFactory.newBuilding(Available.GYM, new Vector2(5, 5));
         Building pubBuilding = buildingFactory.newBuilding(Available.PUB, new Vector2(10, 10));
-        Building lectureHallBuilding = buildingFactory.newBuilding(Available.LECTUREHALL, new Vector2(20, 20));
-        boolean accom = broker.placeBuilding(accomBuilding);
+        Building lectureHallBuilding = buildingFactory.newBuilding(Available.LECTURE_HALL, new Vector2(20, 20));
+        boolean halls = broker.placeBuilding(accomBuilding);
         boolean gym = broker.placeBuilding(gymBuilding);
         boolean pub = broker.placeBuilding(pubBuilding);
         boolean lectureHall = broker.placeBuilding(lectureHallBuilding);
 
-        assertTrue(accom, "accom placed: successful");
+        assertTrue(halls, "halls placed: successful");
         assertTrue(gym, "gym placed: successful");
         assertTrue(pub, "pub placed: successful");
         assertTrue(lectureHall, "lecture hall placed: successful");
-        assertEquals(1, broker.getBuildingCount(Available.HALLS), "accom building count incremented");
+        assertEquals(1, broker.getBuildingCount(Available.HALLS), "halls building count incremented");
         assertEquals(1, broker.getBuildingCount(Available.GYM), "gym building count incremented");
         assertEquals(1, broker.getBuildingCount(Available.PUB), "pub building count incremented");
-        assertEquals(1, broker.getBuildingCount(Available.LECTUREHALL), "lecture hall building count incremented");
+        assertEquals(1, broker.getBuildingCount(Available.LECTURE_HALL), "lecture hall building count incremented");
     }
 
     @Test
@@ -55,21 +55,21 @@ public class BrokerBuildingTest {
         Building accomBuilding = buildingFactory.newBuilding(Available.HALLS, new Vector2(-1, 0));
         Building gymBuilding = buildingFactory.newBuilding(Available.GYM, new Vector2(0, -1));
         Building pubBuilding = buildingFactory.newBuilding(Available.PUB, new Vector2(0, broker.getMapCells() + 1));
-        Building lectureHallBuilding = buildingFactory.newBuilding(Available.LECTUREHALL,
+        Building lectureHallBuilding = buildingFactory.newBuilding(Available.LECTURE_HALL,
                 new Vector2(broker.getMapCells() + 1, 0));
-        boolean accom = broker.placeBuilding(accomBuilding);
+        boolean halls = broker.placeBuilding(accomBuilding);
         boolean gym = broker.placeBuilding(gymBuilding);
         boolean pub = broker.placeBuilding(pubBuilding);
         boolean lectureHall = broker.placeBuilding(lectureHallBuilding);
 
-        assertFalse(accom, "accom placed: unsuccessful");
+        assertFalse(halls, "halls placed: unsuccessful");
         assertFalse(gym, "gym placed: unsuccessful");
         assertFalse(pub, "pub placed: unsuccessful");
         assertFalse(lectureHall, "lecture hall placed: unsuccessful");
-        assertEquals(0, broker.getBuildingCount(Available.HALLS), "accom building count no change");
+        assertEquals(0, broker.getBuildingCount(Available.HALLS), "halls building count no change");
         assertEquals(0, broker.getBuildingCount(Available.GYM), "gym building count no change");
         assertEquals(0, broker.getBuildingCount(Available.PUB), "pub building count no change");
-        assertEquals(0, broker.getBuildingCount(Available.LECTUREHALL), "lecture hall building count no change");
+        assertEquals(0, broker.getBuildingCount(Available.LECTURE_HALL), "lecture hall building count no change");
 
     }
 
@@ -78,14 +78,14 @@ public class BrokerBuildingTest {
         Building accomBuilding = buildingFactory.newBuilding(Available.HALLS, new Vector2(0, 0));
         Building gymBuilding = buildingFactory.newBuilding(Available.GYM, new Vector2(0, 0));
         Building pubBuilding = buildingFactory.newBuilding(Available.PUB, new Vector2(0, 0));
-        boolean accom = broker.placeBuilding(accomBuilding);
+        boolean halls = broker.placeBuilding(accomBuilding);
         boolean gym = broker.placeBuilding(gymBuilding);
         boolean pub = broker.placeBuilding(pubBuilding);
 
-        assertTrue(accom, "accom placed: successful");
+        assertTrue(halls, "halls placed: successful");
         assertFalse(gym, "gym placed: unsuccessful");
         assertFalse(pub, "pub placed: unsuccessful");
-        assertEquals(1, broker.getBuildingCount(Available.HALLS), "accom building count incremented");
+        assertEquals(1, broker.getBuildingCount(Available.HALLS), "halls building count incremented");
         assertEquals(0, broker.getBuildingCount(Available.GYM), "overlapping gym building count no change");
         assertEquals(0, broker.getBuildingCount(Available.PUB), "overlapping pub building count no change");
 

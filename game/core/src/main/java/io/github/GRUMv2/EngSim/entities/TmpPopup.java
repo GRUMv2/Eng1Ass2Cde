@@ -2,7 +2,6 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.broker.PopupTicket;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
@@ -21,36 +20,36 @@ public abstract class TmpPopup extends Entity {
     private final float CONTENT_SCALE = 0.7f;
     private final float HF_SCALE = ((1 - CONTENT_SCALE) / 2);
 
-    private Color bg = Color.valueOf("cccccc");
-    private Color bd = Color.valueOf("555555");
-    private Color fg = Color.valueOf("333333");
+    private final Color bg = Color.valueOf("cccccc");
+    private final Color bd = Color.valueOf("555555");
+    private final Color fg = Color.valueOf("333333");
 
-    private Runnable popupHook;
-    private PopupTicket ticket;
-    private String content;
+    private final Runnable popupHook;
+    private final PopupTicket ticket;
+    private final String content;
     private String headerText;
 
     private TmpButton[] buttons;
-    private TmpTextBox headerBox;
-    private TmpTextBox contentBox;
+    private final TmpTextBox headerBox;
+    private final TmpTextBox contentBox;
 
     public TmpPopup(Runnable popupHook, PopupTicket popup) {
         this.ticket = popup;
         this.content = popup.getDescription();
         this.popupHook = popupHook;
 
-        Vector2 contentPos = new Vector2(this.POS.x + (2*this.BORDER_WIDTH), this.POS.y + (2*this.BORDER_WIDTH));
-        Vector2 contentSize = new Vector2(this.SIZE.x - (4*this.BORDER_WIDTH), this.SIZE.y - (4*this.BORDER_WIDTH));
+        Vector2 contentPos = new Vector2(this.POS.x + (2 * this.BORDER_WIDTH), this.POS.y + (2 * this.BORDER_WIDTH));
+        Vector2 contentSize = new Vector2(this.SIZE.x - (4 * this.BORDER_WIDTH), this.SIZE.y - (4 * this.BORDER_WIDTH));
 
         this.headerBox = new TmpTextBox(
-            // (x, bottomLeftCorner + divider + footer + content)
-            new Vector2(contentPos.x, contentPos.y + (((this.HF_SCALE + this.CONTENT_SCALE) * contentSize.y) + this.BORDER_WIDTH)),
-            new Vector2(contentSize.x, (contentSize.y * this.HF_SCALE) - this.BORDER_WIDTH)
+                // (x, bottomLeftCorner + divider + footer + content)
+                new Vector2(contentPos.x, contentPos.y + (((this.HF_SCALE + this.CONTENT_SCALE) * contentSize.y) + this.BORDER_WIDTH)),
+                new Vector2(contentSize.x, (contentSize.y * this.HF_SCALE) - this.BORDER_WIDTH)
         );
         this.contentBox = new TmpTextBox(
-            new Vector2(contentPos.x, contentPos.y + (this.HF_SCALE * contentSize.y)),
-            new Vector2(contentSize.x, contentSize.y * this.CONTENT_SCALE),
-            this.content
+                new Vector2(contentPos.x, contentPos.y + (this.HF_SCALE * contentSize.y)),
+                new Vector2(contentSize.x, contentSize.y * this.CONTENT_SCALE),
+                this.content
         );
         this.headerBox.centreText();
         this.headerBox.setTextColor(fg);
@@ -101,22 +100,24 @@ public abstract class TmpPopup extends Entity {
         for (int i = 0; i < 3; i++) {
             ibw = i * this.BORDER_WIDTH;
             renderer.drawRect(
-                new Vector2(this.POS.x + ibw, this.POS.y + ibw),
-                new Vector2(this.SIZE.x - (2 * ibw), this.SIZE.y - (2 * ibw)),
-                bColors[i]
+                    new Vector2(this.POS.x + ibw, this.POS.y + ibw),
+                    new Vector2(this.SIZE.x - (2 * ibw), this.SIZE.y - (2 * ibw)),
+                    bColors[i]
             );
 
             if (i == 2) {
+                //noinspection SuspiciousNameCombination
                 renderer.drawRect(
-                    new Vector2(this.POS.x + (ibw * 2), this.POS.y + ibw + (this.HF_SCALE * (this.SIZE.y - (2 * ibw))) - this.BORDER_WIDTH),
-                    new Vector2(this.SIZE.x - (4 * ibw), this.BORDER_WIDTH),
-                    bd
+                        new Vector2(this.POS.x + (ibw * 2), this.POS.y + ibw + (this.HF_SCALE * (this.SIZE.y - (2 * ibw))) - this.BORDER_WIDTH),
+                        new Vector2(this.SIZE.x - (4 * ibw), this.BORDER_WIDTH),
+                        bd
                 );
 
+                //noinspection SuspiciousNameCombination
                 renderer.drawRect(
-                    new Vector2(this.POS.x + (ibw * 2), this.POS.y + ibw + ((this.HF_SCALE + this.CONTENT_SCALE) * (this.SIZE.y - (2 * ibw)))),
-                    new Vector2(this.SIZE.x - (4 * ibw), this.BORDER_WIDTH),
-                    bd
+                        new Vector2(this.POS.x + (ibw * 2), this.POS.y + ibw + ((this.HF_SCALE + this.CONTENT_SCALE) * (this.SIZE.y - (2 * ibw)))),
+                        new Vector2(this.SIZE.x - (4 * ibw), this.BORDER_WIDTH),
+                        bd
                 );
             }
         }

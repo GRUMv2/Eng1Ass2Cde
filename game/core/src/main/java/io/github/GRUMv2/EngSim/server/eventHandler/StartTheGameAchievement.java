@@ -1,6 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
-
-import io.github.GRUMv2.EngSim.broker.Broker;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 public class StartTheGameAchievement extends Achievement {
 

@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.broker.PopupTicket;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing for:
@@ -27,19 +25,19 @@ public class BrokerPopupTest {
     @Test
     public void testTransientPendingPopups() {
         // Queue should start empty
-        assertTrue(broker.getPendingPopups() == null);
+        assertNull(broker.getPendingPopups());
 
         // Queue should increment on popup add
         PopupTicket p = new PopupTicket("");
         broker.queuePopup(p);
-        assertFalse(broker.getPendingPopups() == null);
+        assertNotNull(broker.getPendingPopups());
 
         // Queue should contain queued popup
         assertEquals(broker.getPendingPopups(), p);
 
         // Queue should be empty after transient is resolved
         broker.resolvePopup();
-        assertTrue(broker.getPendingPopups() == null);
+        assertNull(broker.getPendingPopups());
 
         // Queue should return first queued popup
         p = new PopupTicket("");
@@ -56,24 +54,24 @@ public class BrokerPopupTest {
     @Test
     public void testInteractivePendingPopups() {
         // Queue should start empty
-        assertTrue(broker.getPendingPopups() == null);
+        assertNull(broker.getPendingPopups());
 
         // Queue should increment on popup add
         PopupTicket p = new PopupTicket("", "", new String[]{""});
         broker.queuePopup(p);
-        assertFalse(broker.getPendingPopups() == null);
+        assertNotNull(broker.getPendingPopups());
 
         // Queue should contain queued popup
         assertEquals(broker.getPendingPopups(), p);
 
         // Queue should not be empty until interactive is dismissed
         broker.resolvePopup();
-        assertFalse(broker.getPendingPopups() == null);
+        assertNotNull(broker.getPendingPopups());
 
         // Queue should be empty after interactive is dismissed and resolved
         broker.getPendingPopups().dismiss(0);
         broker.resolvePopup();
-        assertTrue(broker.getPendingPopups() == null);
+        assertNull(broker.getPendingPopups());
 
         // Queue should return first queued popup
         p = new PopupTicket("", "", new String[]{});
@@ -91,7 +89,7 @@ public class BrokerPopupTest {
     @Test
     public void testResolvePopups() {
         // Queue should start empty
-        assertTrue(broker.getPendingPopups() == null);
+        assertNull(broker.getPendingPopups());
 
         // resolvePopup should return false if no popups to resolve
         assertFalse(broker.resolvePopup());
@@ -101,7 +99,7 @@ public class BrokerPopupTest {
         broker.queuePopup(p);
         assertTrue(broker.resolvePopup());
 
-        // resolvePopup should return false if attempted to resolve undismissed popup
+        // resolvePopup should return false if attempted to resolve un-dismissed popup
         p = new PopupTicket("", "", new String[]{""});
         broker.queuePopup(p);
         assertFalse(broker.resolvePopup());
@@ -114,26 +112,26 @@ public class BrokerPopupTest {
     @Test
     public void testResolvedPopupsQueue() {
         // Queue should start empty
-        assertTrue(broker.getResolvedPopups() == null);
+        assertNull(broker.getResolvedPopups());
 
         // Queue should not increment on unresolved popup add
         PopupTicket p = new PopupTicket("", "", new String[]{""});
         broker.queuePopup(p);
-        assertTrue(broker.getResolvedPopups() == null);
+        assertNull(broker.getResolvedPopups());
 
         // Queue should increment on resolved popup
         broker.getPendingPopups().dismiss(0);
         broker.resolvePopup();
-        assertFalse(broker.getResolvedPopups() == null);
+        assertNotNull(broker.getResolvedPopups());
 
         // Queue should empty after retrieval
-        assertTrue(broker.getResolvedPopups() == null);
+        assertNull(broker.getResolvedPopups());
 
         // Queue should not increment on resolved transient
         p = new PopupTicket("");
         broker.queuePopup(p);
         broker.resolvePopup();
-        assertTrue(broker.getResolvedPopups() == null);
+        assertNull(broker.getResolvedPopups());
     }
 
 }

@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 import java.util.Random;
 
@@ -11,9 +11,9 @@ public class CovidEvent extends Event {
             return true;
         }
         server.popupManager.addPopup("Uh oh!",
-            "A new strain of Covid has been discovered in your city.\n" +
-                "The university has been forced to spend 10k per building to\n" +
-                "upgrade their safety measures.");
+                "A new strain of Covid has been discovered in your city.\n" +
+                        "The university has been forced to spend 10k per building to\n" +
+                        "upgrade their safety measures.");
 
         broker.spendMoney(10_000 * broker.getTotalBuildings());
         return false;

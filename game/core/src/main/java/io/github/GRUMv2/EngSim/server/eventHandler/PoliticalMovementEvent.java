@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 import java.util.Random;
 
@@ -12,10 +12,10 @@ public class PoliticalMovementEvent extends Event {
         }
 
         server.popupManager.addPopup("Political Movement!",
-            "Some of your students arnt happy with the university's stance\n" +
-                "on a political issue, they have started a protest!\n\n");
+                "Some of your students arnt happy with the university's stance\n" +
+                        "on a political issue, they have started a protest!\n\n");
 
-        server.setStudentHousingCapacityMultiuplyer(0.5f);
+        server.setStudentHousingCapacityMultiplier(0.5f);
 
         return false;
     }

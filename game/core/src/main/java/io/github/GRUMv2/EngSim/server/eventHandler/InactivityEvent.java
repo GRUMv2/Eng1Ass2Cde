@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 public class InactivityEvent extends Event {
     private int buildingCount = -1;
@@ -14,9 +14,9 @@ public class InactivityEvent extends Event {
 
         if (server.timeKeeper.currentGameTime() - lastChanged > 30_000) {
             server.popupManager.addPopup("Union upset",
-                "The union feels like your not investing in the growth of the uni.\n" +
-                    "They have started organising strikes");
-            server.setMonthlyUpkeepCostsMultiuplyer(2f);
+                    "The union feels like your not investing in the growth of the uni.\n" +
+                            "They have started organising strikes");
+            server.setMonthlyUpkeepCostsMultiplier(2f);
             lastChanged = server.timeKeeper.currentGameTime();
         }
 

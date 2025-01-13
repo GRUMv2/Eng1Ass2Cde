@@ -20,7 +20,13 @@ public final class Broker {
     private final int MAP_CELLS = 30;
     private final int MAP_SIZE = 720;
     private final float REALTIME_LENGTH = 300f;
-
+    private final ConcurrentHashMap<Available, Integer> buildingCount;
+    private final ConcurrentHashMap<Vector2, ForegroundEntity> grid;
+    private final CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
+    private final LinkedBlockingQueue<PopupTicket> pendingPopups;
+    private final LinkedBlockingQueue<PopupTicket> resolvedPopups;
+    private final CopyOnWriteArrayList<String> achievementAwarded;
+    private final CopyOnWriteArrayList<ForegroundEntity> entities;
     private volatile String timeElapsedString = "f";
     private volatile float timeElapsed = 0;
     private volatile float studentSatisfaction = 0f;
@@ -31,21 +37,10 @@ public final class Broker {
     private volatile int income = 0;
     private volatile int gamePausedNumber = 0;
     private volatile int pendingSpendMoney = 0;
-
     // thread-safe
     private volatile boolean gameComplete = false;
-
     private volatile long clientHeartbeat;
     private volatile long serverHeartbeat;
-
-    private ConcurrentHashMap<Available, Integer> buildingCount;
-    private ConcurrentHashMap<Vector2, ForegroundEntity> grid;
-    private CopyOnWriteArrayList<SimpleImmutableEntry<String, Integer>> leaderboard;
-    private LinkedBlockingQueue<PopupTicket> pendingPopups;
-    private LinkedBlockingQueue<PopupTicket> resolvedPopups;
-    private CopyOnWriteArrayList<String> achievementAwarded;
-
-    private CopyOnWriteArrayList<ForegroundEntity> entities;
 
     private Broker() {
         this.buildingCount = new ConcurrentHashMap<>();
@@ -247,8 +242,8 @@ public final class Broker {
         return true;
     }
 
-    public boolean placeObstacle(Obstacle obstacle) {
-        return placeEntity(obstacle);
+    public void placeObstacle(Obstacle obstacle) {
+        placeEntity(obstacle);
     }
 
     public boolean placeBuilding(Building building) {
@@ -285,22 +280,19 @@ public final class Broker {
     }
 
     private boolean validateScore(int score) {
-        if (score < 0) {
-            return false;
-        }
-        /**
-         * else if (score > this.MAX_SCORE) {
-         * return false;
-         * } ...
+        return score >= 0;
+        /*
+          else if (score > this.MAX_SCORE) {
+          return false;
+          } ...
          */
-        return true;
     }
 
     public boolean updateLeaderboard(String name, int score) {
         if (!this.validateScore(score)) {
             return false;
         }
-        SimpleImmutableEntry<String, Integer> newEntry = new SimpleImmutableEntry<String, Integer>(name, score);
+        SimpleImmutableEntry<String, Integer> newEntry = new SimpleImmutableEntry<>(name, score);
         for (int i = 0; i < this.leaderboard.size(); i++) {
             if (score > this.leaderboard.get(i).getValue()) {
                 this.leaderboard.add(i, newEntry);
@@ -336,13 +328,12 @@ public final class Broker {
         return resolvedPopups.poll();
     }
 
-    public synchronized boolean queuePopup(PopupTicket popup) {
+    public synchronized void queuePopup(PopupTicket popup) {
         this.pendingPopups.add(popup);
-        return true;
     }
 
     public synchronized boolean resolvePopup() {
-        if (this.pendingPopups.size() == 0) {
+        if (this.pendingPopups.isEmpty()) {
             return false;
         }
         PopupTicket popup = this.pendingPopups.peek();

@@ -1,11 +1,11 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 
+@SuppressWarnings("resource")
 public class QuitTheGameAchievement extends Achievement {
     private int count = 0;
 
@@ -16,6 +16,8 @@ public class QuitTheGameAchievement extends Achievement {
         File file = new File("AchConst.bin");
         if (!file.exists()) {
             try {
+                // given the try catch clause this is not necessary
+                //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
                 FileWriter r = new FileWriter(file);
                 r.write(0);

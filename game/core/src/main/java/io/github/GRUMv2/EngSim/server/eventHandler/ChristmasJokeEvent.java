@@ -1,16 +1,16 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
-        import java.util.Random;
+import java.util.Random;
 
 public class ChristmasJokeEvent extends Event {
-    private Random random = new Random();
+    private final Random random = new Random();
+    private final List<String> jokes = new ArrayList<>();
     private boolean isDecember = false;
-    private List<String> jokes = new ArrayList<>();
 
 
-    ChristmasJokeEvent () {
+    ChristmasJokeEvent() {
         super();
         jokes.add("How did the ornament get addicted to Christmas?\nHe was hooked on trees his whole life.");
         jokes.add("What would you call an elf who just has won the lottery?\nWelfy!");

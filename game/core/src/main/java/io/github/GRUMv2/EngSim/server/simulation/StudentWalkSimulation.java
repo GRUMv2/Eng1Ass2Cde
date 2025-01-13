@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.Simulation;
+package io.github.GRUMv2.EngSim.server.simulation;
 
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.entities.*;
@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * This class is responsible for simulating the student walking around campus
  */
 public class StudentWalkSimulation {
-    Map<AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>>, Integer> thingsToCheck = new HashMap<>();
-    ArrayList<Double> scores = new ArrayList<>();
+    final Map<AbstractMap.SimpleEntry<Class<? extends ForegroundEntity>, Class<? extends ForegroundEntity>>, Integer> thingsToCheck = new HashMap<>();
+    final ArrayList<Double> scores = new ArrayList<>();
 
     StudentWalkSimulation() {
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Water.class, Halls.class), 2);
@@ -21,24 +21,25 @@ public class StudentWalkSimulation {
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Halls.class, Restaurant.class), 1);
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Halls.class, LectureHall.class), 8);
 
-        // Dont put pubs next to restaurants or gyms
+        // Don't put pubs next to restaurants or gyms
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Restaurant.class, Pub.class), -2);
         thingsToCheck.put(new AbstractMap.SimpleEntry<>(Gym.class, Pub.class), -2);
     }
 
     /**
-     * Manhattan distance- could be improved but oh well lol
+     * Manhattan distance. could be improved but oh well lol
      */
-    private double hdist(Vector2 a, Vector2 b) {
+    private double heuristic_distance(Vector2 a, Vector2 b) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
     /**
      * A* algorithm to calculate the distance between two points
-     * @param grid the grid of the campus
-     * @param from the starting point
-     * @param to the ending point
-     * @param maxDistance distance the algorithm will timeout (prevents slowwwwwwwwwwwwwwwwwww servree)
+     *
+     * @param grid        the grid of the campus
+     * @param from        the starting point
+     * @param to          the ending point
+     * @param maxDistance distance the algorithm will time out (prevents slow server)
      * @return the distance between the two points
      */
     private double distanceByAStar(ConcurrentHashMap<Vector2, ForegroundEntity> grid, Vector2 from, Vector2 to, double maxDistance) {
@@ -51,7 +52,7 @@ public class StudentWalkSimulation {
         Set<Vector2> visited = new HashSet<>();
 
         current_score.put(from, 0.0);
-        straight_line_score.put(from, hdist(from, to));
+        straight_line_score.put(from, heuristic_distance(from, to));
         queue.add(from);
 
         while (!queue.isEmpty()) {
@@ -80,21 +81,22 @@ public class StudentWalkSimulation {
                 double tentativeGScore = current_score.get(current) + 1;
                 if (tentativeGScore < current_score.getOrDefault(neighbor, Double.MAX_VALUE)) {
                     current_score.put(neighbor, tentativeGScore);
-                    straight_line_score.put(neighbor, tentativeGScore + hdist(neighbor, to));
+                    straight_line_score.put(neighbor, tentativeGScore + heuristic_distance(neighbor, to));
                     queue.add(neighbor);
                 }
             }
         }
 
-        // womp womp
+        // w o m p    w o m p
         // TODO: Should this be -1 or maxDistance?
         return -1;
     }
 
     /**
      * Calculate the score of the simulation
+     *
      * @param grid the grid of the campus
-     * @param map basically the grid, read {@link io.github.GRUMv2.EngSim.Server.Server}
+     * @param map  basically the grid, read {@link io.github.GRUMv2.EngSim.server.Server}
      */
     void tick(ConcurrentHashMap<Vector2, ForegroundEntity> grid, HashMap<Class<? extends ForegroundEntity>, ArrayList<Vector2>> map) {
         ArrayList<Double> totalDistances = new ArrayList<>();

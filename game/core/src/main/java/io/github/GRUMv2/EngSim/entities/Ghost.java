@@ -9,7 +9,6 @@ import java.util.Objects;
 
 public class Ghost extends DynamicEntity {
     private final float CELL_WIDTH;
-    private final float ALPHA = 0.7f;
     private final Building building;
 
     public Ghost(Building building) {
@@ -35,14 +34,15 @@ public class Ghost extends DynamicEntity {
                 mousePos.y % CELL_WIDTH
         );
 
-        Vector2 cellSize = new Vector2(CELL_WIDTH, CELL_WIDTH);
+        @SuppressWarnings("SuspiciousNameCombination") Vector2 cellSize = new Vector2(CELL_WIDTH, CELL_WIDTH);
 
         for (Vector2 relCellOffset : this.getRelCellsUsed()) {
             Vector2 cellPos = new Vector2(
                     pos.x + (relCellOffset.x * CELL_WIDTH) + 8,  // why 8? no idea.
                     pos.y + (relCellOffset.y * CELL_WIDTH)
             );
-            renderer.drawRect(cellPos, cellSize, this.getColor(), this.ALPHA);
+            float ALPHA = 0.7f;
+            renderer.drawRect(cellPos, cellSize, this.getColor(), ALPHA);
         }
     }
 

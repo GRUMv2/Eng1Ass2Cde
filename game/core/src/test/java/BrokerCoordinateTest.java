@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 
 /**
  * Testing for:
- *  - Correctly identifying coordindates out of bounds (cellInBounds)
+ *  - Correctly identifying coordinates out of bounds (cellInBounds)
  *  - Correctly reporting eligibility of objects placed at a given position (checkCoordsFree)
  */
 
@@ -68,11 +68,11 @@ public class BrokerCoordinateTest {
         checkCoordsFreeEntity.setAccessible(true);
 
         // Should fail as testEntity is at this position
-        assertFalse((Boolean) checkCoordsFreeEntity.invoke(broker, (Object) baseCheck, new Water(new Vector2(10, 10), new Vector2[]{ new Vector2(0,0) } )));
+        assertFalse((Boolean) checkCoordsFreeEntity.invoke(broker, baseCheck, new Water(new Vector2(10, 10), new Vector2[]{ new Vector2(0,0) } )));
 
         // Should succeed as object to be checked is testEntity,
         // which is the object at that map position
-        assertTrue((Boolean) checkCoordsFreeEntity.invoke(broker, (Object) baseCheck, testEntity));
+        assertTrue((Boolean) checkCoordsFreeEntity.invoke(broker, baseCheck, testEntity));
 
     }
 

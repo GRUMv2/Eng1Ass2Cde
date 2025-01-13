@@ -9,7 +9,7 @@ public final class TmpPopupFactory {
 
     private static TmpPopupFactory instance;
 
-    private Runnable popupHook;
+    private final Runnable popupHook;
 
     private TmpPopupFactory(Runnable popupHook) {
         this.popupHook = popupHook;
@@ -23,8 +23,7 @@ public final class TmpPopupFactory {
     }
 
     public TmpInfoPopup newInfobox(PopupTicket ticket) {
-        TmpInfoPopup infobox = new TmpInfoPopup(this.popupHook, ticket);
-        return infobox;
+        return new TmpInfoPopup(this.popupHook, ticket);
     }
 
 

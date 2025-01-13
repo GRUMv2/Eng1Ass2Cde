@@ -4,28 +4,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.broker.PopupTicket;
-import io.github.GRUMv2.EngSim.entities.Building;
-import io.github.GRUMv2.EngSim.entities.BuildingFactory;
+import io.github.GRUMv2.EngSim.entities.*;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
-import io.github.GRUMv2.EngSim.entities.GameMap;
-import io.github.GRUMv2.EngSim.entities.TmpPopup;
-import io.github.GRUMv2.EngSim.entities.TmpPopupFactory;
-import io.github.GRUMv2.EngSim.entities.UI;
 
-import io.github.GRUMv2.EngSim.entities.Ghost;
 
+/**
+ * The GameScreen class represents the primary visual interface through which the
+ * interactive digital entertainment experience is rendered and perceived by the end-user.
+ * This interface serves as the principal conduit for the graphical and interactive
+ * elements of the game, encapsulating the entirety of the visual and interactive components
+ * that constitute the user's engagement with the game screen.
+ * <p>
+ * Not that anyone really wants to look at the game screen anyway lets be honest
+ * <p>
+ * hope that's enough to satisfy the javadoc gods and their stupid thirst for obvious documentation
+ * <p>
+ * to be fair they probably know that nobody likes java and would prefer to read the code in english
+ * <p>
+ * only doubles the file size tho no stress
+ */
 public class GameScreen extends AbstractGameScreen {
 
     private Available buildingToPlace = null;
     private Modes mode;
-    private GameMap map;
-    private UI ui;
-    private Broker broker;
-    private BuildingFactory builder;
-    private TmpPopupFactory popupFactory;
+    private final GameMap map;
+    private final UI ui;
+    private final Broker broker;
+    private final BuildingFactory builder;
+    private final TmpPopupFactory popupFactory;
 
     private TmpPopup activePopup;
 
@@ -35,13 +43,13 @@ public class GameScreen extends AbstractGameScreen {
         super(renderer, inputHandler);
         broker = Broker.getInstance();
         builder = BuildingFactory.getInstance();
-        popupFactory = TmpPopupFactory.getInstance(() -> this.dismissActivePopup());
+        popupFactory = TmpPopupFactory.getInstance(this::dismissActivePopup);
         map = new GameMap(this, broker);
         ui = new UI(this, broker, builder);
         this.mode = Modes.NORMAL;
     }
 
-    @SuppressWarnings({"NumericOverflow", "divzero"})
+    @SuppressWarnings({"divzero", "NumericOverflow"})
     private void deathByDevZero() {
         int a = 1 / 0;
     }
@@ -85,12 +93,12 @@ public class GameScreen extends AbstractGameScreen {
         }
 
         // Debug features
-        // The player can trigger it if they like but it doesn't exactly offer much help
+        // The player can trigger it if they like, but it doesn't exactly offer much help
         if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
             if (Gdx.input.isKeyPressed(Keys.F7)) {
                 this.changeEvent(Screens.END);
             } else if (Gdx.input.isKeyPressed(Keys.F5)) {
-                broker.queuePopup(new PopupTicket("Debug", "Debug popup", new String[] { "OPTION" }));
+                broker.queuePopup(new PopupTicket("Debug", "Debug popup", new String[]{"OPTION"}));
                 broker.queuePopup(new PopupTicket("This is a lot of information in a notice box"));
                 this.changeEvent(Screens.GAME);
             } else if (Gdx.input.isKeyPressed(Keys.F6)) {
@@ -109,15 +117,6 @@ public class GameScreen extends AbstractGameScreen {
         this.changeEvent(Screens.GAME);
     }
 
-//    public void setBuildingToPlace(Available buildingType) {
-//        if (buildingType == buildingToPlace) {
-//            buildingToPlace = null;
-//        } else {
-//            buildingToPlace = buildingType;
-//        }
-//        this.toggleMode(Modes.NORMAL);
-//    }
-
     public Modes getMode() {
         return mode;
     }
@@ -129,6 +128,7 @@ public class GameScreen extends AbstractGameScreen {
     public void toggleMode(Modes mode) {
         switch (mode) {
             case NORMAL:
+                // Future proofing
                 break;
             case DESTROY:
             case MOVE:
@@ -181,6 +181,7 @@ public class GameScreen extends AbstractGameScreen {
             return false;
         }
         Building building = builder.newBuilding(buildingToPlace, cellPos);
+        assert building != null;
         if (broker.getMoney() < building.getCost()) {
             return false;
         }
@@ -203,7 +204,7 @@ public class GameScreen extends AbstractGameScreen {
                 return;
             }
             // TODO: Exception handle
-            // Theoreticaly throws IllegalArgumentException if building is not within the enum
+            // Theoretically throws IllegalArgumentException if building is not within the enum
             // In practice I don't see how this could ever be triggered, because destroyBuilding
             // implies a previous placeBuilding, triggered by user UI interaction,
             // which is generated from the values of Available
@@ -220,9 +221,9 @@ public class GameScreen extends AbstractGameScreen {
         DESTROY("Destroy"),
         MOVE("Move");
 
-        private String text;
+        private final String text;
 
-        private Modes(String text) {
+        Modes(String text) {
             this.text = text;
         }
 

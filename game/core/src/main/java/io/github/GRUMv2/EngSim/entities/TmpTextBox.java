@@ -3,7 +3,6 @@ package io.github.GRUMv2.EngSim.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
@@ -12,8 +11,8 @@ import io.github.GRUMv2.EngSim.client.Renderer;
  */
 public class TmpTextBox extends Entity {
 
-    private Vector2 pos;
-    private Vector2 size;
+    private final Vector2 pos;
+    private final Vector2 size;
     private Vector2 fontBounds;
     private float textOffsetX;
     private float textOffsetY;
@@ -43,6 +42,7 @@ public class TmpTextBox extends Entity {
         this.content = content;
     }
 
+    @SuppressWarnings("unused") // Planned to be used with text wrapping
     public TmpTextBox(Vector2 pos, Vector2 size, String[] contentLines) {
         this(pos, size, String.join("\n", contentLines));
     }
@@ -52,6 +52,7 @@ public class TmpTextBox extends Entity {
         this.borderWidth = borderWidth;
     }
 
+    @SuppressWarnings("unused")
     public TmpTextBox(Vector2 pos, Vector2 size, String[] contentLines, float borderWidth) {
         this(pos, size, String.join("\n", contentLines), borderWidth);
     }
@@ -133,6 +134,18 @@ public class TmpTextBox extends Entity {
             renderer.drawRect(this.pos, this.size, this.backgroundColor);
         }
 
+        Vector2 textPos = getVector2();
+
+        renderer.drawText(
+            this.content,
+            textPos,
+            this.textColor,
+            renderer.calcFontScale(this.fontBounds, this.content, 2f),
+            this.textAlign
+        );
+    }
+
+    private Vector2 getVector2() {
         Vector2 textPos;
         if (this.textAlign == Align.left) {
             textPos = new Vector2(
@@ -149,13 +162,6 @@ public class TmpTextBox extends Entity {
                 this.pos.y + (this.size.y / 2)
             );
         }
-
-        renderer.drawText(
-            this.content,
-            textPos,
-            this.textColor,
-            renderer.calcFontScale(this.fontBounds, this.content, 2f),
-            this.textAlign
-        );
+        return textPos;
     }
 }

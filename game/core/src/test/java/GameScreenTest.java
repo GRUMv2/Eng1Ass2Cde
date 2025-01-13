@@ -20,7 +20,7 @@ public class GameScreenTest {
 
     @BeforeEach
     public void setUp() {
-        // Pass null values here as renderering can/will not be tested
+        // Pass null values here as rendering can/will not be tested
         screen = new GameScreen(null, null);
 
     }

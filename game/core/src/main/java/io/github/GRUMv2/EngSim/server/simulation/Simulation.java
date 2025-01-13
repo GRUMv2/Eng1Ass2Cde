@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.Simulation;
+package io.github.GRUMv2.EngSim.server.simulation;
 
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.broker.Broker;
@@ -23,7 +23,7 @@ public class Simulation {
     private long currentMoney = 250_000; // You'd have to be pretty good to go over 2bil but just in case
 
     public Simulation() {
-        System.out.println("[ SIM ] Simulation started");
+        System.out.println("[ SIM ] simulation started");
 
         this.broker = Broker.getInstance();
         studentWalkSimulation = new StudentWalkSimulation();
@@ -108,24 +108,24 @@ public class Simulation {
         this.currentMoney += this.getIncomeI();
     }
 
-    public void setStudentHousingCapacityMultiuplyer(float to) {
-        this.rollingValuesSimulator.setStudentHousingCapacityMultiuplyer(to);
+    public void setStudentHousingCapacityMultiplier(float to) {
+        this.rollingValuesSimulator.setStudentHousingCapacityMultiplier(to);
     }
 
-    public void setStudentStudyCapacityMultiuplyer(float to) {
-        this.rollingValuesSimulator.setStudentStudyCapacityMultiuplyer(to);
+    public void setStudentStudyCapacityMultiplier(float to) {
+        this.rollingValuesSimulator.setStudentStudyCapacityMultiplier(to);
     }
 
-    public void setLeisureCapacityMultiuplyer(float to) {
-        this.rollingValuesSimulator.setLeisureCapacityMultiuplyer(to);
+    public void setLeisureCapacityMultiplier(float to) {
+        this.rollingValuesSimulator.setLeisureCapacityMultiplier(to);
     }
 
-    public void setStaffOfficeCapacityMultiuplyer(float to) {
-        this.rollingValuesSimulator.setStaffOfficeCapacityMultiuplyer(to);
+    public void setStaffOfficeCapacityMultiplier(float to) {
+        this.rollingValuesSimulator.setStaffOfficeCapacityMultiplier(to);
     }
 
-    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
-        this.rollingValuesSimulator.setMonthlyUpkeepCostsMultiuplyer(to);
+    public void setMonthlyUpkeepCostsMultiplier(float to) {
+        this.rollingValuesSimulator.setMonthlyUpkeepCostsMultiplier(to);
     }
 
 }

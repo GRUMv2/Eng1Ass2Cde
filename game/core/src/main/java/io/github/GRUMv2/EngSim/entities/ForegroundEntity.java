@@ -3,7 +3,6 @@ package io.github.GRUMv2.EngSim.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
@@ -11,24 +10,24 @@ import io.github.GRUMv2.EngSim.client.Renderer;
  * ForegroundEntity
  */
 public abstract class ForegroundEntity extends Entity {
-    protected static final float CELL_WIDTH = 720 / 30;  // TODO: -> Settings
+    protected static final float CELL_WIDTH = (float) 720 / 30;  // TODO: -> Settings
 
-    private Vector2[] relCellsUsed;
-    private Vector2 mapPos;
-    private Color color;
-    private Vector2 pos;
+    private final Vector2[] relCellsUsed;
+    private final Vector2 mapPos;
+    private final Color color;
+    private final Vector2 pos;
 
     private String text;
     private Color textColor;
-    private Vector2[] bounds;
+    private final Vector2[] bounds;
     private Vector2 textMidpoint;
-    private Vector2 fontBounds;
+    private final Vector2 fontBounds;
 
     public ForegroundEntity(Vector2 mapPos, Vector2[] relCellsUsed, Color color) {
         this.mapPos = mapPos;
         this.relCellsUsed = relCellsUsed;
         this.color = color;
-        // TODO: unhardcode
+        // TODO: un-hardcode
         this.pos = new Vector2((1280 - 720) + (this.mapPos.x * CELL_WIDTH), this.mapPos.y * CELL_WIDTH);
         this.bounds = this.getBounds();
         this.fontBounds = this.fontHackBounds();
@@ -40,12 +39,12 @@ public abstract class ForegroundEntity extends Entity {
         this.textMidpoint = getTextMidpoint();
     }
 
-    public void setText(String text) {
-        this.setText(text, Color.WHITE);    // TODO: default color -> Settings?
-    }
-
     public String getText() {
         return text;
+    }
+
+    public void setText(String text) {
+        this.setText(text, Color.WHITE);    // TODO: default color -> Settings?
     }
 
     public Color getTextColor() {
@@ -113,12 +112,12 @@ public abstract class ForegroundEntity extends Entity {
         }
         Vector2 min = new Vector2(minX, minY);
         Vector2 max = new Vector2(maxX, maxY);
-        return new Vector2[]{ min, max };
+        return new Vector2[]{min, max};
     }
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {
-        Vector2 cellSize = new Vector2(CELL_WIDTH, CELL_WIDTH);
+        @SuppressWarnings("SuspiciousNameCombination") Vector2 cellSize = new Vector2(CELL_WIDTH, CELL_WIDTH);
 
         for (Vector2 relCellOffset : this.relCellsUsed) {
             Vector2 cellPos = new Vector2(
@@ -134,7 +133,7 @@ public abstract class ForegroundEntity extends Entity {
                 this.text,
                 new Vector2(this.textMidpoint.x, this.textMidpoint.y),
                 this.textColor, // Color gets set when text does
-                renderer.calcFontScale(this.fontBounds, this.text, /* max-size, TODO unhardcode */ 2.0f),
+                renderer.calcFontScale(this.fontBounds, this.text, /* max-size, TODO un-hardcode */ 2.0f),
                 Align.center
             );
         }
