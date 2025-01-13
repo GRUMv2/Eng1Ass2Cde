@@ -1,5 +1,6 @@
 plugins {
   id 'java-library' // or 'java' if you prefer
+  id 'jacoco'
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -18,4 +19,18 @@ dependencies {
 
 test {
   useJUnitPlatform()
+  finalizedBy(jacocoTestReport)
 }
+
+jacocoTestReport {
+  dependsOn test
+
+  reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+
+//apply from: "$project.rootDir/jacoco.gradle"
