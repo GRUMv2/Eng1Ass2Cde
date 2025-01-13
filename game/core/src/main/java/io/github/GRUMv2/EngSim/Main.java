@@ -110,10 +110,11 @@ public class Main extends Game {
             case END:
                 this.gameScreen = new EndScreen(renderer, inputHandler);
                 this.gameScreen.setChangeEvent(Screens.QUIT, () -> this.changeScreen(Screens.QUIT));
-                this.server.Stop();
+                this.server.Pause();
                 break;
             case QUIT:
                 this.quit();
+                this.server.Stop();
                 break;
             default:
                 break;

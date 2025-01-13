@@ -9,8 +9,8 @@ import java.util.Iterator;
  * Manages the events that are active
  */
 public class EventHandler {
-    private final Server server;
     final ArrayList<Event> activeEvents = new ArrayList<>();
+    private final Server server;
 
     public EventHandler(Server server) {
         System.out.println("[ EVN ] eventHandler created");
@@ -23,6 +23,7 @@ public class EventHandler {
         activeEvents.add(new MassivePopulationAchievement());
         activeEvents.add(new QuitTheGameAchievement());
         activeEvents.add(new StartTheGameAchievement());
+        activeEvents.add(new ConquerorAchievement());
 
         // events
         activeEvents.add(new LotteryEvent());
@@ -33,6 +34,7 @@ public class EventHandler {
         activeEvents.add(new PoliticalMovementEvent());
         activeEvents.add(new CovidEvent());
         activeEvents.add(new InactivityEvent());
+        activeEvents.add(new ChristmasJokeEvent());
 
         this.server = server;
     }
