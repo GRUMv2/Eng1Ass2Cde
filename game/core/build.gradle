@@ -31,6 +31,3 @@ jacocoTestReport {
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
-
-
-//apply from: "$project.rootDir/jacoco.gradle"
