@@ -1,7 +1,6 @@
 package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
@@ -9,11 +8,11 @@ import io.github.GRUMv2.EngSim.client.Renderer;
  * NoticeBox
  */
 public class StatsBox extends Entity {
-    private float borderWidth = 4f;
+    private final float borderWidth = 4f;
 
-    private TmpTextBox header;
-    private TmpTextBox content;
-    private TmpTextBox[] itemBoxes;
+    private final TmpTextBox header;
+    private final TmpTextBox content;
+    private final TmpTextBox[] itemBoxes;
 
     public StatsBox(Vector2 pos, Vector2 size) {
         this.header = new TmpTextBox(
@@ -41,18 +40,18 @@ public class StatsBox extends Entity {
                 new Vector2(pos.x, pos.y + (spacing * i)),
                 new Vector2(size.x, spacing),
                 "",
-                borderWidth/2
+                borderWidth / 2
             );
         }
     }
 
     public void setStats(
-            long balance,
-            int income,
-            float students,
-            float studentSatisfaction,
-            float staff,
-            float staffSatisfaction) {
+        long balance,
+        int income,
+        float students,
+        float studentSatisfaction,
+        float staff,
+        float staffSatisfaction) {
 
         this.itemBoxes[4].setContent("Balance: £" + (balance == 0 ? 0 : balance / 1000 + "K") + " (" + (income >= 0 ? "+£" + (income / 1000) + "K" : "-£" + (-income / 1000) + "K") + " )");
         this.itemBoxes[3].setContent("Students: " + students);
@@ -70,8 +69,8 @@ public class StatsBox extends Entity {
         this.header.update(renderer, inputHandler);
         this.content.update(renderer, inputHandler);
 
-        for (int i = 0; i < this.itemBoxes.length; i++) {
-            itemBoxes[i].update(renderer, inputHandler);
+        for (TmpTextBox itemBox : this.itemBoxes) {
+            itemBox.update(renderer, inputHandler);
         }
     }
 

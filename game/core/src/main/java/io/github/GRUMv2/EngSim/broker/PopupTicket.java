@@ -3,9 +3,9 @@ package io.github.GRUMv2.EngSim.broker;
 public class PopupTicket {
     private boolean dismissed = false;
 
-    private String name;
-    private String description;
-    private boolean transience;
+    private final String name;
+    private final String description;
+    private final boolean transience;
 
     private String[] options;
     private int response;
@@ -46,6 +46,8 @@ public class PopupTicket {
         return dismissed;
     }
 
+    // Planned for potential future use in interactive popups
+    @SuppressWarnings("unused")
     public String[] getOptions() {
         if (!this.transience) {
             return options;
@@ -53,6 +55,7 @@ public class PopupTicket {
         return new String[]{};
     }
 
+    @SuppressWarnings("unused")
     public int getResponse() {
         return response;
     }

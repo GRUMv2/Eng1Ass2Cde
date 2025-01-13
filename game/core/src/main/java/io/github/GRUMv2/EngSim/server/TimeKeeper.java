@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server;
+package io.github.GRUMv2.EngSim.server;
 
 /**
  * This class is responsible for managing the game time.
@@ -50,7 +50,7 @@ public class TimeKeeper {
         this.startTime += System.currentTimeMillis() - pausedTime;
         this.isPaused = false;
 
-        System.out.println("[ TME ] GameTimer unpaused, starttime adjusted to " +
+        System.out.println("[ TME ] GameTimer un-paused, start time adjusted to " +
             this.startTime + " after " + (System.currentTimeMillis() - pausedTime));
     }
 

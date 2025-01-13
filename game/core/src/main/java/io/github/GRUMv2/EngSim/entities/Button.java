@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 
 abstract public class Button extends Entity {
 
-    private Vector2 pos;
-    private Vector2 size;
+    private final Vector2 pos;
+    private final Vector2 size;
 
     public Button(Vector2 pos, Vector2 size, Runnable command) {
         this.pos = pos;

@@ -10,14 +10,14 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class GameMap extends Entity {
     private final int CELLS_PER_ROW;
 
-    private Broker broker;
-    private GameScreen game;
-    private Cell[] cells;
+    private final Broker broker;
+    private final GameScreen game;
+    private final Cell[] cells;
 
     public GameMap(GameScreen game, Broker broker) {
         this.broker = broker;
         this.CELLS_PER_ROW = broker.getMapCells();
-      
+
         this.game = game;
 
         this.cells = new Cell[CELLS_PER_ROW * CELLS_PER_ROW];
@@ -77,8 +77,6 @@ public class GameMap extends Entity {
             }
         }
     }
-
-    ;
 
     @Override
     public void update(Renderer renderer, InputHandler inputHandler) {

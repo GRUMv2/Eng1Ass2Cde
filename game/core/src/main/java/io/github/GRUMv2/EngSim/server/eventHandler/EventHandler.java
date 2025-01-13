@@ -1,6 +1,6 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
-import io.github.GRUMv2.EngSim.Server.Server;
+import io.github.GRUMv2.EngSim.server.Server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,11 +9,11 @@ import java.util.Iterator;
  * Manages the events that are active
  */
 public class EventHandler {
-    ArrayList<Event> activeEvents = new ArrayList<>();
     private final Server server;
+    final ArrayList<Event> activeEvents = new ArrayList<>();
 
     public EventHandler(Server server) {
-        System.out.println("[ EVN ] EventHandler created");
+        System.out.println("[ EVN ] eventHandler created");
 
         // achievements
         activeEvents.add(new BrokeAchievement());
@@ -39,6 +39,7 @@ public class EventHandler {
 
     /**
      * Tick all active events
+     *
      * @param delta time since last tick
      */
     public void tick(double delta) {
@@ -56,8 +57,8 @@ public class EventHandler {
             if (!resp) {
                 iterator.remove();
                 System.out.println("[ EVN ] '" + event.getClass().getSimpleName() + "' events removed");
-                // avoids 'io.github.GRUMv2.EngSim.Server.EventHandler.InitialiseTestEvent@7d492h2'
-                // for 'EventHandler'
+                // avoids 'io.github.GRUMv2.EngSim.server.eventHandler.InitialiseTestEvent@7d492h2'
+                // for 'eventHandler'
             }
         }
     }

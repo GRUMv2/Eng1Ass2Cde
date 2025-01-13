@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 
 public class FromNothingAchievement extends Achievement {

@@ -1,23 +1,23 @@
 package io.github.GRUMv2.EngSim.client;
 
-import java.util.EnumMap;
-
 import com.badlogic.gdx.ScreenAdapter;
+
+import java.util.EnumMap;
 
 /**
  * AbstractGameScreen - Base screen class
  */
 abstract public class AbstractGameScreen extends ScreenAdapter {
 
-    private Renderer renderer;
-    private InputHandler inputHandler;
+    private final Renderer renderer;
+    private final InputHandler inputHandler;
 
-    private EnumMap<Screens, Runnable> changeEvents;
+    private final EnumMap<Screens, Runnable> changeEvents;
 
     public AbstractGameScreen(Renderer renderer, InputHandler inputHandler) {
         this.renderer = renderer;
         this.inputHandler = inputHandler;
-        this.changeEvents = new EnumMap<Screens, Runnable>(Screens.class);
+        this.changeEvents = new EnumMap<>(Screens.class);
     }
 
     /**
@@ -34,7 +34,8 @@ abstract public class AbstractGameScreen extends ScreenAdapter {
      * Call passed Main.changeEvent() method
      */
     public void changeEvent(Screens screen) {
-        this.changeEvents.getOrDefault(screen, () -> {}).run();
+        this.changeEvents.getOrDefault(screen, () -> {
+        }).run();
     }
 
     /**

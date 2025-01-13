@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 import io.github.GRUMv2.EngSim.entities.Pub;
 
@@ -20,12 +20,12 @@ public class PubRiotEvent extends Event {
         }
 
         server.popupManager.addPopup("Pub Riot!", "The students have rioted in the pub!\n" +
-            "The pub has been destroyed and will need to be rebuilt.");
+                "The pub has been destroyed and will need to be rebuilt.");
 
         List<Pub> pubs = broker.getEntities().stream()
-            .filter(entity -> entity instanceof Pub)
-            .map(entity -> (Pub) entity)
-            .collect(Collectors.toList());
+                .filter(entity -> entity instanceof Pub)
+                .map(entity -> (Pub) entity)
+                .collect(Collectors.toList());
 
         broker.destroyBuilding(pubs.get(random.nextInt(0, pubs.size())).getMapPos());
 

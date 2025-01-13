@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-
 import io.github.GRUMv2.EngSim.entities.TmpButton;
 
 public class PauseScreen extends AbstractGameScreen {
 
-    private TmpButton quitButton;
+    private final TmpButton quitButton;
 
     public PauseScreen(Renderer renderer, InputHandler inputHandler) {
         super(renderer, inputHandler);

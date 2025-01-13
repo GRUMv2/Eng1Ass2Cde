@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.EventHandler;
+package io.github.GRUMv2.EngSim.server.eventHandler;
 
 import java.util.Random;
 
@@ -8,7 +8,7 @@ public class GovernmentGrantEvent extends Event {
     @Override
     public boolean tick(double delta, EventHandler handler) {
         if (random.nextInt(0, 100_000) < 5) {
-            server.setMonthlyUpkeepCostsMultiuplyer(0);
+            server.setMonthlyUpkeepCostsMultiplier(0);
             // only gives 1 month of free upkeep ish
             server.popupManager.addPopup("Government Grant!", "The government has given you a grant for this month,\nyour upkeep costs are free!");
             return false;

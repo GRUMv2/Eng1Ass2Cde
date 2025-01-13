@@ -7,7 +7,6 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 import io.github.GRUMv2.EngSim.client.Screens;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Testing for:
@@ -19,7 +18,7 @@ class FakeScreen extends AbstractGameScreen {
     private int testValue = 0;
 
     public FakeScreen(Renderer renderer, InputHandler handler) {
-        // Pass null values here as renderering can/will not be tested
+        // Pass null values here as rendering can/will not be tested
         super(null, null);
     }
 
@@ -43,7 +42,7 @@ public class AGSTest {
 
     @BeforeEach
     public void setUp() {
-        // Pass null values here as renderering can/will not be tested
+        // Pass null values here as rendering can/will not be tested
         screen = new FakeScreen(null, null);
 
     }

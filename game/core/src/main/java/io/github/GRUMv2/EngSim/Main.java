@@ -1,6 +1,7 @@
 package io.github.GRUMv2.EngSim;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
@@ -8,32 +9,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import io.github.GRUMv2.EngSim.server.Server;
+import io.github.GRUMv2.EngSim.broker.Broker;
+import io.github.GRUMv2.EngSim.client.*;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.badlogic.gdx.Game;
-
-import io.github.GRUMv2.EngSim.broker.Broker;
-import io.github.GRUMv2.EngSim.client.Renderer;
-import io.github.GRUMv2.EngSim.client.InputHandler;
-import io.github.GRUMv2.EngSim.client.Screens;
-import io.github.GRUMv2.EngSim.client.AbstractGameScreen;
-import io.github.GRUMv2.EngSim.client.GameScreen;
-import io.github.GRUMv2.EngSim.client.PauseScreen;
-import io.github.GRUMv2.EngSim.client.MenuScreen;
-import io.github.GRUMv2.EngSim.client.EndScreen;
-
-import io.github.GRUMv2.EngSim.Server.Server;
 
 /**
  * Main - Init class
  * Init LibGDX, server and general setup; handle screen changes
- *
  */
 
 public class Main extends Game {
@@ -42,13 +30,13 @@ public class Main extends Game {
     public final static int HEIGHT = 720;
 
     private OrthographicCamera camera;
-    private InputMultiplexer jellyfin;
+    private InputMultiplexer inputMultiplexer;
     private Renderer renderer;
     private InputHandler inputHandler;
     private AbstractGameScreen gameScreen;
 
-    private Server server;
-    private Broker broker;
+    private final Server server;
+    private final Broker broker;
     private GameScreen game;
 
     public Main() {
@@ -69,8 +57,8 @@ public class Main extends Game {
     public void create() {
         this.loadLeaderboard();
         this.camera = createCamera();
-        this.jellyfin = new InputMultiplexer();
-        Gdx.input.setInputProcessor(jellyfin);
+        this.inputMultiplexer = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputMultiplexer);
         this.renderer = new Renderer(this.camera);
         this.inputHandler = new InputHandler(this.camera);
         this.game = new GameScreen(renderer, inputHandler);
@@ -83,11 +71,10 @@ public class Main extends Game {
     }
 
     /**
-     * Switchbox to swap between different game screens, signalling the server accordingly
+     * Switch box to swap between different game screens, signalling the server accordingly
      * Assigns ability to switch to other screens selectively
      *
      * @param screen screen to change to
-     *
      */
     public void changeScreen(Screens screen) {
         this.gameScreen.dispose();
@@ -103,7 +90,7 @@ public class Main extends Game {
                 break;
             case GAME:
                 this.gameScreen = this.game;
-                // hcky but works
+                // hacky but works
                 if (this.server.timeKeeper.currentGameTime() == 0) {
                     this.server.timeKeeper.start();
                 }
@@ -143,7 +130,8 @@ public class Main extends Game {
         FitViewport viewport = new FitViewport(WIDTH, HEIGHT, newCamera);
         viewport.apply();
         viewport.update((int) screenSize.x, (int) screenSize.y, true);
-        newCamera.position.set((int) newCamera.viewportWidth / 2, (int) newCamera.viewportHeight / 2, 0);
+        // according to local CI this is the most efficient way to do this lol
+        newCamera.position.set((float) (int) newCamera.viewportWidth / 2, (float) (int) newCamera.viewportHeight / 2, 0);
         newCamera.update();
         return newCamera;
     }
@@ -154,7 +142,7 @@ public class Main extends Game {
 
         // If server is kil, quit client
         if (broker.clientSuicide()) {
-            System.out.println("[ HTM ] THE HITMAN IS ACTIVE AND HAS BEEN DISPATCHED (client)");
+            System.out.println("[ HTM ] THE WHITMAN IS ACTIVE AND HAS BEEN DISPATCHED (client)");
             this.quit();
         }
 
@@ -178,19 +166,17 @@ public class Main extends Game {
     }
 
     private FileHandle getLeaderboardFile() {
-        FileHandle leaderboardFile = Gdx.files.local("leaderboard.csv");
-        return leaderboardFile;
+        return Gdx.files.local("leaderboard.csv");
     }
 
     /**
      * Parse saved leaderboard, if it exists, and push to Broker as SimpleImmutableEntry
-     * @return bool value depending on success
      */
-    private boolean loadLeaderboard() {
+    private void loadLeaderboard() {
         FileHandle leaderboardFile = this.getLeaderboardFile();
         if (!leaderboardFile.exists() || leaderboardFile.isDirectory()) {
             System.out.println("[ MAN ] Could not load leaderboard file");
-            return false;
+            return;
         }
 
         String leaderboard = "";
@@ -214,7 +200,7 @@ public class Main extends Game {
             String scoreS = splitLine[splitLine.length - 1];
             String name = String.join(",", Arrays.copyOfRange(splitLine, 0, splitLine.length - 1));
 
-            if (name.length() == 0 || scoreS.length() == 0) {
+            if (name.isEmpty() || scoreS.isEmpty()) {
                 System.out.println("[ MAN ] Invalid line in leaderboard. Skipping.");
                 continue;
             }
@@ -224,23 +210,19 @@ public class Main extends Game {
                 broker.updateLeaderboard(name, score);
             } catch (NumberFormatException e) {
                 System.out.println("[ MAN ] Invalid line in leaderboard. Skipping.");
-                continue;
             }
-
         }
-        return true;
     }
 
     /**
      * Save leaderboard to disk
-     * @return success status
      */
-    private boolean writeLeaderboard() {
+    private void writeLeaderboard() {
         FileHandle leaderboardFile = this.getLeaderboardFile();
         if (leaderboardFile.isDirectory()) {
             // TODO: Check file permissions?
             System.out.println("[ MAN ] Could not open leaderboard file for writing");
-            return false;
+            return;
         }
 
         Writer writer;
@@ -249,10 +231,10 @@ public class Main extends Game {
         } catch (GdxRuntimeException e) {
             System.out.println("[ MAN ] Could not open leaderboard file for writing");
             System.out.println("[ MAN ] " + e);
-            return false;
+            return;
         }
 
-        ArrayList<SimpleImmutableEntry<String, Integer>> leaderboard = new ArrayList<SimpleImmutableEntry<String, Integer>>(Broker.getInstance().getLeaderboard());
+        ArrayList<SimpleImmutableEntry<String, Integer>> leaderboard = new ArrayList<>(Broker.getInstance().getLeaderboard());
         String[] splitLine = new String[leaderboard.size()];
         for (int i = 0; i < splitLine.length; i++) {
             try {
@@ -260,7 +242,7 @@ public class Main extends Game {
             } catch (IOException e) {
                 System.out.println("[ MAN ] Could not open leaderboard file for writing");
                 System.out.println("[ MAN ] " + e);
-                return false;
+                return;
             }
         }
         try {
@@ -269,6 +251,5 @@ public class Main extends Game {
             System.out.println("[ MAN ] Could not open leaderboard file for writing");
             System.out.println("[ MAN ] " + e);
         }
-        return true;
     }
 }

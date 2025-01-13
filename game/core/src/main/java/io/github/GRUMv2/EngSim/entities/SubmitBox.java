@@ -2,7 +2,6 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
 
@@ -15,13 +14,13 @@ public class SubmitBox extends Entity {
     //
     // It's almost like we're missing a proper UI overhaul or something
 
-    private Vector2 pos;
-    private Vector2 size;
+    private final Vector2 pos;
+    private final Vector2 size;
 
-    private float ratio =  0.75f;
+    private final float ratio = 0.75f;
 
-    private TmpButton button;
-    private InputField field;
+    private final TmpButton button;
+    private final InputField field;
 
     private Color backgroundColor;
 

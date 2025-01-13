@@ -1,9 +1,9 @@
-package io.github.GRUMv2.EngSim.Server;
+package io.github.GRUMv2.EngSim.server;
 
 
-import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
-import io.github.GRUMv2.EngSim.Server.PopupManager.PopupManager;
-import io.github.GRUMv2.EngSim.Server.Simulation.Simulation;
+import io.github.GRUMv2.EngSim.server.eventHandler.EventHandler;
+import io.github.GRUMv2.EngSim.server.popupManager.PopupManager;
+import io.github.GRUMv2.EngSim.server.simulation.Simulation;
 import io.github.GRUMv2.EngSim.broker.Broker;
 
 
@@ -25,13 +25,14 @@ public class Server extends Thread {
 
     /**
      * Creates a new server with the given target ticks per second.
+     *
      * @param targetTPS The target ticks per second.
      */
     public Server(int targetTPS) {
-        super("Server");
+        super("server");
         this.targetTPS = targetTPS;
 
-        System.out.println("[ SVR ] Server created");
+        System.out.println("[ SVR ] server created");
 
         simulation = new Simulation();
         eventHandler = new EventHandler(this);
@@ -74,6 +75,9 @@ public class Server extends Thread {
     }
 
     // called by threads
+    @SuppressWarnings("BusyWait")
+    // Not sure how else to implement this, it kind of has to be busy waiting
+    // to keep the server running at a consistent tick rate.
     public void run() {
         System.out.println("[ SVR ] Running in thread " + Thread.currentThread().getName());
 
@@ -85,7 +89,7 @@ public class Server extends Thread {
 
             // kill the server if the client is dead
             if (broker.serverSuicide()) {
-                System.out.println("[ HTM ] The hitman has been called- dun dun duuuun (server)");
+                System.out.println("[ HTM ] The whitman has been called- dun dun dun! (server)");
                 isRunning = false;
             }
 
@@ -119,6 +123,7 @@ public class Server extends Thread {
 
     /**
      * Ticks the simulation, events, and popup system.
+     *
      * @param delta The time since the last tick in milliseconds.
      */
     private void tick(double delta) {
@@ -142,23 +147,23 @@ public class Server extends Thread {
         );
     }
 
-    public void setStudentHousingCapacityMultiuplyer(float to) {
-        this.simulation.setStudentHousingCapacityMultiuplyer(to);
+    public void setStudentHousingCapacityMultiplier(float to) {
+        this.simulation.setStudentHousingCapacityMultiplier(to);
     }
 
-    public void setStudentStudyCapacityMultiuplyer(float to) {
-        this.simulation.setStudentStudyCapacityMultiuplyer(to);
+    public void setStudentStudyCapacityMultiplier(float to) {
+        this.simulation.setStudentStudyCapacityMultiplier(to);
     }
 
-    public void setLeisureCapacityMultiuplyer(float to) {
-        this.simulation.setLeisureCapacityMultiuplyer(to);
+    public void setLeisureCapacityMultiplier(float to) {
+        this.simulation.setLeisureCapacityMultiplier(to);
     }
 
-    public void setStaffOfficeCapacityMultiuplyer(float to) {
-        this.simulation.setStaffOfficeCapacityMultiuplyer(to);
+    public void setStaffOfficeCapacityMultiplier(float to) {
+        this.simulation.setStaffOfficeCapacityMultiplier(to);
     }
 
-    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
-        this.simulation.setMonthlyUpkeepCostsMultiuplyer(to);
+    public void setMonthlyUpkeepCostsMultiplier(float to) {
+        this.simulation.setMonthlyUpkeepCostsMultiplier(to);
     }
 }

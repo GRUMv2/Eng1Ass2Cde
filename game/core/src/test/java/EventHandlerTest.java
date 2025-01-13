@@ -1,5 +1,5 @@
-import io.github.GRUMv2.EngSim.Server.EventHandler.EventHandler;
-import io.github.GRUMv2.EngSim.Server.EventHandler.Event;
+import io.github.GRUMv2.EngSim.server.eventHandler.EventHandler;
+import io.github.GRUMv2.EngSim.server.eventHandler.Event;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

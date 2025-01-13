@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
+
 import static io.github.GRUMv2.EngSim.client.GameScreen.Modes;
 
 public class TmpButton extends TmpTextBox {
@@ -41,9 +42,5 @@ public class TmpButton extends TmpTextBox {
 
     public Modes getMode() {
         return mode;
-    }
-
-    public void setMode(Modes mode) {
-        this.mode = mode;
     }
 }

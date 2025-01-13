@@ -1,13 +1,12 @@
 package io.github.GRUMv2.EngSim.entities;
 
-import java.util.ArrayList;
-import java.util.AbstractMap.SimpleImmutableEntry;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
+
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
 
 /**
  * Leaderboard
@@ -17,18 +16,18 @@ public class Leaderboard extends Entity {
     private final int LEADERBOARD_LENGTH = 10;
     private float borderWidth = 5f;
 
-    private float cellWidth = 0.5f;
-    private float contentHeight = 0.8f;
-    private float headerHeight = (1f - contentHeight) / 2f;
+    private final float cellWidth = 0.5f;
+    private final float contentHeight = 0.8f;
+    private final float headerHeight = (1f - contentHeight) / 2f;
 
-    private Vector2 pos;
-    private Vector2 size;
+    private final Vector2 pos;
+    private final Vector2 size;
 
-    private TmpTextBox titleHeader;
-    private TmpTextBox nameHeader;
-    private TmpTextBox scoreHeader;
-    private TmpTextBox nameCol;
-    private TmpTextBox scoreCol;
+    private final TmpTextBox titleHeader;
+    private final TmpTextBox nameHeader;
+    private final TmpTextBox scoreHeader;
+    private final TmpTextBox nameCol;
+    private final TmpTextBox scoreCol;
 
     private ArrayList<TmpTextBox> entries;
 
@@ -84,7 +83,7 @@ public class Leaderboard extends Entity {
         this.borderWidth = borderWidth;
     }
 
-    public boolean setValues(ArrayList<SimpleImmutableEntry<String, Integer>> leaderboard) {
+    public void setValues(ArrayList<SimpleImmutableEntry<String, Integer>> leaderboard) {
         Vector2 fullSize = this.nameCol.getSize();
         float boxHeight = fullSize.y / this.LEADERBOARD_LENGTH;
         Vector2 namePos = this.nameCol.getPos().cpy().add(0, fullSize.y - boxHeight);
@@ -105,7 +104,6 @@ public class Leaderboard extends Entity {
             scorePos.sub(0, boxHeight);
         }
         this.entries = entries;
-        return true;
     }
 
     @Override

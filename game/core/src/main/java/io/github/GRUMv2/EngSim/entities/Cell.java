@@ -8,15 +8,16 @@ import io.github.GRUMv2.EngSim.client.Renderer;
 public class Cell extends Entity {
     private static final int BORDER_WIDTH = 1;
     // TODO: -> Settings
-    private static final float CELL_WIDTH = 720 / 30;
+    private static final float CELL_WIDTH = (float) 720 / 30;
 
-    private Vector2 pos;
-    private Vector2 size = new Vector2(CELL_WIDTH, CELL_WIDTH);
+    private final Vector2 pos;
+    private final Vector2 size;
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public Cell(Vector2 mapPos, Runnable handleClick) {
         // TODO: Button rendering abstraction
         this.setHandleClick(handleClick);
-        // TODO: unhardcode
+        // TODO: un-hardcode
         pos = new Vector2((1280 - 720) + (mapPos.x * CELL_WIDTH), mapPos.y * CELL_WIDTH);
         size = new Vector2(CELL_WIDTH, CELL_WIDTH);
     }
@@ -36,7 +37,7 @@ public class Cell extends Entity {
         // draw green cell
         renderer.drawRect(
             new Vector2(pos.x + BORDER_WIDTH, pos.y + BORDER_WIDTH),
-            new Vector2(size.x - (2*BORDER_WIDTH), size.y - (2*BORDER_WIDTH)),
+            new Vector2(size.x - (2 * BORDER_WIDTH), size.y - (2 * BORDER_WIDTH)),
             Color.GREEN
         );
 

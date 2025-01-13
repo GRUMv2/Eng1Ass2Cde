@@ -1,4 +1,4 @@
-package io.github.GRUMv2.EngSim.Server.Simulation;
+package io.github.GRUMv2.EngSim.server.simulation;
 
 
 import io.github.GRUMv2.EngSim.entities.Building;
@@ -17,11 +17,11 @@ public class RollingValuesSimulator {
     private final ArrayList<Integer> staffOfficeCapacityList = new ArrayList<>();
     private final ArrayList<Integer> monthlyUpkeepCostsList = new ArrayList<>();
 
-    private float studentHousingCapacityMultiuplyer = 1;
-    private float studentStudyCapacityMultiuplyer = 1;
-    private float leisureCapacityMultiuplyer = 1;
-    private float staffOfficeCapacityMultiuplyer = 1;
-    private float monthlyUpkeepCostsMultiuplyer = 1;
+    private float studentHousingCapacityMultiplier = 1;
+    private float studentStudyCapacityMultiplier = 1;
+    private float leisureCapacityMultiplier = 1;
+    private float staffOfficeCapacityMultiplier = 1;
+    private float monthlyUpkeepCostsMultiplier = 1;
 
     private void addValue(ArrayList<Integer> list, int value) {
         list.add(value);
@@ -51,17 +51,11 @@ public class RollingValuesSimulator {
         this.addValue(staffOfficeCapacityList, staffOfficeCapacityS);
         this.addValue(monthlyUpkeepCostsList, monthlyUpkeepCostsS);
 
-        studentHousingCapacityMultiuplyer = (studentHousingCapacityMultiuplyer - 1) * 0.999f + 1;
-        studentStudyCapacityMultiuplyer = (studentStudyCapacityMultiuplyer - 1) * 0.999f + 1;
-        leisureCapacityMultiuplyer = (leisureCapacityMultiuplyer - 1) * 0.999f + 1;
-        staffOfficeCapacityMultiuplyer = (staffOfficeCapacityMultiuplyer - 1) * 0.999f + 1;
-        monthlyUpkeepCostsMultiuplyer = (monthlyUpkeepCostsMultiuplyer - 1) * 0.999f + 1;
-
-//        System.out.println("[ ROL ] studentHousingCapacity: " + this.studentHousingCapacity());
-//        System.out.println("[ ROL ] studentStudyCapacity: " + this.studentStudyCapacity());
-//        System.out.println("[ ROL ] leisureCapacity: " + this.leisureCapacity());
-//        System.out.println("[ ROL ] staffOfficeCapacity: " + this.staffOfficeCapacity());
-//        System.out.println("[ ROL ] monthlyUpkeepCosts: " + this.monthlyUpkeepCosts());
+        studentHousingCapacityMultiplier = (studentHousingCapacityMultiplier - 1) * 0.999f + 1;
+        studentStudyCapacityMultiplier = (studentStudyCapacityMultiplier - 1) * 0.999f + 1;
+        leisureCapacityMultiplier = (leisureCapacityMultiplier - 1) * 0.999f + 1;
+        staffOfficeCapacityMultiplier = (staffOfficeCapacityMultiplier - 1) * 0.999f + 1;
+        monthlyUpkeepCostsMultiplier = (monthlyUpkeepCostsMultiplier - 1) * 0.999f + 1;
     }
 
     private int getAvg(ArrayList<Integer> of) {
@@ -71,42 +65,42 @@ public class RollingValuesSimulator {
     }
 
     public int studentHousingCapacity() {
-        return (int) Math.floor(this.getAvg(this.studentHousingCapacityList) * studentHousingCapacityMultiuplyer);
+        return (int) Math.floor(this.getAvg(this.studentHousingCapacityList) * studentHousingCapacityMultiplier);
     }
 
     public int studentStudyCapacity() {
-        return (int) Math.floor(this.getAvg(this.studentStudyCapacityList) * studentStudyCapacityMultiuplyer);
+        return (int) Math.floor(this.getAvg(this.studentStudyCapacityList) * studentStudyCapacityMultiplier);
     }
 
     public int leisureCapacity() {
-        return (int) Math.floor(this.getAvg(this.leisureCapacityList) * leisureCapacityMultiuplyer);
+        return (int) Math.floor(this.getAvg(this.leisureCapacityList) * leisureCapacityMultiplier);
     }
 
     public int staffOfficeCapacity() {
-        return (int) Math.floor(this.getAvg(this.staffOfficeCapacityList) * staffOfficeCapacityMultiuplyer);
+        return (int) Math.floor(this.getAvg(this.staffOfficeCapacityList) * staffOfficeCapacityMultiplier);
     }
 
     public int monthlyUpkeepCosts() {
-        return (int) Math.floor(this.getAvg(this.monthlyUpkeepCostsList) * monthlyUpkeepCostsMultiuplyer);
+        return (int) Math.floor(this.getAvg(this.monthlyUpkeepCostsList) * monthlyUpkeepCostsMultiplier);
     }
 
-    public void setStudentHousingCapacityMultiuplyer(float to) {
-        studentHousingCapacityMultiuplyer = to;
+    public void setStudentHousingCapacityMultiplier(float to) {
+        studentHousingCapacityMultiplier = to;
     }
 
-    public void setStudentStudyCapacityMultiuplyer(float to) {
-        studentStudyCapacityMultiuplyer = to;
+    public void setStudentStudyCapacityMultiplier(float to) {
+        studentStudyCapacityMultiplier = to;
     }
 
-    public void setLeisureCapacityMultiuplyer(float to) {
-        leisureCapacityMultiuplyer = to;
+    public void setLeisureCapacityMultiplier(float to) {
+        leisureCapacityMultiplier = to;
     }
 
-    public void setStaffOfficeCapacityMultiuplyer(float to) {
-        staffOfficeCapacityMultiuplyer = to;
+    public void setStaffOfficeCapacityMultiplier(float to) {
+        staffOfficeCapacityMultiplier = to;
     }
 
-    public void setMonthlyUpkeepCostsMultiuplyer(float to) {
-        monthlyUpkeepCostsMultiuplyer = to;
+    public void setMonthlyUpkeepCostsMultiplier(float to) {
+        monthlyUpkeepCostsMultiplier = to;
     }
 }

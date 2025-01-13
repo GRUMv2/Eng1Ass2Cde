@@ -4,12 +4,11 @@ package io.github.GRUMv2.EngSim.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-
 import io.github.GRUMv2.EngSim.broker.Broker;
 import io.github.GRUMv2.EngSim.client.GameScreen;
+import io.github.GRUMv2.EngSim.client.GameScreen.Modes;
 import io.github.GRUMv2.EngSim.client.InputHandler;
 import io.github.GRUMv2.EngSim.client.Renderer;
-import io.github.GRUMv2.EngSim.client.GameScreen.Modes;
 import io.github.GRUMv2.EngSim.entities.BuildingFactory.Available;
 
 public class UI extends Entity {
@@ -17,13 +16,13 @@ public class UI extends Entity {
     // TODO: -> Settings
     private final String TITLE = "University Simulator";
 
-    private GameScreen game;
-    private Broker broker;
-    private PauseButton pauseButton;
-    private BuildingPlaceButton[] buildingPlaceButtons;
-    private TmpButton[] actionButtons;
-    private StatsBox statsBox;
-    private NoticeBox noticeBox;
+    private final GameScreen game;
+    private final Broker broker;
+    private final PauseButton pauseButton;
+    private final BuildingPlaceButton[] buildingPlaceButtons;
+    private final TmpButton[] actionButtons;
+    private final StatsBox statsBox;
+    private final NoticeBox noticeBox;
 
     private int updateTime;
 
@@ -35,7 +34,7 @@ public class UI extends Entity {
             game::togglePause
         );
 
-        this.actionButtons = new TmpButton[] {
+        this.actionButtons = new TmpButton[]{
             new TmpButton(
                 Modes.DESTROY.toString(),
                 new Vector2(20, 410),
@@ -108,14 +107,6 @@ public class UI extends Entity {
             Color.BLACK,
             1f
         );
-
-        // draw the building count
-        //renderer.drawText(
-        //    broker.getTotalBuildings() + " Buildings",
-        //    new Vector2(350, 660),
-        //    Color.BLACK,
-        //    1f
-        //);
 
         if (this.updateTime == broker.getTimeLeft()) {
             this.statsBox.setStats(broker.getMoney(), broker.getIncome());

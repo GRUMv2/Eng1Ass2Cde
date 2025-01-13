@@ -1,4 +1,4 @@
-import io.github.GRUMv2.EngSim.Server.TimeKeeper;
+import io.github.GRUMv2.EngSim.server.TimeKeeper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
