@@ -50,7 +50,7 @@ jobs:
       uses: actions/upload-artifact@v4.4.3
       with:
         name: jacoco-report
-        path: game/core/build/jacocoHtml
+        path: game/core/build/jacocoHtml/
         overwrite: true
 
 
